@@ -126,8 +126,8 @@ The included WebGL Digital Twin provides an interactive executive walkthrough:
 ### Quick Run
 ```bash
 # 1. Clone the repository
-git clone https://github.com/balajiakash6/Sandisk.git
-cd Sandisk
+git clone https://github.com/balajiakash6/NeuroFTL.git
+cd NeuroFTL
 
 # 2. Run the real-time simulation server
 python server.py 8000
@@ -146,7 +146,7 @@ python tests.py
 ## File Structure
 
 ```
-Sandisk/
+NeuroFTL/
 ├── index.html        # Interactive 3D WebGL Digital Twin & Executive Presentation UI
 ├── server.py         # Python Threading HTTP & SSE Real-Time Telemetry Server
 ├── simulator.py      # DualWorkloadSimulator (Conventional LRU FTL vs NeuroFTL)
