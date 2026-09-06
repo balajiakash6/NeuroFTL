@@ -2,6 +2,7 @@
 Adaptive Workload-Aware FTL Telemetry Server
 Provides Server-Sent Events (SSE) stream and REST API for real-time dashboard.
 AI-SSD Firmware Digital Twin Hackathon Project
+Authors: Balaji Akash S, Karthick P, Padmanabhan S, Benit D Binu
 """
 
 import json

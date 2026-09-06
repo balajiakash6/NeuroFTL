@@ -1,6 +1,7 @@
 """
 Adaptive Workload-Aware FTL Simulator - Core Simulation Engine
 AI-SSD Firmware Digital Twin Hackathon Project
+Authors: Balaji Akash S, Karthick P, Padmanabhan S, Benit D Binu
 """
 
 import collections

@@ -1,6 +1,7 @@
 """
 Adaptive Workload-Aware FTL Simulator - Models and Data Structures
 AI-SSD Firmware Digital Twin Hackathon Project
+Authors: Balaji Akash S, Karthick P, Padmanabhan S, Benit D Binu
 """
 
 from dataclasses import dataclass, field

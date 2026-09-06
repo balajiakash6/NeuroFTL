@@ -1,4 +1,4 @@
-﻿# SanDisk NeuroFTL™ | Adaptive Workload-Aware AI-SSD Firmware
+# SanDisk NeuroFTL™ | Adaptive Workload-Aware AI-SSD Firmware
 
 [![Firmware Track](https://img.shields.io/badge/Firmware-100%25%20Commodity%20NVMe-e11d48.svg)](#)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-38bdf8.svg)](#)
@@ -143,6 +143,17 @@ adaptive-fdp-sim/
 ├── .gitignore        # Git ignore configuration
 └── README.md         # Architecture documentation and presentation guide
 ```
+
+---
+
+## Engineering Team & Authors
+
+- **Balaji Akash S**
+- **Karthick P**
+- **Padmanabhan S**
+- **Benit D Binu**
+
+Developed for the AI-SSD Firmware Hackathon Track.
 
 ---
 
