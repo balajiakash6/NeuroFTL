@@ -128,13 +128,10 @@
       padding-bottom: max(8px, env(safe-area-inset-bottom));
     }
 
-    /* Prevent vertical overlap on short laptop viewports (600px - 850px height) */
+    /* Compact text scaling on short laptop viewports (600px - 850px height) */
     @media (max-height: 850px) {
-      #telemetryHud {
-        max-height: 44vh !important;
-      }
       #presentationDock {
-        max-height: 42vh !important;
+        max-height: 50vh !important;
         padding-top: 8px !important;
         padding-bottom: 8px !important;
       }
@@ -147,15 +144,22 @@
     }
 
     @media (max-height: 720px) {
-      #telemetryHud {
-        max-height: 38vh !important;
-      }
       #presentationDock {
-        max-height: 36vh !important;
+        max-height: 48vh !important;
         padding: 6px 10px !important;
       }
       #dockStepPara {
         -webkit-line-clamp: 1 !important;
+      }
+    }
+
+    @media (max-height: 500px) {
+      #presentationDock {
+        max-height: 44vh !important;
+        padding: 4px 8px !important;
+      }
+      #dockStepPara, #dockPointsContainer, #dockMetricsGroup {
+        display: none !important;
       }
     }
 
@@ -362,7 +366,7 @@
     </header>
 
     <!-- Floating Draggable & Resizable Live Telemetry HUD (Desktop, Laptop & Mobile Responsive) -->
-    <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-2.5 sm:p-3 space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-76 md:w-80 lg:w-80 xl:w-84 2xl:w-88 select-none flex flex-col no-scrollbar transition-all duration-300" style="min-width: 250px; min-height: 44px; max-width: 95vw; max-height: 85vh; resize: both; overflow: hidden;">
+    <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 space-y-1.5 sm:space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-[310px] md:w-[320px] lg:w-[325px] xl:w-[330px] 2xl:w-[340px] select-none flex flex-col no-scrollbar transition-all duration-300" style="min-width: 250px; min-height: 44px; max-width: 95vw; max-height: calc(100vh - 75px); overflow-y: auto; overflow-x: hidden; resize: both;">
       
       <!-- Draggable Header with Minimize Toggle -->
       <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex items-center justify-between border-b border-white/10 pb-1.5 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
@@ -381,17 +385,17 @@
       </div>
 
       <!-- Collapsible Body Container (Graph + 4-Metric Comparison Grid) -->
-      <div id="telemetryBody" class="space-y-2 flex flex-col flex-1 min-h-0 transition-all duration-300">
+      <div id="telemetryBody" class="space-y-1.5 sm:space-y-2 flex flex-col flex-1 min-h-0 transition-all duration-300">
         <!-- Real-Time Dual Latency Curve with Proper Markings & Dynamic Height -->
-        <div class="space-y-1.5 flex-1 flex flex-col min-h-0">
+        <div class="space-y-1 sm:space-y-1.5 flex flex-col shrink-0">
           <div class="flex justify-between items-center text-xs font-mono shrink-0">
             <span class="text-zinc-200 font-bold text-xs sm:text-sm">P99 Read Latency Curve</span>
             <span class="text-emerald-400 font-bold text-sm sm:text-base" id="graphCurrentP99">21.4 µs</span>
           </div>
           
-          <!-- Graph Canvas Box with Flexible Bounds -->
-          <div class="w-full flex-1 min-h-[75px] sm:min-h-[85px] bg-[#050811] rounded-xl border border-white/15 relative overflow-hidden p-1 shadow-inner">
-            <canvas id="liveGraphCanvas" class="w-full h-full block"></canvas>
+          <!-- Graph Canvas Box with Strict Height so Canvas NEVER Clips or Collapses -->
+          <div id="graphCanvasBox" class="w-full h-[110px] sm:h-[125px] bg-[#050811] rounded-xl border border-white/15 relative overflow-hidden p-0.5 sm:p-1 shadow-inner flex items-center justify-center shrink-0">
+            <canvas id="liveGraphCanvas" style="width: 100%; height: 100%; display: block;"></canvas>
           </div>
 
           <!-- Legend and Visual Marks -->
@@ -403,41 +407,41 @@
         </div>
 
         <!-- 4-Metric Live Comparison Grid (Executive high-contrast styling) -->
-        <div class="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1.5 border-t border-white/10 font-mono shrink-0">
+        <div class="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1 border-t border-white/10 font-mono shrink-0">
           <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">P99 Latency</div>
+            <div class="text-[10px] text-zinc-300 font-medium">P99 Latency</div>
             <div class="flex items-baseline justify-between gap-1">
-              <span class="text-xs sm:text-base font-bold text-emerald-400" id="statP99Adp">21.4 µs</span>
-              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statP99Std">168.2 µs</span>
+              <span class="text-xs sm:text-sm font-bold text-emerald-400" id="statP99Adp">21.4 µs</span>
+              <span class="text-[9px] sm:text-[10px] text-rose-400 line-through font-semibold truncate" id="statP99Std">168.2 µs</span>
             </div>
-            <div class="text-[10px] sm:text-[11px] text-emerald-400 font-bold" id="deltaLatency">⚡ 7.8× FASTER</div>
+            <div class="text-[9px] sm:text-[10px] text-emerald-400 font-bold" id="deltaLatency">⚡ 7.8× FASTER</div>
           </div>
 
           <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">L2P Hit Rate</div>
+            <div class="text-[10px] text-zinc-300 font-medium">L2P Hit Rate</div>
             <div class="flex items-baseline justify-between gap-1">
-              <span class="text-xs sm:text-base font-bold text-cyan-400" id="statHitAdp">98.6%</span>
-              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statHitStd">18.4%</span>
+              <span class="text-xs sm:text-sm font-bold text-cyan-400" id="statHitAdp">98.6%</span>
+              <span class="text-[9px] sm:text-[10px] text-rose-400 line-through font-semibold truncate" id="statHitStd">18.4%</span>
             </div>
-            <div class="text-[10px] sm:text-[11px] text-cyan-400 font-bold truncate" id="deltaHit">🔒 METADATA LOCKED</div>
+            <div class="text-[9px] sm:text-[10px] text-cyan-400 font-bold truncate" id="deltaHit">🔒 METADATA LOCKED</div>
           </div>
 
           <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">Flash WAF</div>
+            <div class="text-[10px] text-zinc-300 font-medium">Flash WAF</div>
             <div class="flex items-baseline justify-between gap-1">
-              <span class="text-xs sm:text-base font-bold text-emerald-400" id="statWafAdp">1.08</span>
-              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statWafStd">2.84</span>
+              <span class="text-xs sm:text-sm font-bold text-emerald-400" id="statWafAdp">1.08</span>
+              <span class="text-[9px] sm:text-[10px] text-rose-400 line-through font-semibold truncate" id="statWafStd">2.84</span>
             </div>
-            <div class="text-[10px] sm:text-[11px] text-emerald-400 font-bold truncate" id="deltaWaf">🛡️ 2.6× LIFE</div>
+            <div class="text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate" id="deltaWaf">🛡️ 2.6× LIFE</div>
           </div>
 
           <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">GPU Stalls</div>
+            <div class="text-[10px] text-zinc-300 font-medium">GPU Stalls</div>
             <div class="flex items-baseline justify-between gap-1">
-              <span class="text-xs sm:text-base font-bold text-emerald-400" id="statStallAdp">0.0%</span>
-              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statStallStd">38.2%</span>
+              <span class="text-xs sm:text-sm font-bold text-emerald-400" id="statStallAdp">0.0%</span>
+              <span class="text-[9px] sm:text-[10px] text-rose-400 line-through font-semibold truncate" id="statStallStd">38.2%</span>
             </div>
-            <div class="text-[10px] sm:text-[11px] text-emerald-400 font-bold truncate" id="deltaStall">🚀 100% FED</div>
+            <div class="text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate" id="deltaStall">🚀 100% FED</div>
           </div>
         </div>
       </div>
@@ -520,7 +524,7 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-3 md:p-3.5 w-[95vw] sm:w-[92vw] md:max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl 3xl:max-w-5xl 4xl:max-w-6xl 5xl:max-w-7xl shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden transition-all duration-300" style="min-width: 280px; min-height: 90px; max-height: 82vh; resize: both; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 w-[95vw] sm:w-[90vw] md:max-w-[540px] lg:max-w-[600px] xl:max-w-[640px] 2xl:max-w-[740px] 3xl:max-w-[860px] 4xl:max-w-[1000px] 5xl:max-w-[1180px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden transition-all duration-300" style="min-width: 280px; min-height: 80px; max-height: 52vh; resize: both; overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
       <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
@@ -1666,9 +1670,10 @@
     function resizeGraph() {
       if (!graphCanvas) return;
       const rect = graphCanvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      const targetW = Math.max(100, Math.floor((rect.width || 380) * dpr));
-      const targetH = Math.max(60, Math.floor((rect.height || 100) * dpr));
+      if (!rect.width || !rect.height) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const targetW = Math.round(rect.width * dpr);
+      const targetH = Math.round(rect.height * dpr);
       if (graphCanvas.width !== targetW || graphCanvas.height !== targetH) {
         graphCanvas.width = targetW;
         graphCanvas.height = targetH;
@@ -1686,32 +1691,27 @@
 
     function drawGraph() {
       if (!graphCtx || !graphCanvas) return;
+      if (isTelemetryCollapsed || graphCanvas.offsetParent === null) return;
       
-      // Keep canvas resolution synced to CSS bounds
-      const rect = graphCanvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      const targetW = Math.max(100, Math.floor((rect.width || 380) * dpr));
-      const targetH = Math.max(60, Math.floor((rect.height || 100) * dpr));
-      if (graphCanvas.width !== targetW || graphCanvas.height !== targetH) {
-        graphCanvas.width = targetW;
-        graphCanvas.height = targetH;
-      }
-
+      resizeGraph();
       const w = graphCanvas.width;
       const h = graphCanvas.height;
+      if (w < 40 || h < 40) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       graphCtx.clearRect(0, 0, w, h);
 
-      // Defend against overflow: explicit strict paddings on all 4 borders
-      const topPad = 14 * dpr;
-      const bottomPad = 16 * dpr;
-      const leftPad = 46 * dpr;
-      const rightPad = 18 * dpr;
+      // Strict paddings on all 4 borders
+      const topPad = 12 * dpr;
+      const bottomPad = 14 * dpr;
+      const leftPad = 40 * dpr;
+      const rightPad = 14 * dpr;
       const plotW = Math.max(20, w - leftPad - rightPad);
       const plotH = Math.max(20, h - topPad - bottomPad);
 
       // Auto-scaling ceiling with safety clamp
-      const peak = Math.max(...histStdLatency, ...histAdpLatency, 240);
-      const maxVal = Math.min(360, Math.max(250, Math.ceil(peak / 50) * 50));
+      const peak = Math.max(...histStdLatency, ...histAdpLatency, 220);
+      const maxVal = Math.max(260, Math.ceil(peak / 50) * 50);
       const minVal = 0;
 
       const getX = (i) => leftPad + (i / (HISTORY_LEN - 1)) * plotW;
@@ -1720,9 +1720,9 @@
         return topPad + plotH * (1 - (clamped - minVal) / (maxVal - minVal));
       };
 
-      // 1. Draw Y-Axis Markings & Horizontal Grid Lines
-      const levels = [350, 300, 250, 200, 150, 100, 50, 0].filter(lvl => lvl <= maxVal);
-      graphCtx.font = `${9 * dpr}px monospace`;
+      // 1. Draw 4 Clean Spaced Y-Axis Markings & Horizontal Grid Lines
+      const levels = [300, 200, 100, 0].filter(lvl => lvl <= maxVal);
+      graphCtx.font = `${8.5 * dpr}px monospace`;
       graphCtx.fillStyle = '#94a3b8';
       graphCtx.textAlign = 'right';
 
@@ -1730,7 +1730,7 @@
         const y = getY(level);
 
         // Horizontal grid line
-        graphCtx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+        graphCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
         graphCtx.lineWidth = 1;
         graphCtx.beginPath();
         graphCtx.moveTo(leftPad, y);
@@ -1738,12 +1738,12 @@
         graphCtx.stroke();
 
         // Y-axis numerical label
-        graphCtx.fillText(`${level}µs`, leftPad - 5 * dpr, y + 3 * dpr);
+        graphCtx.fillText(`${level}µs`, leftPad - 4 * dpr, y + 3 * dpr);
       });
 
       // 2. Reference Threshold Line: Conventional Double-Read Spike (~168µs)
       const yStdRef = getY(168.2);
-      graphCtx.strokeStyle = 'rgba(225, 29, 72, 0.45)';
+      graphCtx.strokeStyle = 'rgba(225, 29, 72, 0.5)';
       graphCtx.lineWidth = 1.2 * dpr;
       graphCtx.setLineDash([4 * dpr, 4 * dpr]);
       graphCtx.beginPath();
@@ -1752,14 +1752,14 @@
       graphCtx.stroke();
       graphCtx.setLineDash([]); // reset dash
 
-      graphCtx.fillStyle = 'rgba(244, 63, 94, 0.85)';
-      graphCtx.font = `${8.5 * dpr}px monospace`;
+      graphCtx.fillStyle = 'rgba(244, 63, 94, 0.9)';
+      graphCtx.font = `bold ${8 * dpr}px monospace`;
       graphCtx.textAlign = 'right';
-      graphCtx.fillText('Spike 168µs', w - rightPad - 4 * dpr, yStdRef - 3 * dpr);
+      graphCtx.fillText('Spike 168µs', w - rightPad - 2 * dpr, yStdRef - 3 * dpr);
 
       // 3. Reference Target Line: NeuroFTL Locked Target (21.4µs)
       const yAdpRef = getY(21.4);
-      graphCtx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
+      graphCtx.strokeStyle = 'rgba(52, 211, 153, 0.5)';
       graphCtx.lineWidth = 1.2 * dpr;
       graphCtx.setLineDash([3 * dpr, 3 * dpr]);
       graphCtx.beginPath();
@@ -1768,8 +1768,9 @@
       graphCtx.stroke();
       graphCtx.setLineDash([]); // reset dash
 
-      graphCtx.fillStyle = 'rgba(52, 211, 153, 0.85)';
-      graphCtx.fillText('NeuroFTL 21µs', w - rightPad - 4 * dpr, yAdpRef - 3 * dpr);
+      graphCtx.fillStyle = 'rgba(52, 211, 153, 0.95)';
+      graphCtx.font = `bold ${8 * dpr}px monospace`;
+      graphCtx.fillText('NeuroFTL 21µs', w - rightPad - 2 * dpr, yAdpRef - 3 * dpr);
 
       // 4. Draw Conventional Curve (Crimson with subtle gradient area fill)
       const gradStd = graphCtx.createLinearGradient(0, topPad, 0, topPad + plotH);
@@ -1792,7 +1793,7 @@
       // Conventional Line Stroke
       graphCtx.beginPath();
       graphCtx.strokeStyle = '#e11d48';
-      graphCtx.lineWidth = 2.4 * dpr;
+      graphCtx.lineWidth = 2.2 * dpr;
       histStdLatency.forEach((val, i) => {
         const x = getX(i);
         const y = getY(val);
@@ -1801,7 +1802,7 @@
       });
       graphCtx.stroke();
 
-      // Pulsing head dot on Conventional line
+      // Head dot on Conventional line
       const lastStdX = getX(HISTORY_LEN - 1);
       const lastStdY = getY(histStdLatency[HISTORY_LEN - 1]);
       graphCtx.fillStyle = '#e11d48';
@@ -1812,7 +1813,7 @@
       // 5. Draw NeuroFTL Curve (Emerald with solid line & glowing head)
       graphCtx.beginPath();
       graphCtx.strokeStyle = '#34d399';
-      graphCtx.lineWidth = 3.0 * dpr;
+      graphCtx.lineWidth = 2.8 * dpr;
       histAdpLatency.forEach((val, i) => {
         const x = getX(i);
         const y = getY(val);
@@ -1821,7 +1822,7 @@
       });
       graphCtx.stroke();
 
-      // Pulsing head dot on NeuroFTL line
+      // Head dot on NeuroFTL line
       const lastAdpX = getX(HISTORY_LEN - 1);
       const lastAdpY = getY(histAdpLatency[HISTORY_LEN - 1]);
       graphCtx.fillStyle = '#34d399';
@@ -1831,9 +1832,9 @@
 
       // Outer glow ring on latest NeuroFTL point
       graphCtx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
-      graphCtx.lineWidth = 2.0 * dpr;
+      graphCtx.lineWidth = 1.8 * dpr;
       graphCtx.beginPath();
-      graphCtx.arc(lastAdpX, lastAdpY, 7.0 * dpr, 0, Math.PI * 2);
+      graphCtx.arc(lastAdpX, lastAdpY, 6.5 * dpr, 0, Math.PI * 2);
       graphCtx.stroke();
     }
 
@@ -2933,13 +2934,13 @@
       initTabsSidewaysScroll();
       updateZoomUI();
 
-      // On mobile devices (< 768px), auto-collapse Telemetry HUD so the 3D silicon chip is fully visible
-      if (window.innerWidth < 768) {
+      // On mobile devices or short viewports, auto-collapse Telemetry HUD so the 3D silicon chip is fully visible
+      if (window.innerWidth < 768 || window.innerHeight < 500) {
         toggleTelemetryCollapse();
       }
 
-      // On mobile devices (< 640px), auto-collapse Zoom HUD to keep header clean
-      if (window.innerWidth < 640) {
+      // On mobile devices or short viewports, auto-collapse Zoom HUD to keep header clean
+      if (window.innerWidth < 640 || window.innerHeight < 500) {
         toggleZoomCollapse();
       }
 
