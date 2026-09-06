@@ -143,9 +143,9 @@
         touch-action: pan-y !important;
       }
       #telemetryHud {
-        left: 8px !important;
+        left: auto !important;
         right: 8px !important;
-        width: auto !important;
+        width: min(330px, calc(100vw - 16px)) !important;
         max-width: calc(100vw - 16px) !important;
         touch-action: pan-y !important;
       }
@@ -167,6 +167,12 @@
       #dockStepPara {
         -webkit-line-clamp: 2 !important;
       }
+      #telemetryHud {
+        max-height: calc(100vh - 65px) !important;
+      }
+      #graphCanvasBox {
+        height: 105px !important;
+      }
     }
 
     @media (max-height: 720px) {
@@ -176,6 +182,9 @@
       }
       #dockStepPara {
         -webkit-line-clamp: 1 !important;
+      }
+      #graphCanvasBox {
+        height: 95px !important;
       }
     }
 
@@ -356,10 +365,11 @@
       <!-- Right Controls Group -->
       <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
         <div class="flex items-center gap-1 sm:gap-1.5 font-mono text-xs">
-          <!-- Mobile / Desktop Telemetry HUD Toggle -->
-          <button onclick="toggleTelemetryCollapse()" id="btnTopHudToggle" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Toggle Live Telemetry HUD">
+          <!-- Live Telemetry Toggle Tab Button -->
+          <button onclick="toggleTelemetryCollapse()" id="btnTopHudToggle" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-mono text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:bg-emerald-500/30" title="Toggle Live Telemetry Panel (Key H)">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" id="topHudLiveDot"></span>
             <span>📊</span>
-            <span class="hidden lg:inline text-[11px]">HUD</span>
+            <span class="whitespace-nowrap"><span class="hidden sm:inline">Live </span>Telemetry</span>
           </button>
 
           <!-- Fluid Flow Start / Stop Button -->
@@ -433,6 +443,9 @@
           <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
             <span id="telemetrySimBadge" class="text-[8.5px] sm:text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 pointer-events-none hidden md:inline" title="10Hz Discrete-Event Simulation Engine Trace Playback">SIM (10Hz)</span>
             <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden sm:inline" id="graphModePill">NEUROFTL</span>
+            <button onclick="resetTelemetryPosition(event)" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Reset panel position (Snap back to top-right)">
+              <span>⟲</span>
+            </button>
             <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag px-2 py-1 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Minimize / Expand Telemetry HUD">
               <span id="telemetryToggleLabel" class="text-[10px] hidden xs:inline font-semibold">Min</span>
               <span id="telemetryToggleIcon">▾</span>
@@ -1789,8 +1802,9 @@
         }
         if (resizeHandle) resizeHandle.style.display = 'none';
         if (topHudBtn) {
-          topHudBtn.classList.remove('bg-emerald-500/20', 'border-emerald-400', 'text-emerald-300');
-          topHudBtn.classList.add('opacity-70');
+          topHudBtn.className = "px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl apple-pill text-zinc-300 hover:text-white font-mono text-xs font-medium transition cursor-pointer flex items-center gap-1.5 border border-white/15 opacity-80";
+          const topDot = document.getElementById('topHudLiveDot');
+          if (topDot) topDot.className = "w-2 h-2 rounded-full bg-zinc-500 shrink-0";
         }
       } else {
         body.classList.remove('hidden');
@@ -1812,14 +1826,35 @@
         }
         if (resizeHandle) resizeHandle.style.display = '';
         if (topHudBtn) {
-          topHudBtn.classList.remove('opacity-70');
-          topHudBtn.classList.add('bg-emerald-500/20', 'border-emerald-400', 'text-emerald-300');
+          topHudBtn.className = "px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-mono text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:bg-emerald-500/30";
+          const topDot = document.getElementById('topHudLiveDot');
+          if (topDot) topDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0";
         }
         setTimeout(() => {
           resizeGraph();
           drawGraph();
         }, 30);
       }
+    }
+
+    function resetTelemetryPosition(event) {
+      if (event) { event.stopPropagation(); event.preventDefault(); }
+      const panel = document.getElementById('telemetryHud');
+      if (!panel) return;
+      panel.style.position = '';
+      panel.style.left = '';
+      panel.style.top = '';
+      panel.style.right = '';
+      panel.style.bottom = '';
+      panel.style.width = '';
+      panel.style.height = '';
+      panel.style.transform = '';
+      panel.style.margin = '';
+      playTone('click');
+      setTimeout(() => {
+        resizeGraph();
+        drawGraph();
+      }, 50);
     }
 
     let isZoomCollapsed = false;
@@ -2757,6 +2792,17 @@
       addGraphPoint(stdP99, adpP99);
 
       // 2. Update Live Telemetry HUD (Top-Right Floating Glass Panel)
+      const p99El = document.getElementById('graphCurrentP99');
+      const statP99El = document.getElementById('statP99Adp');
+      const deltaLatEl = document.getElementById('deltaLatency');
+      const hitEl = document.getElementById('statHitAdp');
+      const deltaHitEl = document.getElementById('deltaHit');
+      const wafEl = document.getElementById('statWafAdp');
+      const deltaWafEl = document.getElementById('deltaWaf');
+      const stallEl = document.getElementById('statStallAdp');
+      const deltaStallEl = document.getElementById('deltaStall');
+      const miniP99El = document.getElementById('miniP99');
+
       if (currentArchMode === 'SOLUTION') {
         setText('statP99Adp', adpP99.toFixed(1) + ' µs');
         setText('statP99Std', stdP99.toFixed(1) + ' µs');
@@ -2776,6 +2822,17 @@
         setText('deltaStall', '🚀 100% FED COMPUTE');
 
         setText('graphCurrentP99', adpP99.toFixed(1) + ' µs');
+
+        if (p99El) p99El.className = "text-emerald-400 font-bold text-sm sm:text-base";
+        if (statP99El) statP99El.className = "text-xs sm:text-sm font-bold text-emerald-400";
+        if (deltaLatEl) deltaLatEl.className = "text-[9px] sm:text-[10px] text-emerald-400 font-bold";
+        if (hitEl) hitEl.className = "text-xs sm:text-sm font-bold text-cyan-400";
+        if (deltaHitEl) deltaHitEl.className = "text-[9px] sm:text-[10px] text-cyan-400 font-bold truncate";
+        if (wafEl) wafEl.className = "text-xs sm:text-sm font-bold text-emerald-400";
+        if (deltaWafEl) deltaWafEl.className = "text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate";
+        if (stallEl) stallEl.className = "text-xs sm:text-sm font-bold text-emerald-400";
+        if (deltaStallEl) deltaStallEl.className = "text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate";
+        if (miniP99El && miniP99El.parentElement) miniP99El.parentElement.className = "px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 whitespace-nowrap";
       } else {
         // Conventional LRU Mode (Double-Read Trap in Effect)
         setText('statP99Adp', stdP99.toFixed(1) + ' µs');
@@ -2796,6 +2853,17 @@
         setText('deltaStall', '❌ GPU DATA-STARVED');
 
         setText('graphCurrentP99', stdP99.toFixed(1) + ' µs');
+
+        if (p99El) p99El.className = "text-rose-400 font-bold text-sm sm:text-base";
+        if (statP99El) statP99El.className = "text-xs sm:text-sm font-bold text-rose-400";
+        if (deltaLatEl) deltaLatEl.className = "text-[9px] sm:text-[10px] text-rose-400 font-bold";
+        if (hitEl) hitEl.className = "text-xs sm:text-sm font-bold text-rose-400";
+        if (deltaHitEl) deltaHitEl.className = "text-[9px] sm:text-[10px] text-rose-400 font-bold truncate";
+        if (wafEl) wafEl.className = "text-xs sm:text-sm font-bold text-rose-400";
+        if (deltaWafEl) deltaWafEl.className = "text-[9px] sm:text-[10px] text-rose-400 font-bold truncate";
+        if (stallEl) stallEl.className = "text-xs sm:text-sm font-bold text-rose-400";
+        if (deltaStallEl) deltaStallEl.className = "text-[9px] sm:text-[10px] text-rose-400 font-bold truncate";
+        if (miniP99El && miniP99El.parentElement) miniP99El.parentElement.className = "px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30 whitespace-nowrap";
       }
 
       // Keep minimized header live metrics synchronized
@@ -2969,13 +3037,16 @@
         if (!panel || !handle) return;
         handle.style.cursor = 'grab';
 
-        // Double click resets position
+        // Double click on grip handle resets position
         if (resetFn) {
-          handle.addEventListener('dblclick', (e) => {
-            if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
-            resetFn();
-            playTone('click');
-          });
+          const grip = handle.querySelector('.w-12, .w-16');
+          if (grip) {
+            grip.addEventListener('dblclick', (e) => {
+              e.stopPropagation();
+              resetFn();
+              playTone('click');
+            });
+          }
         }
 
         handle.addEventListener('pointerdown', (e) => {
