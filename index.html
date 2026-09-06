@@ -443,7 +443,7 @@
           <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
             <span id="telemetrySimBadge" class="text-[8.5px] sm:text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 pointer-events-none hidden md:inline" title="10Hz Discrete-Event Simulation Engine Trace Playback">SIM (10Hz)</span>
             <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden sm:inline" id="graphModePill">NEUROFTL</span>
-            <button onclick="resetTelemetryPosition(event)" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Reset panel position (Snap back to top-right)">
+            <button onclick="resetTelemetryPosition(event)" id="btnResetTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Reset panel position (Snap back to top-right)">
               <span>⟲</span>
             </button>
             <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag px-2 py-1 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Minimize / Expand Telemetry HUD">
@@ -1722,6 +1722,16 @@
 
       if (!dock || !body) return;
 
+      // Snap dock to main bottom-center position to eliminate overlaps
+      dock.style.position = '';
+      dock.style.left = '';
+      dock.style.top = '';
+      dock.style.right = '';
+      dock.style.bottom = '';
+      dock.style.transform = '';
+      dock.style.margin = '';
+      dock.style.width = '';
+
       if (isDockCollapsed) {
         savedDockHeight = dock.style.height || '';
         body.classList.add('hidden');
@@ -1747,7 +1757,7 @@
         dock.style.maxHeight = '82vh';
         dock.style.height = savedDockHeight || 'auto';
         dock.style.padding = '';
-        dock.style.resize = 'both';
+        dock.style.resize = 'none';
         if (header) {
           header.style.borderBottom = '';
           header.style.paddingBottom = '';
@@ -1777,8 +1787,20 @@
       const resizeHandle = document.getElementById('telemetryResizeHandle');
       const miniSummary = document.getElementById('telemetryMiniSummary');
       const header = document.getElementById('telemetryHudHeader');
+      const simBadge = document.getElementById('telemetrySimBadge');
+      const modePill = document.getElementById('graphModePill');
+      const resetBtn = document.getElementById('btnResetTelemetry');
 
       if (!panel || !body) return;
+
+      // Always snap to main top-right position
+      panel.style.position = '';
+      panel.style.left = '';
+      panel.style.top = '';
+      panel.style.right = '';
+      panel.style.bottom = '';
+      panel.style.transform = '';
+      panel.style.margin = '';
 
       if (isTelemetryCollapsed) {
         savedTelemetryHeight = panel.style.height || '';
@@ -1788,8 +1810,8 @@
         panel.style.maxHeight = 'none';
         panel.style.height = 'auto';
         panel.style.width = 'auto';
-        panel.style.minWidth = '260px';
-        panel.style.padding = '8px 12px';
+        panel.style.minWidth = '0px';
+        panel.style.padding = '6px 12px';
         panel.style.resize = 'none';
         if (icon) icon.innerText = '▸';
         if (toggleLabel) toggleLabel.innerText = 'Expand';
@@ -1797,6 +1819,11 @@
           miniSummary.classList.remove('hidden');
           miniSummary.classList.add('flex');
         }
+        // Hide extra cluttered badges when minimized to prevent overlaps
+        if (simBadge) simBadge.classList.add('hidden');
+        if (modePill) modePill.classList.add('hidden');
+        if (resetBtn) resetBtn.classList.add('hidden');
+
         if (header) {
           header.classList.remove('border-b', 'border-white/10', 'pb-1.5');
         }
@@ -1821,6 +1848,11 @@
           miniSummary.classList.add('hidden');
           miniSummary.classList.remove('flex');
         }
+        // Restore badges when expanded
+        if (simBadge) simBadge.classList.remove('hidden');
+        if (modePill) modePill.classList.remove('hidden');
+        if (resetBtn) resetBtn.classList.remove('hidden');
+
         if (header) {
           header.classList.add('border-b', 'border-white/10', 'pb-1.5');
         }
