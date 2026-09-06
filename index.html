@@ -17,6 +17,9 @@
           'lg': '1024px',
           'xl': '1280px',
           '2xl': '1536px',
+          '3xl': '1920px',
+          '4xl': '2560px',
+          '5xl': '3840px',
         },
         extend: {
           fontFamily: {
@@ -123,6 +126,73 @@
     }
     .safe-bottom {
       padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+
+    /* Prevent vertical overlap on short laptop viewports (600px - 850px height) */
+    @media (max-height: 850px) {
+      #telemetryHud {
+        max-height: 44vh !important;
+      }
+      #presentationDock {
+        max-height: 42vh !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+      }
+      #dockBody {
+        gap: 2px !important;
+      }
+      #dockStepPara {
+        -webkit-line-clamp: 2 !important;
+      }
+    }
+
+    @media (max-height: 720px) {
+      #telemetryHud {
+        max-height: 38vh !important;
+      }
+      #presentationDock {
+        max-height: 36vh !important;
+        padding: 6px 10px !important;
+      }
+      #dockStepPara {
+        -webkit-line-clamp: 1 !important;
+      }
+    }
+
+    /* 4K and 8K Ultra-High-Resolution Displays */
+    @media (min-width: 2560px) {
+      #presentationDock {
+        max-width: 1380px !important;
+      }
+      #telemetryHud {
+        width: 400px !important;
+      }
+    }
+
+    @media (min-width: 3840px) {
+      #presentationDock {
+        max-width: 1720px !important;
+        padding: 24px !important;
+        border-radius: 28px !important;
+      }
+      #presentationDockHeader {
+        padding-bottom: 12px !important;
+      }
+      #dockStepTitle {
+        font-size: 1.5rem !important;
+      }
+      #dockStepPara {
+        font-size: 1.1rem !important;
+      }
+      #telemetryHud {
+        width: 480px !important;
+        padding: 20px !important;
+        border-radius: 28px !important;
+      }
+      #viewportZoomControls {
+        padding: 16px !important;
+        border-radius: 24px !important;
+      }
     }
   </style>
 </head>
@@ -292,18 +362,18 @@
     </header>
 
     <!-- Floating Draggable & Resizable Live Telemetry HUD (Desktop, Laptop & Mobile Responsive) -->
-    <div id="telemetryHud" class="fixed top-12 sm:top-16 right-1.5 sm:right-3 z-30 pointer-events-auto apple-glass rounded-2xl p-2.5 sm:p-3 space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-80 md:w-88 select-none flex flex-col no-scrollbar transition-all duration-300" style="min-width: 250px; min-height: 44px; max-width: 95vw; max-height: 85vh; resize: both; overflow: hidden;">
+    <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-2.5 sm:p-3 space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-76 md:w-80 lg:w-80 xl:w-84 2xl:w-88 select-none flex flex-col no-scrollbar transition-all duration-300" style="min-width: 250px; min-height: 44px; max-width: 95vw; max-height: 85vh; resize: both; overflow: hidden;">
       
       <!-- Draggable Header with Minimize Toggle -->
       <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex items-center justify-between border-b border-white/10 pb-1.5 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
         <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-none min-w-0">
           <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5">⠿</span>
           <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" id="graphLiveDot"></span>
-          <span class="text-[11px] sm:text-xs md:text-sm font-mono font-bold tracking-wider text-white truncate">LIVE TELEMETRY STREAM</span>
+          <span class="text-[11px] sm:text-xs md:text-sm font-mono font-bold tracking-wider text-white truncate"><span class="hidden xs:inline">LIVE </span>TELEMETRY<span class="hidden md:inline"> STREAM</span></span>
         </div>
         
         <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
-          <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none" id="graphModePill">NEUROFTL</span>
+          <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden xs:inline" id="graphModePill">NEUROFTL</span>
           <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Minimize / Expand Telemetry HUD">
             <span id="telemetryToggleIcon">▾</span>
           </button>
@@ -382,57 +452,65 @@
     <!-- ========================================================================= -->
     <!-- 2.5 3D VIEWPORT MANUAL ZOOM & CAMERA HUD (Desktop, Laptop, and Mobile)    -->
     <!-- ========================================================================= -->
-    <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-auto sm:bottom-28 sm:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono transition-all duration-300" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
+    <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-14 md:top-16 sm:left-3 md:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono transition-all duration-300" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
       
       <!-- Top Title & Live Scale Indicator -->
-      <div class="flex items-center justify-between gap-1.5 border-b border-white/10 pb-1 px-0.5">
-        <div class="flex items-center gap-1 text-zinc-300 text-[10px] sm:text-xs font-bold">
+      <div id="viewportZoomHeader" onclick="toggleZoomCollapse()" class="flex items-center justify-between gap-1.5 border-b border-white/10 pb-1 px-0.5 cursor-pointer select-none" title="Click to minimize/expand • Drag to move">
+        <div class="flex items-center gap-1 text-zinc-300 text-[10px] sm:text-xs font-bold pointer-events-none">
           <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           <span>3D ZOOM</span>
         </div>
-        <div class="flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-1.5 py-0.2">
-          <span id="zoomReadout" class="text-[10px] sm:text-xs font-bold text-cyan-300">100%</span>
+        <div class="flex items-center gap-1">
+          <div class="flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-1.5 py-0.2 pointer-events-none">
+            <span id="zoomReadout" class="text-[10px] sm:text-xs font-bold text-cyan-300">100%</span>
+          </div>
+          <button onclick="event.stopPropagation(); toggleZoomCollapse()" id="btnToggleZoom" class="no-drag w-4 h-4 rounded text-[10px] font-mono text-zinc-400 hover:text-white sm:hidden flex items-center justify-center cursor-pointer" title="Minimize / Expand Zoom HUD">
+            <span id="zoomToggleIcon">▾</span>
+          </button>
         </div>
       </div>
 
-      <!-- Zoom In / Out Buttons + Interactive Slider -->
-      <div class="flex items-center gap-1 sm:gap-1.5">
-        <!-- Zoom Out Button -->
-        <button onclick="manualZoom(-1)" id="btnZoomOut" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom Out (- or Wheel Down)">
-          –
-        </button>
+      <!-- Zoom Controls Body (collapsible on mobile) -->
+      <div id="zoomControlsBody" class="flex flex-col gap-1 transition-all duration-300">
+        <!-- Zoom In / Out Buttons + Interactive Slider -->
+        <div class="flex items-center gap-1 sm:gap-1.5">
+          <!-- Zoom Out Button -->
+          <button onclick="manualZoom(-1)" id="btnZoomOut" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom Out (- or Wheel Down)">
+            –
+          </button>
 
-        <!-- Scrub Range Slider -->
-        <input type="range" id="zoomSlider" min="0" max="100" value="50" oninput="onZoomSliderInput(this.value)" class="w-16 sm:w-24 accent-cyan-400 cursor-pointer h-1.5 bg-white/15 rounded-lg" title="Drag to adjust zoom distance">
+          <!-- Scrub Range Slider -->
+          <input type="range" id="zoomSlider" min="0" max="100" value="50" oninput="onZoomSliderInput(this.value)" class="w-16 sm:w-24 accent-cyan-400 cursor-pointer h-1.5 bg-white/15 rounded-lg" title="Drag to adjust zoom distance">
 
-        <!-- Zoom In Button -->
-        <button onclick="manualZoom(1)" id="btnZoomIn" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom In (+ or Wheel Up)">
-          +
+          <!-- Zoom In Button -->
+          <button onclick="manualZoom(1)" id="btnZoomIn" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom In (+ or Wheel Up)">
+            +
+          </button>
+        </div>
+
+        <!-- Silicon Die Focus Preset Buttons -->
+        <div class="grid grid-cols-4 gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] pt-0.5 border-t border-white/10">
+          <button onclick="focusPreset('OVERVIEW')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white transition cursor-pointer text-center" title="Wide Overview Framing">
+            Wide
+          </button>
+          <button onclick="focusPreset('CONTROLLER')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-cyan-500/20 text-zinc-300 hover:text-cyan-300 transition cursor-pointer text-center" title="Focus Gen5 Controller Die">
+            Ctrl
+          </button>
+          <button onclick="focusPreset('DRAM')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-amber-500/20 text-zinc-300 hover:text-amber-300 transition cursor-pointer text-center" title="Focus 3-Region DRAM Die">
+            DRAM
+          </button>
+          <button onclick="focusPreset('FLASH')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-emerald-500/20 text-zinc-300 hover:text-emerald-300 transition cursor-pointer text-center" title="Focus BiCS5 3D Flash Dies">
+            NAND
+          </button>
+        </div>
+
+        <!-- Reset to Current Step Framing -->
+        <button onclick="resetCameraZoom()" class="w-full py-0.5 rounded-lg sm:rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-400/40 text-[9px] sm:text-[10px] text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center gap-1" title="Reset to current step preset (R or 0)">
+          <span>⟲</span>
+          <span class="hidden xs:inline">Reset Camera</span>
+          <span class="xs:hidden">Reset</span>
         </button>
       </div>
-
-      <!-- Silicon Die Focus Preset Buttons -->
-      <div class="grid grid-cols-4 gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] pt-0.5 border-t border-white/10">
-        <button onclick="focusPreset('OVERVIEW')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white transition cursor-pointer text-center" title="Wide Overview Framing">
-          Wide
-        </button>
-        <button onclick="focusPreset('CONTROLLER')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-cyan-500/20 text-zinc-300 hover:text-cyan-300 transition cursor-pointer text-center" title="Focus Gen5 Controller Die">
-          Ctrl
-        </button>
-        <button onclick="focusPreset('DRAM')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-amber-500/20 text-zinc-300 hover:text-amber-300 transition cursor-pointer text-center" title="Focus 3-Region DRAM Die">
-          DRAM
-        </button>
-        <button onclick="focusPreset('FLASH')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-emerald-500/20 text-zinc-300 hover:text-emerald-300 transition cursor-pointer text-center" title="Focus BiCS5 3D Flash Dies">
-          NAND
-        </button>
-      </div>
-
-      <!-- Reset to Current Step Framing -->
-      <button onclick="resetCameraZoom()" class="w-full py-0.5 rounded-lg sm:rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-400/40 text-[9px] sm:text-[10px] text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center gap-1" title="Reset to current step preset (R or 0)">
-        <span>⟲</span>
-        <span class="hidden xs:inline">Reset Camera</span>
-        <span class="xs:hidden">Reset</span>
-      </button>
 
     </div>
 
@@ -442,7 +520,7 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-3.5 w-[96vw] max-w-5xl shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden" style="width: min(1060px, calc(100vw - 12px)); max-width: min(1060px, calc(100vw - 12px)); min-height: 100px; max-height: 82vh; resize: both; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-3 md:p-3.5 w-[95vw] sm:w-[92vw] md:max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl 3xl:max-w-5xl 4xl:max-w-6xl 5xl:max-w-7xl shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden transition-all duration-300" style="min-width: 280px; min-height: 90px; max-height: 82vh; resize: both; overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
       <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
@@ -460,53 +538,52 @@
             <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5 pointer-events-none shrink-0" title="Drag to move panel">⠿</span>
 
             <!-- Left Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-6 sm:w-7 h-6 sm:h-8 rounded-lg sm:rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-40 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps left">
+            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps left">
               ‹
             </button>
 
             <!-- Scrollable Tabs Track with Wheel & Touch Drag Support -->
-            <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar min-w-0 flex-1 w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
+            <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
               <!-- Step Tab 0: Overview -->
-              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>🔍</span>
                 <span>Overview</span>
               </button>
 
               <!-- Step Tab 1: Workload -->
-              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>1</span>
                 <span class="hidden xs:inline">Workload</span>
               </button>
 
               <!-- Step Tab 2: Double-Read -->
-              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>2</span>
-                <span>Double-Read ⚠️</span>
+                <span class="hidden sm:inline">Double-Read ⚠️</span>
+                <span class="sm:hidden hidden xs:inline">Read ⚠️</span>
               </button>
 
               <!-- Step Tab 3: Classifier -->
-              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>3</span>
                 <span class="hidden xs:inline">Classifier ⚡</span>
-                <span class="xs:hidden">Classifier</span>
               </button>
 
               <!-- Step Tab 4: 3-Region -->
-              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>4</span>
                 <span class="hidden xs:inline">3-Region 🛡️</span>
-                <span class="xs:hidden">3-Region</span>
               </button>
 
               <!-- Step Tab 5: Verdict -->
-              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>5</span>
-                <span>Verdict 🏆</span>
+                <span class="hidden xs:inline">Verdict 🏆</span>
               </button>
             </div>
 
             <!-- Right Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-6 sm:w-7 h-6 sm:h-8 rounded-lg sm:rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-80 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps right">
+            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps right">
               ›
             </button>
           </div>
@@ -1105,11 +1182,11 @@
         const tab = document.getElementById(`stepTab${i}`);
         if (!tab) continue;
         if (i === stepNum) {
-          tab.className = "no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
         } else if (i < stepNum && i > 0) {
-          tab.className = "no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
         } else {
-          tab.className = "no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
         }
       }
 
@@ -1332,6 +1409,15 @@
       const btnRight = document.getElementById('btnScrollTabsRight');
       if (!container || !btnLeft || !btnRight) return;
 
+      const hasOverflow = container.scrollWidth > container.clientWidth + 4;
+      if (!hasOverflow) {
+        btnLeft.classList.add('hidden');
+        btnRight.classList.add('hidden');
+        return;
+      }
+      btnLeft.classList.remove('hidden');
+      btnRight.classList.remove('hidden');
+
       const atStart = container.scrollLeft <= 4;
       const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 6;
 
@@ -1505,6 +1591,22 @@
           resizeGraph();
           drawGraph();
         }, 50);
+      }
+    }
+
+    let isZoomCollapsed = false;
+    function toggleZoomCollapse() {
+      playTone('click');
+      isZoomCollapsed = !isZoomCollapsed;
+      const body = document.getElementById('zoomControlsBody');
+      const icon = document.getElementById('zoomToggleIcon');
+      if (!body) return;
+      if (isZoomCollapsed) {
+        body.classList.add('hidden');
+        if (icon) icon.innerText = '▸';
+      } else {
+        body.classList.remove('hidden');
+        if (icon) icon.innerText = '▾';
       }
     }
 
@@ -2069,7 +2171,16 @@
 
       scene = new THREE.Scene();
 
-      camera = new THREE.PerspectiveCamera(36, w / h, 0.1, 1000);
+      const aspect = w / h;
+      let initFov = 36;
+      if (aspect < 1.0) {
+        initFov = Math.min(62, Math.max(38, 36 * (1.1 / aspect)));
+      } else if (aspect < 1.4) {
+        initFov = 40;
+      } else if (aspect > 2.2) {
+        initFov = 34;
+      }
+      camera = new THREE.PerspectiveCamera(initFov, aspect, 0.1, 1000);
       camera.position.set(OVERVIEW_CAM.x, OVERVIEW_CAM.y, OVERVIEW_CAM.z);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -2305,10 +2416,22 @@
       if (!camera || !renderer) return;
       const w = window.innerWidth;
       const h = window.innerHeight;
-      camera.aspect = w / h;
+      const aspect = w / h;
+      camera.aspect = aspect;
+      if (aspect < 1.0) {
+        camera.fov = Math.min(62, Math.max(38, 36 * (1.1 / aspect)));
+      } else if (aspect < 1.4) {
+        camera.fov = 40;
+      } else if (aspect > 2.2) {
+        camera.fov = 34;
+      } else {
+        camera.fov = 36;
+      }
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       resizeGraph();
+      updateTabScrollButtons();
     }
 
     let frameCount = 0;
@@ -2750,12 +2873,15 @@
 
       // Setup Telemetry HUD
       makeDraggable(telemetryPanel, telemetryHeader, () => {
-        telemetryPanel.style.left = 'auto';
-        telemetryPanel.style.top = '48px';
-        telemetryPanel.style.right = '12px';
-        telemetryPanel.style.bottom = 'auto';
+        telemetryPanel.style.position = '';
+        telemetryPanel.style.left = '';
+        telemetryPanel.style.top = '';
+        telemetryPanel.style.right = '';
+        telemetryPanel.style.bottom = '';
         telemetryPanel.style.width = '';
         telemetryPanel.style.height = '';
+        telemetryPanel.style.transform = '';
+        telemetryPanel.style.margin = '';
       });
       makeResizable(telemetryPanel, telemetryResize, 260, 190, () => {
         drawGraph();
@@ -2763,15 +2889,33 @@
 
       // Setup Presentation Dock
       makeDraggable(dockPanel, dockHeader, () => {
-        dockPanel.style.left = '50%';
-        dockPanel.style.top = 'auto';
-        dockPanel.style.right = 'auto';
-        dockPanel.style.bottom = '8px';
-        dockPanel.style.transform = 'translateX(-50%)';
+        dockPanel.style.position = '';
+        dockPanel.style.left = '';
+        dockPanel.style.top = '';
+        dockPanel.style.right = '';
+        dockPanel.style.bottom = '';
         dockPanel.style.width = '';
         dockPanel.style.height = '';
+        dockPanel.style.transform = '';
+        dockPanel.style.margin = '';
       });
       makeResizable(dockPanel, dockResize, 320, 150, null);
+
+      // Setup Viewport Zoom Controls
+      const zoomHeader = document.getElementById('viewportZoomHeader');
+      if (zoomControls && zoomHeader) {
+        makeDraggable(zoomControls, zoomHeader, () => {
+          zoomControls.style.position = '';
+          zoomControls.style.left = '';
+          zoomControls.style.top = '';
+          zoomControls.style.right = '';
+          zoomControls.style.bottom = '';
+          zoomControls.style.width = '';
+          zoomControls.style.height = '';
+          zoomControls.style.transform = '';
+          zoomControls.style.margin = '';
+        });
+      }
 
       // ResizeObserver to ensure live graph redraws smoothly on any resize
       if (window.ResizeObserver && telemetryPanel) {
@@ -2792,6 +2936,11 @@
       // On mobile devices (< 768px), auto-collapse Telemetry HUD so the 3D silicon chip is fully visible
       if (window.innerWidth < 768) {
         toggleTelemetryCollapse();
+      }
+
+      // On mobile devices (< 640px), auto-collapse Zoom HUD to keep header clean
+      if (window.innerWidth < 640) {
+        toggleZoomCollapse();
       }
 
       // Support direct step jumping via URL query parameter (e.g. ?step=1 or ?autostart)
