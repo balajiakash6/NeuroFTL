@@ -80,6 +80,9 @@
       backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
+    .panel-transition {
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background-color 0.2s ease;
+    }
     .sandisk-glow {
       box-shadow: 0 0 25px -4px rgba(225, 29, 72, 0.55);
     }
@@ -398,24 +401,40 @@
     </header>
 
     <!-- Floating Draggable & Resizable Live Telemetry HUD (Desktop, Laptop & Mobile Responsive) -->
-    <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 space-y-1.5 sm:space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-[310px] md:w-[320px] lg:w-[325px] xl:w-[330px] 2xl:w-[340px] select-none flex flex-col no-scrollbar transition-all duration-300" style="min-width: 250px; min-height: 44px; max-width: 95vw; max-height: calc(100vh - 75px); overflow-y: auto; overflow-x: hidden; resize: both;">
+    <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 space-y-1.5 sm:space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-[310px] md:w-[320px] lg:w-[325px] xl:w-[330px] 2xl:w-[340px] select-none flex flex-col no-scrollbar panel-transition" style="min-width: 260px; min-height: 44px; max-width: 95vw; max-height: calc(100vh - 75px); overflow-y: auto; overflow-x: hidden;">
       
       <!-- Draggable Header with Minimize Toggle -->
       <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex flex-col border-b border-white/10 pb-1.5 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
         <!-- Visual Drag Handle -->
         <div class="w-12 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-1.5 cursor-grab active:cursor-grabbing transition" title="Drag to reposition panel"></div>
 
-        <div class="flex items-center justify-between w-full">
-          <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-none min-w-0">
+        <div class="flex items-center justify-between w-full gap-1.5">
+          <!-- Left: Title with Dot -->
+          <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-none shrink-0">
             <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5">⠿</span>
             <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" id="graphLiveDot"></span>
-            <span class="text-[11px] sm:text-xs md:text-sm font-mono font-bold tracking-wider text-white truncate"><span class="hidden xs:inline">LIVE </span>TELEMETRY</span>
+            <span class="text-xs sm:text-sm font-mono font-bold tracking-wider text-white whitespace-nowrap flex items-center gap-1">
+              <span class="text-emerald-400">LIVE</span>
+              <span>TELEMETRY</span>
+            </span>
+          </div>
+
+          <!-- Center: Minimized Live Summary (Shows live latency & WAF even when minimized!) -->
+          <div id="telemetryMiniSummary" class="hidden items-center gap-1.5 font-mono text-xs min-w-0">
+            <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 whitespace-nowrap">
+              <span id="miniP99">21.4 µs</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 whitespace-nowrap hidden xs:inline">
+              <span id="miniWaf">1.08</span> WAF
+            </span>
           </div>
           
+          <!-- Right Controls -->
           <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
-            <span class="text-[8.5px] sm:text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 pointer-events-none hidden xs:inline" title="10Hz Discrete-Event Simulation Engine Trace Playback">SIM PLAYBACK (10Hz)</span>
+            <span id="telemetrySimBadge" class="text-[8.5px] sm:text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 pointer-events-none hidden md:inline" title="10Hz Discrete-Event Simulation Engine Trace Playback">SIM (10Hz)</span>
             <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden sm:inline" id="graphModePill">NEUROFTL</span>
-            <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Minimize / Expand Telemetry HUD">
+            <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag px-2 py-1 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Minimize / Expand Telemetry HUD">
+              <span id="telemetryToggleLabel" class="text-[10px] hidden xs:inline font-semibold">Min</span>
               <span id="telemetryToggleIcon">▾</span>
             </button>
           </div>
@@ -423,7 +442,7 @@
       </div>
 
       <!-- Collapsible Body Container (Graph + 4-Metric Comparison Grid) -->
-      <div id="telemetryBody" class="space-y-1.5 sm:space-y-2 flex flex-col flex-1 min-h-0 transition-all duration-300">
+      <div id="telemetryBody" class="space-y-1.5 sm:space-y-2 flex flex-col flex-1 min-h-0">
         <!-- Real-Time Dual Latency Curve with Proper Markings & Dynamic Height -->
         <div class="space-y-1 sm:space-y-1.5 flex flex-col shrink-0">
           <div class="flex justify-between items-center text-xs font-mono shrink-0">
@@ -490,9 +509,11 @@
         </div>
       </div>
 
-      <!-- Custom Visible Resize Grip Corner -->
-      <div id="telemetryResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition hidden sm:flex" title="Drag corner to resize">
-        <span class="text-xs leading-none">⤡</span>
+      <!-- Custom Visible Resize Grip Corner (Smooth 60fps) -->
+      <div id="telemetryResizeHandle" class="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize flex items-end justify-end p-1 text-zinc-400 hover:text-emerald-400 select-none z-20 touch-none hidden sm:flex" title="Drag corner to resize panel">
+        <svg class="w-3.5 h-3.5 opacity-60 hover:opacity-100" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M22 22H20V20H22V22ZM22 16H20V18H22V16ZM16 22H18V20H16V22ZM22 12H20V14H22V12ZM12 22H14V20H12V22ZM16 18H18V16H16V18Z"/>
+        </svg>
       </div>
 
     </div>
@@ -500,7 +521,7 @@
     <!-- ========================================================================= -->
     <!-- 2.5 3D VIEWPORT MANUAL ZOOM & CAMERA HUD (Desktop, Laptop, and Mobile)    -->
     <!-- ========================================================================= -->
-    <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-14 md:top-16 sm:left-3 md:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono transition-all duration-300" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
+    <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-14 md:top-16 sm:left-3 md:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono panel-transition" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
       
       <!-- Top Title & Live Scale Indicator -->
       <div id="viewportZoomHeader" onclick="toggleZoomCollapse()" class="flex items-center justify-between gap-1.5 border-b border-white/10 pb-1 px-0.5 cursor-grab active:cursor-grabbing select-none" title="Click to minimize/expand • Drag to move">
@@ -569,7 +590,7 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 w-[95vw] sm:w-[90vw] md:max-w-[540px] lg:max-w-[600px] xl:max-w-[640px] 2xl:max-w-[740px] 3xl:max-w-[860px] 4xl:max-w-[1000px] 5xl:max-w-[1180px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden transition-all duration-300" style="min-width: 280px; min-height: 80px; max-height: 52vh; resize: both; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 w-[95vw] sm:w-[90vw] md:max-w-[540px] lg:max-w-[600px] xl:max-w-[640px] 2xl:max-w-[740px] 3xl:max-w-[860px] 4xl:max-w-[1000px] 5xl:max-w-[1180px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; min-height: 80px; max-height: 52vh; overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
       <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
@@ -753,9 +774,11 @@
 
       </div>
 
-      <!-- Custom Visible Resize Grip Corner -->
-      <div id="presentationResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition hidden sm:flex" title="Drag corner to resize">
-        <span class="text-xs leading-none">⤡</span>
+      <!-- Custom Visible Resize Grip Corner (Smooth 60fps) -->
+      <div id="presentationResizeHandle" class="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize flex items-end justify-end p-1 text-zinc-400 hover:text-emerald-400 select-none z-20 touch-none hidden sm:flex" title="Drag corner to resize dock">
+        <svg class="w-3.5 h-3.5 opacity-60 hover:opacity-100" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M22 22H20V20H22V22ZM22 16H20V18H22V16ZM16 22H18V20H16V22ZM22 12H20V14H22V12ZM12 22H14V20H12V22ZM16 18H18V16H16V18Z"/>
+        </svg>
       </div>
 
     </div>
@@ -1736,8 +1759,11 @@
       const panel = document.getElementById('telemetryHud');
       const body = document.getElementById('telemetryBody');
       const icon = document.getElementById('telemetryToggleIcon');
+      const toggleLabel = document.getElementById('telemetryToggleLabel');
       const topHudBtn = document.getElementById('btnTopHudToggle');
       const resizeHandle = document.getElementById('telemetryResizeHandle');
+      const miniSummary = document.getElementById('telemetryMiniSummary');
+      const header = document.getElementById('telemetryHudHeader');
 
       if (!panel || !body) return;
 
@@ -1749,10 +1775,18 @@
         panel.style.maxHeight = 'none';
         panel.style.height = 'auto';
         panel.style.width = 'auto';
-        panel.style.minWidth = '0px';
+        panel.style.minWidth = '260px';
         panel.style.padding = '8px 12px';
         panel.style.resize = 'none';
         if (icon) icon.innerText = '▸';
+        if (toggleLabel) toggleLabel.innerText = 'Expand';
+        if (miniSummary) {
+          miniSummary.classList.remove('hidden');
+          miniSummary.classList.add('flex');
+        }
+        if (header) {
+          header.classList.remove('border-b', 'border-white/10', 'pb-1.5');
+        }
         if (resizeHandle) resizeHandle.style.display = 'none';
         if (topHudBtn) {
           topHudBtn.classList.remove('bg-emerald-500/20', 'border-emerald-400', 'text-emerald-300');
@@ -1764,10 +1798,18 @@
         panel.style.maxHeight = '85vh';
         panel.style.height = savedTelemetryHeight || 'auto';
         panel.style.width = savedTelemetryWidth || '';
-        panel.style.minWidth = '220px';
+        panel.style.minWidth = '260px';
         panel.style.padding = '';
-        panel.style.resize = 'both';
+        panel.style.resize = 'none';
         if (icon) icon.innerText = '▾';
+        if (toggleLabel) toggleLabel.innerText = 'Min';
+        if (miniSummary) {
+          miniSummary.classList.add('hidden');
+          miniSummary.classList.remove('flex');
+        }
+        if (header) {
+          header.classList.add('border-b', 'border-white/10', 'pb-1.5');
+        }
         if (resizeHandle) resizeHandle.style.display = '';
         if (topHudBtn) {
           topHudBtn.classList.remove('opacity-70');
@@ -1776,7 +1818,7 @@
         setTimeout(() => {
           resizeGraph();
           drawGraph();
-        }, 50);
+        }, 30);
       }
     }
 
@@ -1851,11 +1893,12 @@
 
     function resizeGraph() {
       if (!graphCanvas) return;
-      const rect = graphCanvas.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
+      const w = graphCanvas.clientWidth || (graphCanvas.parentElement ? graphCanvas.parentElement.clientWidth : 280);
+      const h = graphCanvas.clientHeight || (graphCanvas.parentElement ? graphCanvas.parentElement.clientHeight : 110);
+      if (w < 20 || h < 20) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const targetW = Math.round(rect.width * dpr);
-      const targetH = Math.round(rect.height * dpr);
+      const targetW = Math.round(w * dpr);
+      const targetH = Math.round(h * dpr);
       if (graphCanvas.width !== targetW || graphCanvas.height !== targetH) {
         graphCanvas.width = targetW;
         graphCanvas.height = targetH;
@@ -2755,6 +2798,10 @@
         setText('graphCurrentP99', stdP99.toFixed(1) + ' µs');
       }
 
+      // Keep minimized header live metrics synchronized
+      setText('miniP99', (currentArchMode === 'SOLUTION' ? adpP99.toFixed(1) : stdP99.toFixed(1)) + ' µs');
+      setText('miniWaf', (currentArchMode === 'SOLUTION' ? adpWaf.toFixed(2) : stdWaf.toFixed(2)));
+
       // 3. Update Presentation Dock Metric Cards dynamically according to active step
       if (currentStepIdx === 2) {
         // Stage 2: Conventional Failure
@@ -3038,6 +3085,7 @@
           panel.style.transform = 'none';
           panel.style.margin = '0';
           panel.style.transition = 'none'; // Critical: eliminates CSS transition delay during resize
+          panel.style.willChange = 'width, height';
 
           document.body.style.userSelect = 'none';
           document.body.style.cursor = 'se-resize';
@@ -3082,9 +3130,14 @@
             document.body.style.userSelect = '';
             document.body.style.cursor = '';
             panel.style.transition = '';
+            panel.style.willChange = 'auto';
             try { handle.releasePointerCapture(ev.pointerId); } catch (_) {}
             window.removeEventListener('pointermove', onPointerMove);
             window.removeEventListener('pointerup', onPointerUp);
+            if (panel.id === 'telemetryHud') {
+              resizeGraph();
+              drawGraph();
+            }
           }
 
           window.addEventListener('pointermove', onPointerMove, { passive: false });
@@ -3104,9 +3157,7 @@
         telemetryPanel.style.transform = '';
         telemetryPanel.style.margin = '';
       });
-      makeResizable(telemetryPanel, telemetryResize, 260, 190, () => {
-        drawGraph();
-      });
+      makeResizable(telemetryPanel, telemetryResize, 260, 190, null);
 
       // Setup Presentation Dock
       makeDraggable(dockPanel, dockHeader, () => {
@@ -3138,10 +3189,16 @@
         });
       }
 
-      // ResizeObserver to ensure live graph redraws smoothly on any resize
+      // ResizeObserver to ensure live graph redraws smoothly without redundant layout reflows
       if (window.ResizeObserver && telemetryPanel) {
+        let roRaf = null;
         const ro = new ResizeObserver(() => {
-          drawGraph();
+          if (roRaf) return;
+          roRaf = requestAnimationFrame(() => {
+            resizeGraph();
+            drawGraph();
+            roRaf = null;
+          });
         });
         ro.observe(telemetryPanel);
       }
@@ -3153,11 +3210,6 @@
       initDraggableAndResizable();
       initTabsSidewaysScroll();
       updateZoomUI();
-
-      // On mobile devices or short viewports, auto-collapse Telemetry HUD so the 3D silicon chip is fully visible
-      if (window.innerWidth < 768 || window.innerHeight < 500) {
-        toggleTelemetryCollapse();
-      }
 
       // On mobile devices or short viewports, auto-collapse Zoom HUD to keep header clean
       if (window.innerWidth < 640 || window.innerHeight < 500) {
