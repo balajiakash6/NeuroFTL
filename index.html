@@ -157,7 +157,12 @@
         transform: none !important;
         width: auto !important;
         max-width: calc(100vw - 16px) !important;
+        max-height: 58vh !important;
+        padding: 6px 10px !important;
         touch-action: pan-y !important;
+      }
+      #stepProcessContainer {
+        padding: 4px 6px !important;
       }
       #telemetryHud {
         left: auto !important;
@@ -620,7 +625,7 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 w-[95vw] sm:w-[90vw] md:max-w-[540px] lg:max-w-[600px] xl:max-w-[640px] 2xl:max-w-[740px] 3xl:max-w-[860px] 4xl:max-w-[1000px] 5xl:max-w-[1180px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; min-height: 80px; max-height: 52vh; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 w-[95vw] sm:w-[90vw] md:max-w-[680px] lg:max-w-[760px] xl:max-w-[840px] 2xl:max-w-[920px] 3xl:max-w-[1040px] 4xl:max-w-[1200px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; min-height: 80px; max-height: 52vh; overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
       <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
@@ -718,74 +723,61 @@
       </div>
 
       <!-- Collapsible Body Area -->
-      <div id="dockBody" class="space-y-1.5 flex flex-col flex-1 min-h-0 transition-all duration-300 overflow-y-auto no-scrollbar w-full">
+      <div id="dockBody" class="space-y-1 sm:space-y-1.5 flex flex-col flex-1 min-h-0 transition-all duration-300 overflow-y-auto no-scrollbar w-full">
         
-        <!-- Main Step Narrative -->
-        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 sm:gap-3 flex-1 min-h-0 py-0.5 sm:py-1 overflow-hidden w-full">
+        <!-- Top Executive Row: Narrative & Live Silicon Metrics -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 sm:gap-3 shrink-0 w-full pt-0.5">
           
-          <!-- Left: Stage Banner, Big Title, Clear Paragraph, and Technical Tags -->
-          <div class="space-y-1 flex-1 min-w-0 overflow-hidden">
-            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-              <span class="text-[9px] sm:text-xs font-mono font-bold uppercase tracking-wider px-2 sm:px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
+          <!-- Left: Stage Banner, Big Title, Clear Paragraph -->
+          <div class="space-y-0.5 flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
               <span class="text-zinc-500 text-xs hidden xs:inline">•</span>
-              <span class="text-[10px] sm:text-xs font-mono text-cyan-300 font-semibold truncate max-w-[220px] sm:max-w-none" id="dockActiveChip">Focus: Complete Gen5 x4 NVMe SSD Silicon</span>
+              <span class="text-[9px] sm:text-[10px] font-mono text-cyan-300 font-semibold truncate" id="dockActiveChip">Focus: Complete Gen5 x4 NVMe SSD Silicon</span>
             </div>
             
-            <h2 class="text-xs sm:text-base lg:text-lg font-extrabold text-white tracking-tight leading-snug truncate" id="dockStepTitle">
+            <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-white tracking-tight leading-snug truncate" id="dockStepTitle">
               SanDisk NeuroFTL™ Silicon Architecture Overview
             </h2>
             
             <!-- Clear, comfortably readable explanation -->
-            <p class="text-[11px] sm:text-sm text-zinc-200 leading-relaxed font-normal line-clamp-2 md:line-clamp-none" id="dockStepPara">
+            <p class="text-[10.5px] sm:text-xs text-zinc-300 leading-relaxed font-normal line-clamp-2" id="dockStepPara">
               A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 100% firmware scheduling without modifying host software or SSD hardware.
             </p>
-
-            <!-- Technical Highlight Chips -->
-            <div class="flex items-center gap-1 sm:gap-1.5 pt-0.5 flex-wrap font-mono text-[9px] sm:text-xs w-full overflow-hidden" id="dockPointsContainer">
-              <div id="point1" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium max-w-full truncate">
-                <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-cyan-400 shrink-0"></span>
-                <strong class="text-white">Gen5 Controller:</strong> Embedded Spatial AI Classifier
-              </div>
-              <div id="point2" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium max-w-full truncate">
-                <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-amber-400 shrink-0"></span>
-                <strong class="text-white">3-Region DRAM:</strong> Pinned L2P &amp; Direct DMA Bypass
-              </div>
-              <div id="point3" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium max-w-full truncate">
-                <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-emerald-400 shrink-0"></span>
-                <strong class="text-white">BiCS5 3D Flash:</strong> Dynamic pSLC Shield &amp; RUH Segregation
-              </div>
-            </div>
           </div>
 
-          <!-- Right: Key Metric Cards (Side-by-side on mobile, stacked on desktop) -->
-          <div class="flex flex-row md:flex-col gap-1.5 sm:gap-2 shrink-0 font-mono" id="dockMetricsGroup">
-            
+          <!-- Right: Sleek Silicon Metric Badges (Zero Overlap, High Contrast) -->
+          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 font-mono self-start sm:self-center" id="dockMetricsGroup">
             <!-- Latency Card -->
-            <div class="flex-1 md:flex-none p-1.5 sm:p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-[110px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardLatency">
-              <div class="text-[9px] sm:text-xs text-zinc-300 font-semibold">P99 Read Latency</div>
-              <div class="flex items-baseline gap-1">
-                <span class="text-sm sm:text-lg font-black text-emerald-400" id="metricP99">21.4 µs</span>
-                <span class="text-[9px] sm:text-[10px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
+            <div class="px-2 sm:px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-right space-y-0.2 shadow-sm" id="metricCardLatency">
+              <div class="text-[8px] sm:text-[9px] text-zinc-400 font-semibold uppercase tracking-wider" id="metricLatencyLabel">P99 Read Latency</div>
+              <div class="flex items-baseline justify-end gap-1">
+                <span class="text-xs sm:text-sm font-black text-emerald-400" id="metricP99">21.4 µs</span>
+                <span class="text-[8px] sm:text-[9px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
               </div>
-              <div class="text-[9px] sm:text-xs font-bold text-emerald-400 truncate" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
+              <div class="text-[8px] sm:text-[8.5px] font-bold text-emerald-400 truncate" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
             </div>
 
             <!-- Secondary Metric Card -->
-            <div class="flex-1 md:flex-none p-1.5 sm:p-2.5 rounded-xl bg-white/5 border border-white/15 min-w-[110px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardSecondary">
-              <div class="text-[9px] sm:text-xs text-zinc-300 font-semibold truncate" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
-              <div class="flex items-baseline gap-1">
-                <span class="text-sm sm:text-lg font-black text-cyan-400" id="metricSecondaryVal">98.6%</span>
-                <span class="text-[9px] sm:text-[10px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
+            <div class="px-2 sm:px-2.5 py-1 rounded-xl bg-white/5 border border-white/15 text-right space-y-0.2 shadow-sm" id="metricCardSecondary">
+              <div class="text-[8px] sm:text-[9px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
+              <div class="flex items-baseline justify-end gap-1">
+                <span class="text-xs sm:text-sm font-black text-cyan-400" id="metricSecondaryVal">98.6%</span>
+                <span class="text-[8px] sm:text-[9px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
               </div>
-              <div class="text-[9px] sm:text-xs font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 LOCKED</div>
+              <div class="text-[8px] sm:text-[8.5px] font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 LOCKED</div>
             </div>
-
           </div>
 
         </div>
 
-        <!-- REAL-TIME HARDWARE & FIRMWARE PROCESS PIPELINE -->
-        <div id="stepProcessContainer" class="w-full bg-black/40 backdrop-blur-md rounded-xl p-1.5 sm:p-2 border border-white/10 overflow-hidden shrink-0 shadow-inner my-0.5">
+        <!-- Hidden bullet tags container to keep backward-compatible IDs -->
+        <div id="dockPointsContainer" class="hidden">
+          <div id="point1"></div><div id="point2"></div><div id="point3"></div>
+        </div>
+
+        <!-- REAL-TIME HARDWARE & FIRMWARE PROCESS PIPELINE (The High-Tech Star) -->
+        <div id="stepProcessContainer" class="w-full bg-black/40 backdrop-blur-md rounded-xl p-1.5 sm:p-2 border border-white/10 overflow-hidden shrink-0 shadow-inner">
           <div class="flex items-center justify-between pb-1 mb-1 border-b border-white/10 text-[9px] sm:text-[10px] font-mono">
             <span class="flex items-center gap-1.5 text-zinc-300 font-bold tracking-wider">
               <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
@@ -1366,45 +1358,44 @@
 
     function updateStep3DVisuals(stepNum) {
       if (stepNum === 1) {
-        if (pciePulseMesh) pciePulseMesh.visible = true;
-        if (classifierRing) classifierRing.visible = true;
-        if (pslcShieldMesh) pslcShieldMesh.visible = true;
+        if (doubleReadBeam) doubleReadBeam.visible = false;
+        if (doubleReadBeam2) doubleReadBeam2.visible = false;
+        if (bypassSpline) bypassSpline.visible = true;
+        if (socDieOutline) socDieOutline.material.opacity = 0.5;
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.3;
       } else if (stepNum === 2) {
         if (doubleReadBeam) doubleReadBeam.visible = true;
         if (doubleReadBeam2) doubleReadBeam2.visible = true;
-        if (shockwaveRing) shockwaveRing.visible = true;
         if (bypassSpline) bypassSpline.visible = false;
+        if (socDieOutline) socDieOutline.material.opacity = 0.2;
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.0;
       } else if (stepNum === 3) {
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (shockwaveRing) shockwaveRing.visible = false;
         if (bypassSpline) {
           bypassSpline.visible = true;
           bypassSpline.material.color.setHex(0xf59e0b);
         }
-        if (classifierRing) {
-          classifierRing.visible = true;
-          classifierRing.material.color.setHex(0x34d399);
-        }
+        if (socDieOutline) socDieOutline.material.opacity = 0.9;
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.4;
       } else if (stepNum === 4) {
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (shockwaveRing) shockwaveRing.visible = false;
         if (bypassSpline) bypassSpline.visible = true;
-        if (pslcShieldMesh) {
-          pslcShieldMesh.visible = true;
-          pslcShieldMesh.material.color.setHex(0xf59e0b);
-        }
+        if (socDieOutline) socDieOutline.material.opacity = 0.4;
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.95;
       } else if (stepNum === 5) {
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (shockwaveRing) shockwaveRing.visible = false;
         if (bypassSpline) bypassSpline.visible = true;
+        if (socDieOutline) socDieOutline.material.opacity = 0.6;
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.6;
       } else {
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (shockwaveRing) shockwaveRing.visible = false;
         if (bypassSpline) bypassSpline.visible = true;
+        if (socDieOutline) socDieOutline.material.opacity = 0.4;
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.4;
       }
     }
 
@@ -2472,7 +2463,7 @@
     let isCamLerping = false;
 
     let pcbMesh, socMesh, dramMesh, nandMesh1, nandMesh2;
-    let doubleReadBeam, doubleReadBeam2, bypassSpline, shockwaveRing, classifierRing, pslcShieldMesh, pciePulseMesh;
+    let doubleReadBeam, doubleReadBeam2, bypassSpline, socDieOutline, pslcDieOutline, nandDieOutline1, nandDieOutline2;
     let particles, particleData;
     const NUM_PARTICLES = 160;
 
@@ -2950,8 +2941,17 @@
       doubleReadBeam.visible = false;
       scene.add(doubleReadBeam);
 
-      // Second Laser Beam for 2-Stage Double-Read Penalty (DRAM to NAND Die 2)
-      const beamGeo2 = new THREE.CylinderGeometry(0.12, 0.12, 5.8, 8);
+      // Precision Optical Interconnect Beam 1 (DRAM to Flash Die 1)
+      const beamGeo1 = new THREE.CylinderGeometry(0.035, 0.035, 5.5, 8);
+      beamGeo1.rotateZ(Math.PI / 2);
+      beamGeo1.rotateY(0.35);
+      const beamMat1 = new THREE.MeshBasicMaterial({ color: 0xff0044, transparent: true, opacity: 0.85 });
+      doubleReadBeam.geometry.dispose();
+      doubleReadBeam.geometry = beamGeo1;
+      doubleReadBeam.material = beamMat1;
+
+      // Precision Optical Interconnect Beam 2 (DRAM to Flash Die 2)
+      const beamGeo2 = new THREE.CylinderGeometry(0.035, 0.035, 5.8, 8);
       beamGeo2.rotateZ(Math.PI / 2);
       beamGeo2.rotateY(-0.35);
       const beamMat2 = new THREE.MeshBasicMaterial({ color: 0xff1e56, transparent: true, opacity: 0.85 });
@@ -2960,42 +2960,26 @@
       doubleReadBeam2.visible = false;
       scene.add(doubleReadBeam2);
 
-      // Expanding Shockwave Ring for Flash Latency Penalty
-      const shockwaveGeo = new THREE.RingGeometry(0.4, 1.8, 32);
-      shockwaveGeo.rotateX(-Math.PI / 2);
-      const shockwaveMat = new THREE.MeshBasicMaterial({ color: 0xff0044, transparent: true, opacity: 0.0, side: THREE.DoubleSide });
-      shockwaveRing = new THREE.Mesh(shockwaveGeo, shockwaveMat);
-      shockwaveRing.position.set(5.0, 0.75, -1.9);
-      shockwaveRing.visible = false;
-      scene.add(shockwaveRing);
+      // Clean Semiconductor Die Edge Outlines (High-Precision Hardware Aesthetics)
+      socDieOutline = new THREE.BoxHelper(socMesh, 0x38bdf8);
+      socDieOutline.material.transparent = true;
+      socDieOutline.material.opacity = 0.4;
+      scene.add(socDieOutline);
 
-      // Holographic AI Classifier Ring over SoC Controller
-      const ringGeo = new THREE.TorusGeometry(1.9, 0.05, 12, 48);
-      ringGeo.rotateX(Math.PI / 2);
-      const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.75 });
-      classifierRing = new THREE.Mesh(ringGeo, ringMat);
-      classifierRing.position.set(-5.5, 0.85, 0);
-      classifierRing.visible = true;
-      scene.add(classifierRing);
+      pslcDieOutline = new THREE.BoxHelper(nandMesh2, 0xf59e0b);
+      pslcDieOutline.material.transparent = true;
+      pslcDieOutline.material.opacity = 0.6;
+      scene.add(pslcDieOutline);
 
-      // pSLC Dynamic Wear-Shield Hexagon over NAND Die 2
-      const pslcShieldGeo = new THREE.RingGeometry(1.6, 2.1, 6);
-      pslcShieldGeo.rotateX(-Math.PI / 2);
-      const pslcShieldMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.7, side: THREE.DoubleSide });
-      pslcShieldMesh = new THREE.Mesh(pslcShieldGeo, pslcShieldMat);
-      pslcShieldMesh.position.set(5.0, 0.78, 1.9);
-      pslcShieldMesh.visible = true;
-      scene.add(pslcShieldMesh);
+      nandDieOutline1 = new THREE.BoxHelper(nandMesh1, 0xff0044);
+      nandDieOutline1.material.transparent = true;
+      nandDieOutline1.material.opacity = 0.0;
+      scene.add(nandDieOutline1);
 
-      // PCIe Gen5 Interface Traffic Pulse Ring at Gold Fingers
-      const pcieGeo = new THREE.RingGeometry(0.8, 2.4, 4);
-      pcieGeo.rotateX(-Math.PI / 2);
-      pcieGeo.rotateZ(Math.PI / 4);
-      const pcieMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
-      pciePulseMesh = new THREE.Mesh(pcieGeo, pcieMat);
-      pciePulseMesh.position.set(-11.5, 0.45, 0);
-      pciePulseMesh.visible = true;
-      scene.add(pciePulseMesh);
+      nandDieOutline2 = new THREE.BoxHelper(nandMesh2, 0xff0044);
+      nandDieOutline2.material.transparent = true;
+      nandDieOutline2.material.opacity = 0.0;
+      scene.add(nandDieOutline2);
 
       // Bypass Rail (NeuroFTL)
       const curve = new THREE.QuadraticBezierCurve3(
@@ -3015,15 +2999,18 @@
       const pColors = new Float32Array(NUM_PARTICLES * 3);
       particleData = [];
 
+      const TRACK_Z = [-1.4, -0.7, 0.0, 0.7, 1.4];
       for (let i = 0; i < NUM_PARTICLES; i++) {
         const isStreaming = Math.random() < 0.65;
-        pPos[i * 3] = -12 + Math.random() * 22;
-        pPos[i * 3 + 1] = 0.5 + Math.random() * 0.7;
-        pPos[i * 3 + 2] = -2.5 + Math.random() * 5.0;
+        const trackZ = TRACK_Z[i % TRACK_Z.length];
+        pPos[i * 3] = -12 + (i / NUM_PARTICLES) * 23.5;
+        pPos[i * 3 + 1] = 0.42;
+        pPos[i * 3 + 2] = trackZ;
 
         particleData.push({
-          speed: 0.12 + Math.random() * 0.14,
+          speed: 0.11 + (i % 5) * 0.02,
           isStreaming: isStreaming,
+          trackZ: trackZ,
           originX: -12
         });
 
@@ -3054,7 +3041,6 @@
     function set3DProblem() {
       if (doubleReadBeam) doubleReadBeam.visible = true;
       if (doubleReadBeam2) doubleReadBeam2.visible = true;
-      if (shockwaveRing) shockwaveRing.visible = true;
       if (bypassSpline) bypassSpline.visible = false;
       updateSocLidTexture(false);
       updateDramLiveTexture();
@@ -3071,7 +3057,6 @@
     function set3DSolution() {
       if (doubleReadBeam) doubleReadBeam.visible = false;
       if (doubleReadBeam2) doubleReadBeam2.visible = false;
-      if (shockwaveRing) shockwaveRing.visible = false;
       if (bypassSpline) bypassSpline.visible = true;
       updateSocLidTexture(true);
       updateDramLiveTexture();
@@ -3095,14 +3080,21 @@
       const h = window.innerHeight;
       const aspect = w / h;
       camera.aspect = aspect;
-      if (aspect < 1.0) {
-        camera.fov = Math.min(62, Math.max(38, 36 * (1.1 / aspect)));
+      if (aspect < 0.55) {
+        // Ultra-tall mobile portrait (e.g. 390x844, 412x915)
+        camera.fov = 54;
+      } else if (aspect < 1.0) {
+        // Standard mobile portrait / narrow tablet
+        camera.fov = Math.min(50, Math.max(38, 36 * (1.05 / aspect)));
       } else if (aspect < 1.4) {
-        camera.fov = 40;
+        // Tablet / iPad 4:3
+        camera.fov = 38;
       } else if (aspect > 2.2) {
-        camera.fov = 34;
+        // 21:9 Ultrawide
+        camera.fov = 32;
       } else {
-        camera.fov = 36;
+        // Standard 16:9 / 16:10 Laptop & Desktop
+        camera.fov = 35;
       }
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
@@ -3158,25 +3150,25 @@
       // Dynamic Speed & Stutter Physics based on Active Step
       let stepSpeedMultiplier = 1.0;
       if (currentStepIdx === 1) {
-        stepSpeedMultiplier = 1.6; // High throughput 14.2 GB/s arrival
+        stepSpeedMultiplier = 1.5; // High throughput 14.2 GB/s line-rate arrival
       } else if (currentStepIdx === 2 || currentArchMode === 'PROBLEM') {
         // Stuttered queue stall / GPU compute starving
-        stepSpeedMultiplier = (Math.sin(Date.now() * 0.008) > 0.2 ? 0.35 : 0.06);
+        stepSpeedMultiplier = (Math.sin(Date.now() * 0.008) > 0.2 ? 0.35 : 0.08);
       } else if (currentStepIdx === 3) {
         stepSpeedMultiplier = 1.25;
       } else if (currentStepIdx === 5) {
         stepSpeedMultiplier = 1.35; // Silky smooth verdict flow
       }
 
-      // Fluid Particle Flow Animation
+      // Fluid Particle Flow Animation along physical copper bus traces
       if (flowSpeedFactor > 0.01 && particles && particles.visible) {
         const pos = particles.geometry.attributes.position.array;
         for (let i = 0; i < NUM_PARTICLES; i++) {
           pos[i * 3] += particleData[i].speed * flowSpeedFactor * stepSpeedMultiplier;
+          pos[i * 3 + 1] = 0.42; // Hug PCB copper traces
+          pos[i * 3 + 2] = particleData[i].trackZ;
           if (pos[i * 3] > 11.5) {
             pos[i * 3] = -12.0;
-            pos[i * 3 + 1] = 0.5 + Math.random() * 0.7;
-            pos[i * 3 + 2] = -2.5 + Math.random() * 5.0;
           }
         }
         particles.geometry.attributes.position.needsUpdate = true;
@@ -3184,70 +3176,36 @@
 
       const tNow = Date.now() * 0.003;
 
-      // 1. Classifier Ring Animation (Step 3 & General Solution Mode)
-      if (classifierRing) {
-        classifierRing.rotation.y += 0.025;
-        if (currentStepIdx === 3) {
-          classifierRing.material.opacity = (0.6 + Math.sin(tNow * 4) * 0.35) * flowOpacity;
-          classifierRing.material.color.setHex(0x34d399); // Emerald when detecting sequential
-          classifierRing.scale.setScalar(1.0 + Math.sin(tNow * 3) * 0.08);
-        } else if (currentArchMode === 'SOLUTION') {
-          classifierRing.material.opacity = 0.45 * flowOpacity;
-          classifierRing.material.color.setHex(0x38bdf8); // Cyan standard
-          classifierRing.scale.setScalar(1.0);
-        } else {
-          classifierRing.material.opacity = 0.08 * flowOpacity; // Dimmed in problem mode
-        }
+      // 1. SoC Controller Edge Illumination (Cyan Logic Pulse)
+      if (socDieOutline) {
+        const baseSocOp = currentStepIdx === 3 ? 0.85 : 0.35;
+        socDieOutline.material.opacity = (baseSocOp + Math.sin(tNow * 4) * 0.15) * flowOpacity;
       }
 
-      // 2. pSLC Shield Animation (Step 4 & General Solution Mode)
-      if (pslcShieldMesh) {
-        pslcShieldMesh.rotation.y += 0.012;
-        if (currentStepIdx === 4) {
-          pslcShieldMesh.material.opacity = (0.55 + Math.sin(tNow * 5) * 0.35) * flowOpacity;
-          pslcShieldMesh.scale.setScalar(1.0 + Math.sin(tNow * 4) * 0.1);
-        } else if (currentArchMode === 'SOLUTION') {
-          pslcShieldMesh.material.opacity = 0.35 * flowOpacity;
-          pslcShieldMesh.scale.setScalar(1.0);
-        } else {
-          pslcShieldMesh.material.opacity = 0.05 * flowOpacity;
-        }
+      // 2. pSLC Die Edge Illumination (Golden Shield Glow)
+      if (pslcDieOutline) {
+        const basePslcOp = currentStepIdx === 4 ? 0.9 : 0.4;
+        pslcDieOutline.material.opacity = (basePslcOp + Math.sin(tNow * 5) * 0.15) * flowOpacity;
       }
 
-      // 3. PCIe Gen5 Traffic Pulse (Step 1)
-      if (pciePulseMesh) {
-        if (currentStepIdx === 1) {
-          const pciePulse = (Date.now() % 900) / 900;
-          pciePulseMesh.scale.setScalar(0.7 + pciePulse * 0.7);
-          pciePulseMesh.material.opacity = (1.0 - pciePulse) * 0.85 * flowOpacity;
-        } else {
-          pciePulseMesh.material.opacity = 0.25 * flowOpacity;
-          pciePulseMesh.scale.setScalar(1.0);
-        }
-      }
-
-      // 4. Double-Read 2-Stage Alternating Lasers & Shockwave (Step 2)
+      // 3. Double-Read Precision Coherent Laser Probes & Die Alert Edges (Step 2)
       if (currentStepIdx === 2 || currentArchMode === 'PROBLEM') {
         const cycle = (Date.now() % 1200);
         if (doubleReadBeam) {
           doubleReadBeam.visible = true;
-          doubleReadBeam.material.opacity = (cycle < 600 ? 0.9 : 0.25) * flowOpacity;
+          doubleReadBeam.material.opacity = (cycle < 600 ? 0.9 : 0.2) * flowOpacity;
         }
         if (doubleReadBeam2) {
           doubleReadBeam2.visible = true;
-          doubleReadBeam2.material.opacity = (cycle >= 600 ? 0.95 : 0.2) * flowOpacity;
+          doubleReadBeam2.material.opacity = (cycle >= 600 ? 0.95 : 0.15) * flowOpacity;
         }
-        if (shockwaveRing) {
-          shockwaveRing.visible = true;
-          const sPhase = (cycle % 600) / 600;
-          shockwaveRing.scale.setScalar(0.8 + sPhase * 1.5);
-          shockwaveRing.material.opacity = (1.0 - sPhase) * 0.85 * flowOpacity;
-          shockwaveRing.position.z = cycle < 600 ? -1.9 : 1.9; // Alternates between Flash Die 1 and Die 2!
-        }
+        if (nandDieOutline1) nandDieOutline1.material.opacity = (cycle < 600 ? 0.85 : 0.1) * flowOpacity;
+        if (nandDieOutline2) nandDieOutline2.material.opacity = (cycle >= 600 ? 0.85 : 0.1) * flowOpacity;
       } else {
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (shockwaveRing) shockwaveRing.visible = false;
+        if (nandDieOutline1) nandDieOutline1.material.opacity = 0.0;
+        if (nandDieOutline2) nandDieOutline2.material.opacity = 0.0;
       }
 
       controls.update();
