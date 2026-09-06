@@ -301,17 +301,13 @@
       </div>
 
       <div class="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2.5">
-        <button onclick="startPitch()" id="btnStart" class="w-full sm:w-auto px-5 sm:px-7 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 transition-all transform hover:scale-105 cursor-pointer pulse-primary flex items-center justify-center gap-2">
+        <button onclick="startPitch()" id="btnStart" class="w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 transition-all transform hover:scale-105 cursor-pointer pulse-primary flex items-center justify-center gap-2">
           <span>🚀 Start Interactive Pitch</span>
           <span class="text-xs font-mono font-normal opacity-90 hidden sm:inline">(Space)</span>
         </button>
-        <button onclick="openPowModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono shadow-md" title="View Simulation Methodology & Proof of Work">
+        <button onclick="openPowModal()" class="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono shadow-md" title="View Simulation Methodology & Proof of Work">
           <span>🔬 Proof of Work</span>
         </button>
-        <a href="https://github.com/balajiakash6/NeuroFTL" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono shadow-md" title="Open GitHub Repository">
-          <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          <span>GitHub</span>
-        </a>
       </div>
 
       <div class="text-[10px] sm:text-[11px] text-zinc-400 font-mono">
@@ -386,12 +382,6 @@
             <span>🔬</span>
             <span class="hidden md:inline text-[11px]">Proof</span>
           </button>
-
-          <!-- GitHub Repository Link -->
-          <a href="https://github.com/balajiakash6/NeuroFTL" target="_blank" rel="noopener noreferrer" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/20 bg-white/10 hover:bg-white/20 font-bold" title="View Architecture & Source Code on GitHub">
-            <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            <span class="hidden sm:inline text-[11px]">Repo</span>
-          </a>
 
           <!-- Audio Toggle -->
           <button onclick="toggleAudio()" id="btnAudio" class="apple-pill p-1.5 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer" title="Toggle Sound">
@@ -970,12 +960,12 @@
 
       </div>
 
-      <!-- Links & Close Action -->
-      <div class="pt-1 flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-white/10">
-        <a href="https://github.com/balajiakash6/NeuroFTL" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs font-mono border border-white/20 transition flex items-center gap-2">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          <span>Explore Source Code on GitHub ↗</span>
-        </a>
+      <!-- Actions -->
+      <div class="pt-1 flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-white/10 font-mono text-xs">
+        <div class="text-zinc-400 text-[11px] flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>Discrete-Event Silicon Simulation • 100% Firmware Architecture</span>
+        </div>
         <button onclick="closePowModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-black text-xs font-bold font-mono transition cursor-pointer">
           Close Methodology
         </button>
@@ -1354,10 +1344,14 @@
         }
       }
 
-      // Automatically center active tab in sideways scroll container!
+      // Automatically center active tab in sideways scroll container smoothly
       const activeTab = document.getElementById(`stepTab${stepNum}`);
-      if (activeTab) {
-        activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      const scrollContainer = document.getElementById('stageTabsScrollContainer');
+      if (activeTab && scrollContainer) {
+        const containerRect = scrollContainer.getBoundingClientRect();
+        const tabRect = activeTab.getBoundingClientRect();
+        const targetScroll = scrollContainer.scrollLeft + (tabRect.left + tabRect.width / 2) - (containerRect.left + containerRect.width / 2);
+        scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
       }
       setTimeout(updateTabScrollButtons, 350);
 
@@ -1612,44 +1606,107 @@
       const container = document.getElementById('stageTabsScrollContainer');
       if (!container) return;
 
-      // Mouse wheel horizontal scroll
+      // Mouse wheel horizontal scroll (immediate, smooth)
       container.addEventListener('wheel', (e) => {
-        if (e.deltaY !== 0) {
+        if (e.deltaY !== 0 || e.deltaX !== 0) {
           e.preventDefault();
-          container.scrollLeft += e.deltaY * 0.9;
+          container.style.scrollBehavior = 'auto';
+          container.scrollLeft += (e.deltaY !== 0 ? e.deltaY : e.deltaX) * 0.9;
           updateTabScrollButtons();
         }
       }, { passive: false });
 
-      // Pointer drag to scroll
+      // Ultra-smooth pointer drag-to-scroll with momentum
       let isDown = false;
-      let startX = 0;
-      let scrollLeft = 0;
+      let startClientX = 0;
+      let startScrollLeft = 0;
+      let hasDragged = false;
+      let prevClientX = 0;
+      let velocity = 0;
+      let momentumId = null;
 
       container.addEventListener('pointerdown', (e) => {
-        if (e.target.closest('button')) return;
-        isDown = true;
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-        container.style.cursor = 'grabbing';
-      });
+        if (momentumId) {
+          cancelAnimationFrame(momentumId);
+          momentumId = null;
+        }
 
-      window.addEventListener('pointerup', () => {
-        isDown = false;
-        if (container) container.style.cursor = '';
+        isDown = true;
+        hasDragged = false;
+        startClientX = e.clientX;
+        prevClientX = e.clientX;
+        startScrollLeft = container.scrollLeft;
+        velocity = 0;
+
+        container.style.scrollBehavior = 'auto';
+        try { container.setPointerCapture(e.pointerId); } catch (_) {}
       });
 
       window.addEventListener('pointermove', (e) => {
         if (!isDown || !container) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        container.scrollLeft = scrollLeft - walk;
-        updateTabScrollButtons();
-      });
+        const dx = e.clientX - startClientX;
 
-      container.addEventListener('scroll', updateTabScrollButtons);
-      window.addEventListener('resize', updateTabScrollButtons);
+        // If moved more than 3px, mark as drag
+        if (!hasDragged && Math.abs(dx) > 3) {
+          hasDragged = true;
+          container.style.cursor = 'grabbing';
+        }
+
+        if (hasDragged) {
+          e.preventDefault();
+          velocity = e.clientX - prevClientX;
+          prevClientX = e.clientX;
+          container.scrollLeft = startScrollLeft - dx;
+          updateTabScrollButtons();
+        }
+      }, { passive: false });
+
+      function endDrag(e) {
+        if (!isDown) return;
+        isDown = false;
+        if (container) {
+          container.style.cursor = '';
+          try { container.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        // Suppress button click if user was dragging
+        if (hasDragged) {
+          const captureClick = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            window.removeEventListener('click', captureClick, true);
+          };
+          window.addEventListener('click', captureClick, true);
+          setTimeout(() => window.removeEventListener('click', captureClick, true), 100);
+
+          // Momentum / inertial glide
+          if (Math.abs(velocity) > 1.2) {
+            let currentVel = velocity * 1.5;
+            function momentumStep() {
+              if (Math.abs(currentVel) > 0.3 && container) {
+                container.scrollLeft -= currentVel;
+                currentVel *= 0.93; // smooth friction
+                updateTabScrollButtons();
+                momentumId = requestAnimationFrame(momentumStep);
+              } else {
+                momentumId = null;
+                if (container) container.style.scrollBehavior = 'smooth';
+              }
+            }
+            momentumId = requestAnimationFrame(momentumStep);
+          } else {
+            if (container) container.style.scrollBehavior = 'smooth';
+          }
+        } else {
+          if (container) container.style.scrollBehavior = 'smooth';
+        }
+      }
+
+      window.addEventListener('pointerup', endDrag);
+      window.addEventListener('pointercancel', endDrag);
+
+      container.addEventListener('scroll', updateTabScrollButtons, { passive: true });
+      window.addEventListener('resize', updateTabScrollButtons, { passive: true });
       updateTabScrollButtons();
     }
 
@@ -2950,35 +3007,52 @@
           panel.style.transform = 'none';
           panel.style.margin = '0';
           panel.style.width = rect.width + 'px';
+          panel.style.transition = 'none'; // Critical: eliminates 300ms CSS delay during drag
 
           handle.style.cursor = 'grabbing';
           document.body.style.userSelect = 'none';
 
           try { handle.setPointerCapture(e.pointerId); } catch (_) {}
 
+          let rafId = null;
+          let latestX = startX;
+          let latestY = startY;
+
           function onPointerMove(ev) {
             ev.preventDefault();
             ev.stopPropagation();
+            latestX = ev.clientX;
+            latestY = ev.clientY;
 
-            const dx = ev.clientX - startX;
-            const dy = ev.clientY - startY;
+            if (!rafId) {
+              rafId = requestAnimationFrame(() => {
+                const dx = latestX - startX;
+                const dy = latestY - startY;
 
-            let newLeft = initialLeft + dx;
-            let newTop = initialTop + dy;
+                let newLeft = initialLeft + dx;
+                let newTop = initialTop + dy;
 
-            // Clamping within screen bounds
-            const maxLeft = Math.max(4, window.innerWidth - panel.offsetWidth - 4);
-            const maxTop = Math.max(4, window.innerHeight - panel.offsetHeight - 4);
-            newLeft = Math.max(4, Math.min(maxLeft, newLeft));
-            newTop = Math.max(4, Math.min(maxTop, newTop));
+                // Clamping within screen bounds
+                const maxLeft = Math.max(4, window.innerWidth - panel.offsetWidth - 4);
+                const maxTop = Math.max(4, window.innerHeight - panel.offsetHeight - 4);
+                newLeft = Math.max(4, Math.min(maxLeft, newLeft));
+                newTop = Math.max(4, Math.min(maxTop, newTop));
 
-            panel.style.left = newLeft + 'px';
-            panel.style.top = newTop + 'px';
+                panel.style.left = newLeft + 'px';
+                panel.style.top = newTop + 'px';
+                rafId = null;
+              });
+            }
           }
 
           function onPointerUp(ev) {
+            if (rafId) {
+              cancelAnimationFrame(rafId);
+              rafId = null;
+            }
             handle.style.cursor = 'grab';
             document.body.style.userSelect = '';
+            panel.style.transition = '';
             try { handle.releasePointerCapture(ev.pointerId); } catch (_) {}
             window.removeEventListener('pointermove', onPointerMove);
             window.removeEventListener('pointerup', onPointerUp);
@@ -3014,34 +3088,51 @@
           panel.style.bottom = 'auto';
           panel.style.transform = 'none';
           panel.style.margin = '0';
+          panel.style.transition = 'none'; // Critical: eliminates CSS transition delay during resize
 
           document.body.style.userSelect = 'none';
           document.body.style.cursor = 'se-resize';
 
           try { handle.setPointerCapture(e.pointerId); } catch (_) {}
 
+          let rafId = null;
+          let latestX = startX;
+          let latestY = startY;
+
           function onPointerMove(ev) {
             ev.preventDefault();
             ev.stopPropagation();
+            latestX = ev.clientX;
+            latestY = ev.clientY;
 
-            const dx = ev.clientX - startX;
-            const dy = ev.clientY - startY;
+            if (!rafId) {
+              rafId = requestAnimationFrame(() => {
+                const dx = latestX - startX;
+                const dy = latestY - startY;
 
-            const maxW = window.innerWidth - rect.left - 10;
-            const maxH = window.innerHeight - rect.top - 10;
+                const maxW = window.innerWidth - rect.left - 10;
+                const maxH = window.innerHeight - rect.top - 10;
 
-            const newW = Math.max(minW, Math.min(maxW, startW + dx));
-            const newH = Math.max(minH, Math.min(maxH, startH + dy));
+                const newW = Math.max(minW, Math.min(maxW, startW + dx));
+                const newH = Math.max(minH, Math.min(maxH, startH + dy));
 
-            panel.style.width = newW + 'px';
-            panel.style.height = newH + 'px';
+                panel.style.width = newW + 'px';
+                panel.style.height = newH + 'px';
 
-            if (onResize) onResize(newW, newH);
+                if (onResize) onResize(newW, newH);
+                rafId = null;
+              });
+            }
           }
 
           function onPointerUp(ev) {
+            if (rafId) {
+              cancelAnimationFrame(rafId);
+              rafId = null;
+            }
             document.body.style.userSelect = '';
             document.body.style.cursor = '';
+            panel.style.transition = '';
             try { handle.releasePointerCapture(ev.pointerId); } catch (_) {}
             window.removeEventListener('pointermove', onPointerMove);
             window.removeEventListener('pointerup', onPointerUp);
