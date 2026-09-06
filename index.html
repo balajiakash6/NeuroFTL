@@ -2,7 +2,7 @@
 <html lang="en" class="h-full w-full overflow-hidden bg-black text-white">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>SanDisk NeuroFTL™ | Adaptive Workload-Aware AI-SSD Firmware</title>
   
   <!-- Tailwind CSS -->
@@ -10,6 +10,14 @@
   <script>
     tailwind.config = {
       theme: {
+        screens: {
+          'xs': '420px',
+          'sm': '640px',
+          'md': '768px',
+          'lg': '1024px',
+          'xl': '1280px',
+          '2xl': '1536px',
+        },
         extend: {
           fontFamily: {
             sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Inter"', 'system-ui', 'sans-serif'],
@@ -37,12 +45,25 @@
   <style>
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      touch-action: manipulation;
+      -webkit-text-size-adjust: 100%;
     }
     body {
       background: radial-gradient(circle at 50% 8%, #1c0812 0%, #06070a 45%, #000000 100%);
       font-feature-settings: "cv02", "cv03", "cv04", "cv11";
       -webkit-font-smoothing: antialiased;
       user-select: none;
+    }
+    #threeContainer {
+      touch-action: none; /* Essential: prevents mobile browser pull-to-refresh & gestures */
     }
     .apple-glass {
       background: rgba(10, 14, 24, 0.72);
@@ -96,6 +117,13 @@
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 255, 255, 0.3);
     }
+    /* Safe-area insets for mobile devices with notch or home indicator bar */
+    .safe-top {
+      padding-top: max(8px, env(safe-area-inset-top));
+    }
+    .safe-bottom {
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
   </style>
 </head>
 <body class="h-screen w-screen overflow-hidden relative font-sans select-none bg-black text-white">
@@ -108,27 +136,30 @@
   <!-- ========================================================================= -->
   <!-- 1. CLEAN APPLE-STYLE START SCREEN                                         -->
   <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- 1. CLEAN APPLE-STYLE START SCREEN                                         -->
+  <!-- ========================================================================= -->
   <div id="startOverlay" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-4 transition-all duration-400">
-    <div class="apple-glass p-5 sm:p-7 rounded-3xl max-w-lg w-full text-center space-y-3.5 shadow-2xl border border-white/15 relative overflow-hidden">
+    <div class="apple-glass p-4 sm:p-7 rounded-3xl max-w-lg w-full text-center space-y-3 sm:space-y-3.5 shadow-2xl border border-white/15 relative max-h-[92vh] overflow-y-auto no-scrollbar">
       
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-mono font-bold">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-[11px] sm:text-xs font-mono font-bold">
         <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
         <span>SANDISK ENTERPRISE FIRMWARE TRACK</span>
       </div>
 
       <div class="space-y-1">
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+        <h1 class="text-xl sm:text-3xl font-bold tracking-tight text-white">
           SanDisk NeuroFTL™
         </h1>
-        <p class="text-xs font-bold text-rose-400">
+        <p class="text-[11px] sm:text-xs font-bold text-rose-400">
           Adaptive Workload-Aware Flash Translation Layer for AI Storage Systems
         </p>
-        <p class="text-xs text-zinc-200 max-w-md mx-auto leading-relaxed pt-0.5 font-normal">
+        <p class="text-[11px] sm:text-xs text-zinc-200 max-w-md mx-auto leading-relaxed pt-0.5 font-normal">
           Solving the AI Storage Bottleneck through 100% firmware scheduling on standard commodity NVMe SSD hardware. Eliminates the Double-Read Trap and locks P99 latency at 21µs.
         </p>
       </div>
 
-      <div class="grid grid-cols-3 gap-2 text-left text-xs font-mono">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2 text-left text-xs font-mono">
         <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
           <div class="text-cyan-400 font-bold text-[10px]">Region 1 (65%)</div>
           <div class="text-[11px] font-bold text-white">Pinned L2P Table</div>
@@ -147,7 +178,7 @@
       </div>
 
       <!-- Engineering Team / Authors -->
-      <div class="p-2 rounded-2xl bg-white/5 border border-white/10 font-mono text-left">
+      <div class="p-2 sm:p-2.5 rounded-2xl bg-white/5 border border-white/10 font-mono text-left">
         <div class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-white/10">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
           <span>Engineering &amp; Firmware Research Team</span>
@@ -155,32 +186,32 @@
         <div class="grid grid-cols-2 gap-1.5 pt-1.5 text-xs">
           <div class="flex items-center gap-1.5 text-zinc-200">
             <span class="text-rose-400 font-bold">▪</span>
-            <span class="font-bold text-white">Balaji Akash S</span>
+            <span class="font-bold text-white text-[11px] sm:text-xs">Balaji Akash S</span>
           </div>
           <div class="flex items-center gap-1.5 text-zinc-200">
             <span class="text-cyan-400 font-bold">▪</span>
-            <span class="font-bold text-white">Karthick P</span>
+            <span class="font-bold text-white text-[11px] sm:text-xs">Karthick P</span>
           </div>
           <div class="flex items-center gap-1.5 text-zinc-200">
             <span class="text-amber-400 font-bold">▪</span>
-            <span class="font-bold text-white">Padmanabhan S</span>
+            <span class="font-bold text-white text-[11px] sm:text-xs">Padmanabhan S</span>
           </div>
           <div class="flex items-center gap-1.5 text-zinc-200">
             <span class="text-emerald-400 font-bold">▪</span>
-            <span class="font-bold text-white">Benit D Binu</span>
+            <span class="font-bold text-white text-[11px] sm:text-xs">Benit D Binu</span>
           </div>
         </div>
       </div>
 
-      <div class="pt-1 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <button onclick="startPitch()" id="btnStart" class="w-full sm:w-auto px-8 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 transition-all transform hover:scale-105 cursor-pointer pulse-primary flex items-center justify-center gap-2">
+      <div class="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+        <button onclick="startPitch()" id="btnStart" class="w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 transition-all transform hover:scale-105 cursor-pointer pulse-primary flex items-center justify-center gap-2">
           <span>🚀 Start Interactive Pitch</span>
-          <span class="text-xs font-mono font-normal opacity-90">(Space)</span>
+          <span class="text-xs font-mono font-normal opacity-90 hidden sm:inline">(Space)</span>
         </button>
       </div>
 
       <div class="text-[10px] sm:text-[11px] text-zinc-400 font-mono">
-        Starts in wide panoramic view • Zooms in smoothly with each step
+        Panoramic 3D view • Tap or click steps to explore silicon architecture
       </div>
     </div>
   </div>
@@ -188,61 +219,63 @@
   <!-- ========================================================================= -->
   <!-- 2. FLOATING HUD OVERLAY (Pointer-events-none outer, pointer-events-auto UI) -->
   <!-- ========================================================================= -->
-  <div class="fixed inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between p-2 sm:p-3 overflow-hidden">
+  <div class="fixed inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between p-1.5 sm:p-3 overflow-hidden">
     
-    <!-- Top Header -->
-    <header class="w-full flex items-center justify-between pointer-events-auto shrink-0 gap-2 h-11">
+    <!-- Top Header (Responsive across Desktop, Laptop, and Mobile) -->
+    <header class="w-full flex items-center justify-between pointer-events-auto shrink-0 gap-1 sm:gap-2 h-10 sm:h-11 px-0.5 sm:px-0">
       
-      <!-- Top-Left: SanDisk® Product Brand Card (Vibrant, high-contrast, frosted glass) -->
-      <div class="apple-glass px-2.5 sm:px-3 py-1 rounded-2xl border border-white/20 flex items-center gap-2 sm:gap-2.5 shadow-2xl shrink-0" style="background: rgba(14, 18, 28, 0.88); box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 16px rgba(225, 29, 72, 0.3);">
-        <div class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl bg-gradient-to-r from-[#e11d48] to-[#be123c] flex items-center justify-center shadow-md border border-white/30" style="box-shadow: 0 0 14px rgba(225, 29, 72, 0.7);">
-          <span class="font-extrabold tracking-wider text-xs sm:text-sm text-white drop-shadow">SanDisk®</span>
+      <!-- Top-Left: SanDisk® Product Brand Card -->
+      <div class="apple-glass px-1.5 sm:px-3 py-1 rounded-xl sm:rounded-2xl border border-white/20 flex items-center gap-1.5 sm:gap-2.5 shadow-xl shrink-0" style="background: rgba(14, 18, 28, 0.88); box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 16px rgba(225, 29, 72, 0.3);">
+        <div class="h-6 sm:h-8 px-1.5 sm:px-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-[#e11d48] to-[#be123c] flex items-center justify-center shadow-md border border-white/30">
+          <span class="font-extrabold tracking-wider text-[11px] sm:text-sm text-white drop-shadow">SanDisk®</span>
         </div>
         <div class="flex flex-col text-left">
-          <div class="flex items-center gap-1.5">
-            <h1 class="text-xs sm:text-sm font-black tracking-tight text-white">NeuroFTL™</h1>
-            <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-rose-500/25 border border-rose-500/40 text-rose-300 font-mono font-bold">FW Twin</span>
+          <div class="flex items-center gap-1 sm:gap-1.5">
+            <h1 class="text-[11px] sm:text-sm font-black tracking-tight text-white hidden xs:block">NeuroFTL™</h1>
+            <span class="text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 rounded-full bg-rose-500/25 border border-rose-500/40 text-rose-300 font-mono font-bold hidden md:inline">FW Twin</span>
           </div>
-          <p class="text-[9px] sm:text-[10px] text-zinc-300 font-medium hidden sm:block">Adaptive AI Storage FTL</p>
+          <p class="text-[9px] sm:text-[10px] text-zinc-300 font-medium hidden md:block">Adaptive AI Storage FTL</p>
         </div>
       </div>
 
       <!-- Center Mode Switcher (Conventional vs NeuroFTL) -->
-      <div class="apple-pill rounded-full p-0.5 flex items-center gap-1 shadow-xl shrink-0">
-        <button onclick="switchMode('PROBLEM')" id="btnTopProblem" class="px-2.5 sm:px-3.5 py-1 rounded-full text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer">
-          Conventional FTL
+      <div class="apple-pill rounded-full p-0.5 flex items-center gap-0.5 sm:gap-1 shadow-lg shrink-0">
+        <button onclick="switchMode('PROBLEM')" id="btnTopProblem" class="px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer">
+          <span class="hidden sm:inline">Conventional FTL</span>
+          <span class="sm:hidden">Conv</span>
         </button>
-        <button onclick="switchMode('SOLUTION')" id="btnTopSolution" class="px-2.5 sm:px-3.5 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/20 transition cursor-pointer">
-          SanDisk NeuroFTL™
+        <button onclick="switchMode('SOLUTION')" id="btnTopSolution" class="px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/20 transition cursor-pointer">
+          <span class="hidden sm:inline">SanDisk NeuroFTL™</span>
+          <span class="sm:hidden">NeuroFTL</span>
         </button>
       </div>
 
       <!-- Right Controls Group -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <div class="flex items-center gap-1.5 font-mono text-xs">
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <div class="flex items-center gap-1 sm:gap-1.5 font-mono text-xs">
+          <!-- Mobile / Desktop Telemetry HUD Toggle -->
+          <button onclick="toggleTelemetryCollapse()" id="btnTopHudToggle" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Toggle Live Telemetry HUD">
+            <span>📊</span>
+            <span class="hidden lg:inline text-[11px]">HUD</span>
+          </button>
+
           <!-- Fluid Flow Start / Stop Button -->
-          <button onclick="toggleSimulationFlow()" id="btnFlowToggle" class="px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer flex items-center gap-1 font-bold shadow-md">
+          <button onclick="toggleSimulationFlow()" id="btnFlowToggle" class="p-1.5 sm:px-3 sm:py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer flex items-center gap-1 font-bold shadow-md" title="Toggle Traffic Flow">
             <span id="flowToggleIcon">⏸</span>
-            <span id="flowToggleText" class="text-[11px]">Stop Flow</span>
+            <span id="flowToggleText" class="hidden sm:inline text-[11px]">Stop Flow</span>
           </button>
 
           <!-- Zoom Out Overview Button -->
-          <button onclick="zoomOutOverview()" id="btnZoomOverview" class="apple-pill px-2.5 py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Zoom to Panoramic Overview (Key O)">
+          <button onclick="zoomOutOverview()" id="btnZoomOverview" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15 hidden xs:flex" title="Zoom to Panoramic Overview (Key O)">
             <span>🔍</span>
             <span class="hidden md:inline text-[11px]">Overview</span>
           </button>
 
           <!-- Problem Statement & Architecture Spec Modal Button -->
-          <button onclick="openSpecModal()" class="apple-pill px-2.5 py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="View Problem Statement & Solution Mapping">
+          <button onclick="openSpecModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="View Specification">
             <span>📖</span>
             <span class="hidden md:inline text-[11px]">Spec</span>
           </button>
-
-          <!-- Live Stream Status Pill -->
-          <div id="liveStatusPill" class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px]">
-            <span id="liveStatusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-            <span id="liveStatusText">8 Hz LIVE</span>
-          </div>
 
           <!-- Audio Toggle -->
           <button onclick="toggleAudio()" id="btnAudio" class="apple-pill p-1.5 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer" title="Toggle Sound">
@@ -250,146 +283,155 @@
           </button>
 
           <!-- Reset -->
-          <button onclick="resetDemo()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1" title="Restart Pitch">
+          <button onclick="resetDemo()" class="apple-pill p-1.5 sm:px-2 sm:py-1 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1 hidden sm:flex" title="Restart Pitch">
             <span>↺</span>
-            <span class="hidden sm:inline text-[11px]">Reset</span>
+            <span class="hidden xl:inline text-[11px]">Reset</span>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Floating Draggable & Resizable Live Telemetry HUD -->
-    <div id="telemetryHud" class="fixed top-14 sm:top-16 right-2 sm:right-3 z-30 pointer-events-auto apple-glass rounded-2xl p-3 space-y-2 shadow-2xl border border-white/20 w-80 sm:w-88 select-none flex flex-col no-scrollbar" style="min-width: 280px; min-height: 200px; max-width: 95vw; max-height: 85vh; resize: both; overflow: hidden;">
+    <!-- Floating Draggable & Resizable Live Telemetry HUD (Desktop, Laptop & Mobile Responsive) -->
+    <div id="telemetryHud" class="fixed top-12 sm:top-16 right-1.5 sm:right-3 z-30 pointer-events-auto apple-glass rounded-2xl p-2.5 sm:p-3 space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-80 md:w-88 select-none flex flex-col no-scrollbar transition-all duration-300" style="min-width: 250px; min-height: 44px; max-width: 95vw; max-height: 85vh; resize: both; overflow: hidden;">
       
-      <!-- Draggable Header -->
-      <div id="telemetryHudHeader" class="flex items-center justify-between border-b border-white/10 pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to reset position">
-        <div class="flex items-center gap-2 pointer-events-none">
-          <span class="text-zinc-400 font-mono text-sm opacity-80 px-0.5">⠿</span>
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" id="graphLiveDot"></span>
-          <span class="text-xs sm:text-sm font-mono font-bold tracking-wider text-white">LIVE TELEMETRY STREAM</span>
-        </div>
-        <span class="text-[10px] sm:text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none" id="graphModePill">NEUROFTL ACTIVE</span>
-      </div>
-
-      <!-- Real-Time Dual Latency Curve with Proper Markings & Dynamic Height -->
-      <div class="space-y-1.5 flex-1 flex flex-col min-h-0">
-        <div class="flex justify-between items-center text-xs font-mono shrink-0">
-          <span class="text-zinc-200 font-bold text-xs sm:text-sm">P99 Read Latency Curve</span>
-          <span class="text-emerald-400 font-bold text-sm sm:text-base" id="graphCurrentP99">21.4 µs</span>
+      <!-- Draggable Header with Minimize Toggle -->
+      <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex items-center justify-between border-b border-white/10 pb-1.5 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
+        <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-none min-w-0">
+          <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5">⠿</span>
+          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" id="graphLiveDot"></span>
+          <span class="text-[11px] sm:text-xs md:text-sm font-mono font-bold tracking-wider text-white truncate">LIVE TELEMETRY STREAM</span>
         </div>
         
-        <!-- Graph Canvas Box with Flexible Bounds -->
-        <div class="w-full flex-1 min-h-[80px] bg-[#050811] rounded-xl border border-white/15 relative overflow-hidden p-1 shadow-inner">
-          <canvas id="liveGraphCanvas" class="w-full h-full block"></canvas>
-        </div>
-
-        <!-- Legend and Visual Marks -->
-        <div class="flex justify-between items-center text-xs font-mono text-zinc-300 pt-0.5 shrink-0">
-          <span class="text-rose-400 flex items-center gap-1.5 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Conventional (~168µs)</span>
-          <span class="text-emerald-400 flex items-center gap-1.5 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> NeuroFTL (21µs)</span>
-          <span class="text-zinc-400 font-medium">Time ➔</span>
+        <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
+          <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none" id="graphModePill">NEUROFTL</span>
+          <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Minimize / Expand Telemetry HUD">
+            <span id="telemetryToggleIcon">▾</span>
+          </button>
         </div>
       </div>
 
-      <!-- 4-Metric Live Comparison Grid (Executive high-contrast styling) -->
-      <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-white/10 font-mono shrink-0">
-        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-          <div class="text-xs text-zinc-300 font-medium">P99 Latency</div>
-          <div class="flex items-baseline justify-between">
-            <span class="text-sm sm:text-base font-bold text-emerald-400" id="statP99Adp">21.4 µs</span>
-            <span class="text-xs text-rose-400 line-through font-semibold" id="statP99Std">168.2</span>
+      <!-- Collapsible Body Container (Graph + 4-Metric Comparison Grid) -->
+      <div id="telemetryBody" class="space-y-2 flex flex-col flex-1 min-h-0 transition-all duration-300">
+        <!-- Real-Time Dual Latency Curve with Proper Markings & Dynamic Height -->
+        <div class="space-y-1.5 flex-1 flex flex-col min-h-0">
+          <div class="flex justify-between items-center text-xs font-mono shrink-0">
+            <span class="text-zinc-200 font-bold text-xs sm:text-sm">P99 Read Latency Curve</span>
+            <span class="text-emerald-400 font-bold text-sm sm:text-base" id="graphCurrentP99">21.4 µs</span>
           </div>
-          <div class="text-[11px] text-emerald-400 font-bold" id="deltaLatency">⚡ 7.8× FASTER</div>
+          
+          <!-- Graph Canvas Box with Flexible Bounds -->
+          <div class="w-full flex-1 min-h-[75px] sm:min-h-[85px] bg-[#050811] rounded-xl border border-white/15 relative overflow-hidden p-1 shadow-inner">
+            <canvas id="liveGraphCanvas" class="w-full h-full block"></canvas>
+          </div>
+
+          <!-- Legend and Visual Marks -->
+          <div class="flex justify-between items-center text-[10px] sm:text-xs font-mono text-zinc-300 pt-0.5 shrink-0">
+            <span class="text-rose-400 flex items-center gap-1 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Conv (~168µs)</span>
+            <span class="text-emerald-400 flex items-center gap-1 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> NeuroFTL (21µs)</span>
+            <span class="text-zinc-400 font-medium hidden sm:inline">Time ➔</span>
+          </div>
         </div>
 
-        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-          <div class="text-xs text-zinc-300 font-medium">L2P Hit Rate</div>
-          <div class="flex items-baseline justify-between">
-            <span class="text-sm sm:text-base font-bold text-cyan-400" id="statHitAdp">98.6%</span>
-            <span class="text-xs text-rose-400 line-through font-semibold" id="statHitStd">18.4%</span>
+        <!-- 4-Metric Live Comparison Grid (Executive high-contrast styling) -->
+        <div class="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1.5 border-t border-white/10 font-mono shrink-0">
+          <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">P99 Latency</div>
+            <div class="flex items-baseline justify-between gap-1">
+              <span class="text-xs sm:text-base font-bold text-emerald-400" id="statP99Adp">21.4 µs</span>
+              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statP99Std">168.2 µs</span>
+            </div>
+            <div class="text-[10px] sm:text-[11px] text-emerald-400 font-bold" id="deltaLatency">⚡ 7.8× FASTER</div>
           </div>
-          <div class="text-[11px] text-cyan-400 font-bold" id="deltaHit">🔒 METADATA LOCKED</div>
-        </div>
 
-        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-          <div class="text-xs text-zinc-300 font-medium">Flash WAF</div>
-          <div class="flex items-baseline justify-between">
-            <span class="text-sm sm:text-base font-bold text-emerald-400" id="statWafAdp">1.08</span>
-            <span class="text-xs text-rose-400 line-through font-semibold" id="statWafStd">2.84</span>
+          <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">L2P Hit Rate</div>
+            <div class="flex items-baseline justify-between gap-1">
+              <span class="text-xs sm:text-base font-bold text-cyan-400" id="statHitAdp">98.6%</span>
+              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statHitStd">18.4%</span>
+            </div>
+            <div class="text-[10px] sm:text-[11px] text-cyan-400 font-bold truncate" id="deltaHit">🔒 METADATA LOCKED</div>
           </div>
-          <div class="text-[11px] text-emerald-400 font-bold" id="deltaWaf">🛡️ 2.6× FLASH LIFE</div>
-        </div>
 
-        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
-          <div class="text-xs text-zinc-300 font-medium">GPU Stalls</div>
-          <div class="flex items-baseline justify-between">
-            <span class="text-sm sm:text-base font-bold text-emerald-400" id="statStallAdp">0.0%</span>
-            <span class="text-xs text-rose-400 line-through font-semibold" id="statStallStd">38.2%</span>
+          <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">Flash WAF</div>
+            <div class="flex items-baseline justify-between gap-1">
+              <span class="text-xs sm:text-base font-bold text-emerald-400" id="statWafAdp">1.08</span>
+              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statWafStd">2.84</span>
+            </div>
+            <div class="text-[10px] sm:text-[11px] text-emerald-400 font-bold truncate" id="deltaWaf">🛡️ 2.6× LIFE</div>
           </div>
-          <div class="text-[11px] text-emerald-400 font-bold" id="deltaStall">🚀 100% FED COMPUTE</div>
+
+          <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+            <div class="text-[10px] sm:text-xs text-zinc-300 font-medium">GPU Stalls</div>
+            <div class="flex items-baseline justify-between gap-1">
+              <span class="text-xs sm:text-base font-bold text-emerald-400" id="statStallAdp">0.0%</span>
+              <span class="text-[10px] sm:text-xs text-rose-400 line-through font-semibold truncate" id="statStallStd">38.2%</span>
+            </div>
+            <div class="text-[10px] sm:text-[11px] text-emerald-400 font-bold truncate" id="deltaStall">🚀 100% FED</div>
+          </div>
         </div>
       </div>
 
       <!-- Custom Visible Resize Grip Corner -->
-      <div id="telemetryResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition" title="Drag corner to resize">
+      <div id="telemetryResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition hidden sm:flex" title="Drag corner to resize">
         <span class="text-xs leading-none">⤡</span>
       </div>
 
     </div>
 
-    <!-- Spacer to keep header anchored -->
     <!-- ========================================================================= -->
-    <!-- 2.5 3D VIEWPORT MANUAL ZOOM & CAMERA HUD (Floating Executive Controls)    -->
+    <!-- 2.5 3D VIEWPORT MANUAL ZOOM & CAMERA HUD (Desktop, Laptop, and Mobile)    -->
     <!-- ========================================================================= -->
-    <div id="viewportZoomControls" class="fixed bottom-24 sm:bottom-28 left-3 sm:left-4 z-20 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1.5 font-mono" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
+    <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-auto sm:bottom-28 sm:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono transition-all duration-300" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
       
       <!-- Top Title & Live Scale Indicator -->
-      <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-1 px-0.5">
-        <div class="flex items-center gap-1.5 text-zinc-300 text-xs font-bold">
-          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+      <div class="flex items-center justify-between gap-1.5 border-b border-white/10 pb-1 px-0.5">
+        <div class="flex items-center gap-1 text-zinc-300 text-[10px] sm:text-xs font-bold">
+          <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           <span>3D ZOOM</span>
         </div>
-        <div class="flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-2 py-0.5">
-          <span id="zoomReadout" class="text-xs font-bold text-cyan-300">100%</span>
+        <div class="flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-1.5 py-0.2">
+          <span id="zoomReadout" class="text-[10px] sm:text-xs font-bold text-cyan-300">100%</span>
         </div>
       </div>
 
       <!-- Zoom In / Out Buttons + Interactive Slider -->
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1 sm:gap-1.5">
         <!-- Zoom Out Button -->
-        <button onclick="manualZoom(-1)" id="btnZoomOut" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom Out (- or Wheel Down)">
+        <button onclick="manualZoom(-1)" id="btnZoomOut" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom Out (- or Wheel Down)">
           –
         </button>
 
         <!-- Scrub Range Slider -->
-        <input type="range" id="zoomSlider" min="0" max="100" value="50" oninput="onZoomSliderInput(this.value)" class="w-20 sm:w-24 accent-cyan-400 cursor-pointer h-1.5 bg-white/15 rounded-lg" title="Drag to adjust zoom distance">
+        <input type="range" id="zoomSlider" min="0" max="100" value="50" oninput="onZoomSliderInput(this.value)" class="w-16 sm:w-24 accent-cyan-400 cursor-pointer h-1.5 bg-white/15 rounded-lg" title="Drag to adjust zoom distance">
 
         <!-- Zoom In Button -->
-        <button onclick="manualZoom(1)" id="btnZoomIn" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom In (+ or Wheel Up)">
+        <button onclick="manualZoom(1)" id="btnZoomIn" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom In (+ or Wheel Up)">
           +
         </button>
       </div>
 
       <!-- Silicon Die Focus Preset Buttons -->
-      <div class="grid grid-cols-4 gap-1 text-[10px] pt-0.5 border-t border-white/10">
-        <button onclick="focusPreset('OVERVIEW')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white transition cursor-pointer text-center" title="Wide Overview Framing">
+      <div class="grid grid-cols-4 gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] pt-0.5 border-t border-white/10">
+        <button onclick="focusPreset('OVERVIEW')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white transition cursor-pointer text-center" title="Wide Overview Framing">
           Wide
         </button>
-        <button onclick="focusPreset('CONTROLLER')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-cyan-500/20 text-zinc-300 hover:text-cyan-300 transition cursor-pointer text-center" title="Focus Gen5 Controller Die">
+        <button onclick="focusPreset('CONTROLLER')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-cyan-500/20 text-zinc-300 hover:text-cyan-300 transition cursor-pointer text-center" title="Focus Gen5 Controller Die">
           Ctrl
         </button>
-        <button onclick="focusPreset('DRAM')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-amber-500/20 text-zinc-300 hover:text-amber-300 transition cursor-pointer text-center" title="Focus 3-Region DRAM Die">
+        <button onclick="focusPreset('DRAM')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-amber-500/20 text-zinc-300 hover:text-amber-300 transition cursor-pointer text-center" title="Focus 3-Region DRAM Die">
           DRAM
         </button>
-        <button onclick="focusPreset('FLASH')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-zinc-300 hover:text-emerald-300 transition cursor-pointer text-center" title="Focus BiCS5 3D Flash Dies">
+        <button onclick="focusPreset('FLASH')" class="px-1 py-0.5 rounded bg-white/5 hover:bg-emerald-500/20 text-zinc-300 hover:text-emerald-300 transition cursor-pointer text-center" title="Focus BiCS5 3D Flash Dies">
           NAND
         </button>
       </div>
 
       <!-- Reset to Current Step Framing -->
-      <button onclick="resetCameraZoom()" class="w-full py-0.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-400/40 text-[10px] text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center gap-1" title="Reset to current step preset (R or 0)">
+      <button onclick="resetCameraZoom()" class="w-full py-0.5 rounded-lg sm:rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-400/40 text-[9px] sm:text-[10px] text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center gap-1" title="Reset to current step preset (R or 0)">
         <span>⟲</span>
-        <span>Reset Camera Angle</span>
+        <span class="hidden xs:inline">Reset Camera</span>
+        <span class="xs:hidden">Reset</span>
       </button>
 
     </div>
@@ -398,12 +440,12 @@
     <div class="flex-1 pointer-events-none"></div>
 
     <!-- ========================================================================= -->
-    <!-- 3. EXECUTIVE PRESENTATION DOCK (Professional, Large Fonts, High-Contrast) -->
+    <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-3 sm:p-3.5 w-[96vw] max-w-5xl shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar" style="min-width: 320px; min-height: 130px; max-width: 1060px; max-height: 82vh; resize: both; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-3.5 w-[96vw] max-w-5xl shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden" style="width: min(1060px, calc(100vw - 12px)); max-width: min(1060px, calc(100vw - 12px)); min-height: 100px; max-height: 82vh; resize: both; overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
-      <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1.5 border-b border-white/10 pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
+      <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
         
         <!-- Glowing Level Progress Bar Track -->
         <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
@@ -411,64 +453,66 @@
         </div>
 
         <!-- Header Controls Row: Left Tabs & Right Pinned Controls -->
-        <div class="flex items-center justify-between gap-1.5 sm:gap-2 w-full">
+        <div class="flex items-center justify-between gap-1 sm:gap-2 w-full min-w-0 overflow-hidden">
           
           <!-- Left: Grip & Impressive Sideways Scrollable Stage Tabs Carousel -->
-          <div class="flex items-center gap-1 min-w-0 flex-1 relative py-0.5">
-            <span class="text-zinc-400 font-mono text-sm opacity-80 px-0.5 pointer-events-none shrink-0" title="Drag to move panel">⠿</span>
+          <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-1 relative py-0.5 overflow-hidden">
+            <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5 pointer-events-none shrink-0" title="Drag to move panel">⠿</span>
 
             <!-- Left Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-6 sm:w-7 h-7 sm:h-8 rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-40 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps left">
+            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-6 sm:w-7 h-6 sm:h-8 rounded-lg sm:rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-40 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps left">
               ‹
             </button>
 
             <!-- Scrollable Tabs Track with Wheel & Touch Drag Support -->
-            <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar min-w-0 flex-1 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
-              <!-- Step Tab 0: Overview (Starts Active!) -->
-              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+            <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar min-w-0 flex-1 w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
+              <!-- Step Tab 0: Overview -->
+              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>🔍</span>
                 <span>Overview</span>
               </button>
 
               <!-- Step Tab 1: Workload -->
-              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>1</span>
-                <span>Workload</span>
+                <span class="hidden xs:inline">Workload</span>
               </button>
 
               <!-- Step Tab 2: Double-Read -->
-              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>2</span>
                 <span>Double-Read ⚠️</span>
               </button>
 
               <!-- Step Tab 3: Classifier -->
-              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>3</span>
-                <span>Classifier ⚡</span>
+                <span class="hidden xs:inline">Classifier ⚡</span>
+                <span class="xs:hidden">Classifier</span>
               </button>
 
               <!-- Step Tab 4: 3-Region -->
-              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>4</span>
-                <span>3-Region 🛡️</span>
+                <span class="hidden xs:inline">3-Region 🛡️</span>
+                <span class="xs:hidden">3-Region</span>
               </button>
 
-              <!-- Step Tab 5: Verdict (Now fully visible & scrollable!) -->
-              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <!-- Step Tab 5: Verdict -->
+              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>5</span>
                 <span>Verdict 🏆</span>
               </button>
             </div>
 
             <!-- Right Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-6 sm:w-7 h-7 sm:h-8 rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-80 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps right (View Step 5)">
+            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-6 sm:w-7 h-6 sm:h-8 rounded-lg sm:rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-xs sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-80 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps right">
               ›
             </button>
           </div>
 
-          <!-- Right: Pinned Window Controls (NEVER clipped, always on top right) -->
-          <div class="flex items-center gap-1.5 sm:gap-2 text-xs font-mono text-zinc-200 shrink-0 ml-auto pl-1">
+          <!-- Right: Pinned Window Controls -->
+          <div class="flex items-center gap-1 sm:gap-2 text-xs font-mono text-zinc-200 shrink-0 ml-auto pl-1">
             <span id="dockStageCount" class="font-bold text-rose-400 text-xs sm:text-sm whitespace-nowrap">OVERVIEW</span>
             
             <button onclick="openSpecModal()" class="no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
@@ -479,10 +523,10 @@
               <span>Next →</span>
             </button>
 
-            <!-- Robust Minimize / Expand Toggle Button -->
-            <button onclick="toggleDockCollapse()" id="btnToggleDock" class="no-drag px-2.5 py-1 rounded-xl apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-100 hover:text-white transition cursor-pointer flex items-center gap-1.5 shrink-0 border border-white/20 shadow-md" title="Minimize / Expand Dock (Press D)">
+            <!-- Minimize / Expand Toggle Button -->
+            <button onclick="toggleDockCollapse()" id="btnToggleDock" class="no-drag px-2 sm:px-2.5 py-1 rounded-xl apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-100 hover:text-white transition cursor-pointer flex items-center gap-1 shrink-0 border border-white/20 shadow-md" title="Minimize / Expand Dock (Press D)">
               <span id="dockToggleIcon">▾</span>
-              <span id="dockToggleLabel">Minimize</span>
+              <span id="dockToggleLabel" class="hidden xs:inline">Minimize</span>
             </button>
           </div>
 
@@ -490,67 +534,67 @@
 
       </div>
 
-      <!-- Collapsible Body Area (Does not disturb 3D simulation when minimized or expanded) -->
-      <div id="dockBody" class="space-y-1.5 flex flex-col flex-1 min-h-0 transition-all duration-300">
+      <!-- Collapsible Body Area -->
+      <div id="dockBody" class="space-y-1.5 flex flex-col flex-1 min-h-0 transition-all duration-300 overflow-hidden w-full">
         
-        <!-- Main Step Narrative: Large Clear Title, Explanation & Key Highlights -->
-        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 flex-1 min-h-0 py-1">
+        <!-- Main Step Narrative -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 sm:gap-3 flex-1 min-h-0 py-0.5 sm:py-1 overflow-hidden w-full">
           
           <!-- Left: Stage Banner, Big Title, Clear Paragraph, and Technical Tags -->
-          <div class="space-y-1 flex-1 min-w-0">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
-              <span class="text-zinc-500 text-xs">•</span>
-              <span class="text-[11px] sm:text-xs font-mono text-cyan-300 font-semibold" id="dockActiveChip">Focus: Complete Gen5 x4 NVMe SSD Silicon</span>
+          <div class="space-y-1 flex-1 min-w-0 overflow-hidden">
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <span class="text-[9px] sm:text-xs font-mono font-bold uppercase tracking-wider px-2 sm:px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
+              <span class="text-zinc-500 text-xs hidden xs:inline">•</span>
+              <span class="text-[10px] sm:text-xs font-mono text-cyan-300 font-semibold truncate max-w-[220px] sm:max-w-none" id="dockActiveChip">Focus: Complete Gen5 x4 NVMe SSD Silicon</span>
             </div>
             
-            <h2 class="text-sm sm:text-base lg:text-lg font-extrabold text-white tracking-tight leading-snug" id="dockStepTitle">
+            <h2 class="text-xs sm:text-base lg:text-lg font-extrabold text-white tracking-tight leading-snug truncate" id="dockStepTitle">
               SanDisk NeuroFTL™ Silicon Architecture Overview
             </h2>
             
             <!-- Clear, comfortably readable explanation -->
-            <p class="text-xs sm:text-sm text-zinc-200 leading-relaxed font-normal line-clamp-2 md:line-clamp-none" id="dockStepPara">
+            <p class="text-[11px] sm:text-sm text-zinc-200 leading-relaxed font-normal line-clamp-2 md:line-clamp-none" id="dockStepPara">
               A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 100% firmware scheduling without modifying host software or SSD hardware.
             </p>
 
-            <!-- Technical Highlight Chips (Large, readable font) -->
-            <div class="flex items-center gap-1.5 pt-0.5 flex-wrap font-mono text-[11px] sm:text-xs" id="dockPointsContainer">
-              <div id="point1" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium">
-                <span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span>
+            <!-- Technical Highlight Chips -->
+            <div class="flex items-center gap-1 sm:gap-1.5 pt-0.5 flex-wrap font-mono text-[9px] sm:text-xs w-full overflow-hidden" id="dockPointsContainer">
+              <div id="point1" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium max-w-full truncate">
+                <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-cyan-400 shrink-0"></span>
                 <strong class="text-white">Gen5 Controller:</strong> Embedded Spatial AI Classifier
               </div>
-              <div id="point2" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium">
-                <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+              <div id="point2" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium max-w-full truncate">
+                <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-amber-400 shrink-0"></span>
                 <strong class="text-white">3-Region DRAM:</strong> Pinned L2P &amp; Direct DMA Bypass
               </div>
-              <div id="point3" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+              <div id="point3" class="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium max-w-full truncate">
+                <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-emerald-400 shrink-0"></span>
                 <strong class="text-white">BiCS5 3D Flash:</strong> Dynamic pSLC Shield &amp; RUH Segregation
               </div>
             </div>
           </div>
 
-          <!-- Right: Spacious Key Metric Cards with Large Numbers -->
-          <div class="flex flex-row md:flex-col gap-2 shrink-0 font-mono" id="dockMetricsGroup">
+          <!-- Right: Key Metric Cards (Side-by-side on mobile, stacked on desktop) -->
+          <div class="flex flex-row md:flex-col gap-1.5 sm:gap-2 shrink-0 font-mono" id="dockMetricsGroup">
             
             <!-- Latency Card -->
-            <div class="flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardLatency">
-              <div class="text-[10px] sm:text-xs text-zinc-300 font-semibold">P99 Read Latency</div>
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-base sm:text-lg font-black text-emerald-400" id="metricP99">21.4 µs</span>
-                <span class="text-[10px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
+            <div class="flex-1 md:flex-none p-1.5 sm:p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-[110px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardLatency">
+              <div class="text-[9px] sm:text-xs text-zinc-300 font-semibold">P99 Read Latency</div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-sm sm:text-lg font-black text-emerald-400" id="metricP99">21.4 µs</span>
+                <span class="text-[9px] sm:text-[10px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
               </div>
-              <div class="text-[10px] sm:text-xs font-bold text-emerald-400" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
+              <div class="text-[9px] sm:text-xs font-bold text-emerald-400 truncate" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
             </div>
 
             <!-- Secondary Metric Card -->
-            <div class="flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/15 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardSecondary">
-              <div class="text-[10px] sm:text-xs text-zinc-300 font-semibold" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-base sm:text-lg font-black text-cyan-400" id="metricSecondaryVal">98.6%</span>
-                <span class="text-[10px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
+            <div class="flex-1 md:flex-none p-1.5 sm:p-2.5 rounded-xl bg-white/5 border border-white/15 min-w-[110px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardSecondary">
+              <div class="text-[9px] sm:text-xs text-zinc-300 font-semibold truncate" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
+              <div class="flex items-baseline gap-1">
+                <span class="text-sm sm:text-lg font-black text-cyan-400" id="metricSecondaryVal">98.6%</span>
+                <span class="text-[9px] sm:text-[10px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
               </div>
-              <div class="text-[10px] sm:text-xs font-bold text-cyan-400" id="metricBadgeSecondary">🔒 METADATA LOCKED</div>
+              <div class="text-[9px] sm:text-xs font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 LOCKED</div>
             </div>
 
           </div>
@@ -558,27 +602,27 @@
         </div>
 
         <!-- Bottom Actions: Back, Auto-Play, Large Next CTA Button -->
-        <div class="flex items-center justify-between pt-1.5 border-t border-white/10 shrink-0">
-          <div class="flex items-center gap-2">
-            <button onclick="prevStep()" id="btnPrevStep" disabled class="no-drag px-3.5 py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+        <div class="flex items-center justify-between pt-1 border-t border-white/10 shrink-0 gap-1.5">
+          <div class="flex items-center gap-1 sm:gap-2">
+            <button onclick="prevStep()" id="btnPrevStep" disabled class="no-drag px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
               ← Back
             </button>
-            <button onclick="toggleAutoPlay()" id="btnAutoPlay" class="no-drag px-3.5 py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1.5">
+            <button onclick="toggleAutoPlay()" id="btnAutoPlay" class="no-drag px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1 sm:gap-1.5">
               <span id="autoIcon">▶</span>
-              <span>Auto</span>
+              <span class="hidden xs:inline">Auto</span>
             </button>
           </div>
 
           <!-- Primary Call-to-Action Next Button -->
-          <button onclick="nextStep()" id="btnNextStep" class="no-drag px-5 sm:px-6 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-400 hover:from-rose-400 hover:to-amber-300 text-black font-bold text-xs sm:text-sm font-mono shadow-xl shadow-rose-500/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-2 pulse-primary">
-            <span id="btnNextLabel">Next: Step 1 - Workload Arrival (PCIe Gen5) →</span>
+          <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-6 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-400 hover:from-rose-400 hover:to-amber-300 text-black font-bold text-xs sm:text-sm font-mono shadow-xl shadow-rose-500/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1.5 sm:gap-2 pulse-primary shrink-0">
+            <span id="btnNextLabel" class="truncate">Next →</span>
           </button>
         </div>
 
       </div>
 
       <!-- Custom Visible Resize Grip Corner -->
-      <div id="presentationResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition" title="Drag corner to resize">
+      <div id="presentationResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition hidden sm:flex" title="Drag corner to resize">
         <span class="text-xs leading-none">⤡</span>
       </div>
 
@@ -662,6 +706,8 @@
             <div class="text-[8px] text-zinc-400 line-through">38.2% (100% fed)</div>
           </div>
         </div>
+      </div>
+
       <!-- Engineering & Firmware Research Team -->
       <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
         <div class="text-white font-bold text-xs uppercase tracking-wider font-mono flex items-center gap-1.5">
@@ -1009,7 +1055,8 @@
       setText('dockActiveChip', step.activeChip);
       setText('dockStepTitle', step.title);
       setText('dockStepPara', step.para);
-      setText('btnNextLabel', step.nextLabel);
+      const mobileNext = step.num === 5 ? 'Restart ↺' : 'Next →';
+      setText('btnNextLabel', window.innerWidth < 640 ? mobileNext : step.nextLabel);
 
       // Update Progress Bar
       const bar = document.getElementById('dockProgressBar');
@@ -1407,6 +1454,60 @@
       }
     }
 
+    let isTelemetryCollapsed = false;
+    let savedTelemetryHeight = '';
+    let savedTelemetryWidth = '';
+
+    function toggleTelemetryCollapse() {
+      playTone('click');
+      isTelemetryCollapsed = !isTelemetryCollapsed;
+      const panel = document.getElementById('telemetryHud');
+      const body = document.getElementById('telemetryBody');
+      const icon = document.getElementById('telemetryToggleIcon');
+      const topHudBtn = document.getElementById('btnTopHudToggle');
+      const resizeHandle = document.getElementById('telemetryResizeHandle');
+
+      if (!panel || !body) return;
+
+      if (isTelemetryCollapsed) {
+        savedTelemetryHeight = panel.style.height || '';
+        savedTelemetryWidth = panel.style.width || '';
+        body.classList.add('hidden');
+        panel.style.minHeight = '0px';
+        panel.style.maxHeight = 'none';
+        panel.style.height = 'auto';
+        panel.style.width = 'auto';
+        panel.style.minWidth = '0px';
+        panel.style.padding = '8px 12px';
+        panel.style.resize = 'none';
+        if (icon) icon.innerText = '▸';
+        if (resizeHandle) resizeHandle.style.display = 'none';
+        if (topHudBtn) {
+          topHudBtn.classList.remove('bg-emerald-500/20', 'border-emerald-400', 'text-emerald-300');
+          topHudBtn.classList.add('opacity-70');
+        }
+      } else {
+        body.classList.remove('hidden');
+        panel.style.minHeight = '44px';
+        panel.style.maxHeight = '85vh';
+        panel.style.height = savedTelemetryHeight || 'auto';
+        panel.style.width = savedTelemetryWidth || '';
+        panel.style.minWidth = '220px';
+        panel.style.padding = '';
+        panel.style.resize = 'both';
+        if (icon) icon.innerText = '▾';
+        if (resizeHandle) resizeHandle.style.display = '';
+        if (topHudBtn) {
+          topHudBtn.classList.remove('opacity-70');
+          topHudBtn.classList.add('bg-emerald-500/20', 'border-emerald-400', 'text-emerald-300');
+        }
+        setTimeout(() => {
+          resizeGraph();
+          drawGraph();
+        }, 50);
+      }
+    }
+
     // --- Keyboard Navigation ---
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space' || e.code === 'ArrowRight') {
@@ -1438,6 +1539,8 @@
         toggleAutoPlay();
       } else if (e.code === 'KeyD') {
         toggleDockCollapse();
+      } else if (e.code === 'KeyH') {
+        toggleTelemetryCollapse();
       } else if (e.key === '+' || e.key === '=' || e.code === 'NumpadAdd') {
         manualZoom(1);
       } else if (e.key === '-' || e.key === '_' || e.code === 'NumpadSubtract') {
@@ -2686,8 +2789,18 @@
       initTabsSidewaysScroll();
       updateZoomUI();
 
+      // On mobile devices (< 768px), auto-collapse Telemetry HUD so the 3D silicon chip is fully visible
+      if (window.innerWidth < 768) {
+        toggleTelemetryCollapse();
+      }
+
       // Support direct step jumping via URL query parameter (e.g. ?step=1 or ?autostart)
       const params = new URLSearchParams(window.location.search);
+      if (params.has('hud') && params.get('hud') === 'collapsed' && !isTelemetryCollapsed) {
+        toggleTelemetryCollapse();
+      } else if (params.has('hud') && params.get('hud') === 'open' && isTelemetryCollapsed) {
+        toggleTelemetryCollapse();
+      }
       if (params.has('autostart') || params.has('step')) {
         const overlay = document.getElementById('startOverlay');
         if (overlay) overlay.style.display = 'none';
