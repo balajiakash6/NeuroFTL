@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full w-full overflow-hidden bg-black text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SanDisk NeuroFTL™ | Adaptive Workload-Aware AI-SSD Firmware</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"SF Mono"', 'Menlo', 'Consolas', 'monospace']
+          },
+          colors: {
+            sandisk: {
+              red: '#e11d48',
+              ruby: '#be123c',
+              dark: '#08080c',
+              cyan: '#38bdf8',
+              emerald: '#34d399',
+              amber: '#fbbf24'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background: radial-gradient(circle at 50% 8%, #1c0812 0%, #06070a 45%, #000000 100%);
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+    .apple-glass {
+      background: rgba(10, 14, 24, 0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .apple-pill {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .sandisk-glow {
+      box-shadow: 0 0 25px -4px rgba(225, 29, 72, 0.55);
+    }
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.85); transform: scale(1); }
+      50% { box-shadow: 0 0 0 10px rgba(225, 29, 72, 0); transform: scale(1.02); }
+    }
+    .pulse-primary {
+      animation: pulse-btn 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+    @keyframes red-beacon {
+      0%, 100% { box-shadow: 0 0 18px rgba(225, 29, 72, 0.65); }
+      50% { box-shadow: 0 0 4px rgba(225, 29, 72, 0.2); }
+    }
+    .glow-problem {
+      animation: red-beacon 1.4s infinite;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen overflow-hidden relative font-sans select-none bg-black text-white">
+
+  <!-- ========================================================================= -->
+  <!-- 0. FULL-VIEWPORT 3D SILICON CANVAS (Covers 100% of the screen seamlessly) -->
+  <!-- ========================================================================= -->
+  <div id="threeContainer" class="fixed inset-0 w-full h-full z-0 cursor-grab active:cursor-grabbing"></div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. CLEAN APPLE-STYLE START SCREEN                                         -->
+  <!-- ========================================================================= -->
+  <div id="startOverlay" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-4 transition-all duration-400">
+    <div class="apple-glass p-5 sm:p-7 rounded-3xl max-w-lg w-full text-center space-y-3.5 shadow-2xl border border-white/15 relative overflow-hidden">
+      
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-mono font-bold">
+        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+        <span>SANDISK ENTERPRISE FIRMWARE TRACK</span>
+      </div>
+
+      <div class="space-y-1">
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          SanDisk NeuroFTL™
+        </h1>
+        <p class="text-xs font-bold text-rose-400">
+          Adaptive Workload-Aware Flash Translation Layer for AI Storage Systems
+        </p>
+        <p class="text-xs text-zinc-200 max-w-md mx-auto leading-relaxed pt-0.5 font-normal">
+          Solving the AI Storage Bottleneck through 100% firmware scheduling on standard commodity NVMe SSD hardware. Eliminates the Double-Read Trap and locks P99 latency at 21µs.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 text-left text-xs font-mono">
+        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+          <div class="text-cyan-400 font-bold text-[10px]">Region 1 (65%)</div>
+          <div class="text-[11px] font-bold text-white">Pinned L2P Table</div>
+          <div class="text-[9px] text-zinc-300">98.6% RAM hit (0.1µs)</div>
+        </div>
+        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+          <div class="text-amber-400 font-bold text-[10px]">Region 2 (5%)</div>
+          <div class="text-[11px] font-bold text-white">DMA Bypass Rail</div>
+          <div class="text-[9px] text-zinc-300">0% DRAM cache pollution</div>
+        </div>
+        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+          <div class="text-emerald-400 font-bold text-[10px]">Region 3 (30%)</div>
+          <div class="text-[11px] font-bold text-white">KV &amp; pSLC Shield</div>
+          <div class="text-[9px] text-zinc-300">WAF 1.08 • 2.6× life</div>
+        </div>
+      </div>
+
+      <div class="pt-1 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button onclick="startPitch()" id="btnStart" class="w-full sm:w-auto px-8 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 transition-all transform hover:scale-105 cursor-pointer pulse-primary flex items-center justify-center gap-2">
+          <span>🚀 Start Interactive Pitch</span>
+          <span class="text-xs font-mono font-normal opacity-90">(Space)</span>
+        </button>
+      </div>
+
+      <div class="text-[10px] sm:text-[11px] text-zinc-400 font-mono">
+        Starts in wide panoramic view • Zooms in smoothly with each step
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. FLOATING HUD OVERLAY (Pointer-events-none outer, pointer-events-auto UI) -->
+  <!-- ========================================================================= -->
+  <div class="fixed inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between p-2 sm:p-3 overflow-hidden">
+    
+    <!-- Top Header -->
+    <header class="w-full flex items-center justify-between pointer-events-auto shrink-0 gap-2 h-11">
+      
+      <!-- Top-Left: SanDisk® Product Brand Card (Vibrant, high-contrast, frosted glass) -->
+      <div class="apple-glass px-2.5 sm:px-3 py-1 rounded-2xl border border-white/20 flex items-center gap-2 sm:gap-2.5 shadow-2xl shrink-0" style="background: rgba(14, 18, 28, 0.88); box-shadow: 0 4px 20px rgba(0,0,0,0.6), 0 0 16px rgba(225, 29, 72, 0.3);">
+        <div class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-xl bg-gradient-to-r from-[#e11d48] to-[#be123c] flex items-center justify-center shadow-md border border-white/30" style="box-shadow: 0 0 14px rgba(225, 29, 72, 0.7);">
+          <span class="font-extrabold tracking-wider text-xs sm:text-sm text-white drop-shadow">SanDisk®</span>
+        </div>
+        <div class="flex flex-col text-left">
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-xs sm:text-sm font-black tracking-tight text-white">NeuroFTL™</h1>
+            <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-rose-500/25 border border-rose-500/40 text-rose-300 font-mono font-bold">FW Twin</span>
+          </div>
+          <p class="text-[9px] sm:text-[10px] text-zinc-300 font-medium hidden sm:block">Adaptive AI Storage FTL</p>
+        </div>
+      </div>
+
+      <!-- Center Mode Switcher (Conventional vs NeuroFTL) -->
+      <div class="apple-pill rounded-full p-0.5 flex items-center gap-1 shadow-xl shrink-0">
+        <button onclick="switchMode('PROBLEM')" id="btnTopProblem" class="px-2.5 sm:px-3.5 py-1 rounded-full text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer">
+          Conventional FTL
+        </button>
+        <button onclick="switchMode('SOLUTION')" id="btnTopSolution" class="px-2.5 sm:px-3.5 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/20 transition cursor-pointer">
+          SanDisk NeuroFTL™
+        </button>
+      </div>
+
+      <!-- Right Controls Group -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div class="flex items-center gap-1.5 font-mono text-xs">
+          <!-- Fluid Flow Start / Stop Button -->
+          <button onclick="toggleSimulationFlow()" id="btnFlowToggle" class="px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer flex items-center gap-1 font-bold shadow-md">
+            <span id="flowToggleIcon">⏸</span>
+            <span id="flowToggleText" class="text-[11px]">Stop Flow</span>
+          </button>
+
+          <!-- Zoom Out Overview Button -->
+          <button onclick="zoomOutOverview()" id="btnZoomOverview" class="apple-pill px-2.5 py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Zoom to Panoramic Overview (Key O)">
+            <span>🔍</span>
+            <span class="hidden md:inline text-[11px]">Overview</span>
+          </button>
+
+          <!-- Problem Statement & Architecture Spec Modal Button -->
+          <button onclick="openSpecModal()" class="apple-pill px-2.5 py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="View Problem Statement & Solution Mapping">
+            <span>📖</span>
+            <span class="hidden md:inline text-[11px]">Spec</span>
+          </button>
+
+          <!-- Live Stream Status Pill -->
+          <div id="liveStatusPill" class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px]">
+            <span id="liveStatusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span id="liveStatusText">8 Hz LIVE</span>
+          </div>
+
+          <!-- Audio Toggle -->
+          <button onclick="toggleAudio()" id="btnAudio" class="apple-pill p-1.5 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer" title="Toggle Sound">
+            <span id="audioIcon">🔊</span>
+          </button>
+
+          <!-- Reset -->
+          <button onclick="resetDemo()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1" title="Restart Pitch">
+            <span>↺</span>
+            <span class="hidden sm:inline text-[11px]">Reset</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Floating Draggable & Resizable Live Telemetry HUD -->
+    <div id="telemetryHud" class="fixed top-14 sm:top-16 right-2 sm:right-3 z-30 pointer-events-auto apple-glass rounded-2xl p-3 space-y-2 shadow-2xl border border-white/20 w-80 sm:w-88 select-none flex flex-col no-scrollbar" style="min-width: 280px; min-height: 200px; max-width: 95vw; max-height: 85vh; resize: both; overflow: hidden;">
+      
+      <!-- Draggable Header -->
+      <div id="telemetryHudHeader" class="flex items-center justify-between border-b border-white/10 pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to reset position">
+        <div class="flex items-center gap-2 pointer-events-none">
+          <span class="text-zinc-400 font-mono text-sm opacity-80 px-0.5">⠿</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" id="graphLiveDot"></span>
+          <span class="text-xs sm:text-sm font-mono font-bold tracking-wider text-white">LIVE TELEMETRY STREAM</span>
+        </div>
+        <span class="text-[10px] sm:text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none" id="graphModePill">NEUROFTL ACTIVE</span>
+      </div>
+
+      <!-- Real-Time Dual Latency Curve with Proper Markings & Dynamic Height -->
+      <div class="space-y-1.5 flex-1 flex flex-col min-h-0">
+        <div class="flex justify-between items-center text-xs font-mono shrink-0">
+          <span class="text-zinc-200 font-bold text-xs sm:text-sm">P99 Read Latency Curve</span>
+          <span class="text-emerald-400 font-bold text-sm sm:text-base" id="graphCurrentP99">21.4 µs</span>
+        </div>
+        
+        <!-- Graph Canvas Box with Flexible Bounds -->
+        <div class="w-full flex-1 min-h-[80px] bg-[#050811] rounded-xl border border-white/15 relative overflow-hidden p-1 shadow-inner">
+          <canvas id="liveGraphCanvas" class="w-full h-full block"></canvas>
+        </div>
+
+        <!-- Legend and Visual Marks -->
+        <div class="flex justify-between items-center text-xs font-mono text-zinc-300 pt-0.5 shrink-0">
+          <span class="text-rose-400 flex items-center gap-1.5 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Conventional (~168µs)</span>
+          <span class="text-emerald-400 flex items-center gap-1.5 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> NeuroFTL (21µs)</span>
+          <span class="text-zinc-400 font-medium">Time ➔</span>
+        </div>
+      </div>
+
+      <!-- 4-Metric Live Comparison Grid (Executive high-contrast styling) -->
+      <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-white/10 font-mono shrink-0">
+        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+          <div class="text-xs text-zinc-300 font-medium">P99 Latency</div>
+          <div class="flex items-baseline justify-between">
+            <span class="text-sm sm:text-base font-bold text-emerald-400" id="statP99Adp">21.4 µs</span>
+            <span class="text-xs text-rose-400 line-through font-semibold" id="statP99Std">168.2</span>
+          </div>
+          <div class="text-[11px] text-emerald-400 font-bold" id="deltaLatency">⚡ 7.8× FASTER</div>
+        </div>
+
+        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+          <div class="text-xs text-zinc-300 font-medium">L2P Hit Rate</div>
+          <div class="flex items-baseline justify-between">
+            <span class="text-sm sm:text-base font-bold text-cyan-400" id="statHitAdp">98.6%</span>
+            <span class="text-xs text-rose-400 line-through font-semibold" id="statHitStd">18.4%</span>
+          </div>
+          <div class="text-[11px] text-cyan-400 font-bold" id="deltaHit">🔒 METADATA LOCKED</div>
+        </div>
+
+        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+          <div class="text-xs text-zinc-300 font-medium">Flash WAF</div>
+          <div class="flex items-baseline justify-between">
+            <span class="text-sm sm:text-base font-bold text-emerald-400" id="statWafAdp">1.08</span>
+            <span class="text-xs text-rose-400 line-through font-semibold" id="statWafStd">2.84</span>
+          </div>
+          <div class="text-[11px] text-emerald-400 font-bold" id="deltaWaf">🛡️ 2.6× FLASH LIFE</div>
+        </div>
+
+        <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
+          <div class="text-xs text-zinc-300 font-medium">GPU Stalls</div>
+          <div class="flex items-baseline justify-between">
+            <span class="text-sm sm:text-base font-bold text-emerald-400" id="statStallAdp">0.0%</span>
+            <span class="text-xs text-rose-400 line-through font-semibold" id="statStallStd">38.2%</span>
+          </div>
+          <div class="text-[11px] text-emerald-400 font-bold" id="deltaStall">🚀 100% FED COMPUTE</div>
+        </div>
+      </div>
+
+      <!-- Custom Visible Resize Grip Corner -->
+      <div id="telemetryResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition" title="Drag corner to resize">
+        <span class="text-xs leading-none">⤡</span>
+      </div>
+
+    </div>
+
+    <!-- Spacer to keep header anchored -->
+    <!-- ========================================================================= -->
+    <!-- 2.5 3D VIEWPORT MANUAL ZOOM & CAMERA HUD (Floating Executive Controls)    -->
+    <!-- ========================================================================= -->
+    <div id="viewportZoomControls" class="fixed bottom-24 sm:bottom-28 left-3 sm:left-4 z-20 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1.5 font-mono" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
+      
+      <!-- Top Title & Live Scale Indicator -->
+      <div class="flex items-center justify-between gap-2 border-b border-white/10 pb-1 px-0.5">
+        <div class="flex items-center gap-1.5 text-zinc-300 text-xs font-bold">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span>3D ZOOM</span>
+        </div>
+        <div class="flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-2 py-0.5">
+          <span id="zoomReadout" class="text-xs font-bold text-cyan-300">100%</span>
+        </div>
+      </div>
+
+      <!-- Zoom In / Out Buttons + Interactive Slider -->
+      <div class="flex items-center gap-1.5">
+        <!-- Zoom Out Button -->
+        <button onclick="manualZoom(-1)" id="btnZoomOut" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom Out (- or Wheel Down)">
+          –
+        </button>
+
+        <!-- Scrub Range Slider -->
+        <input type="range" id="zoomSlider" min="0" max="100" value="50" oninput="onZoomSliderInput(this.value)" class="w-20 sm:w-24 accent-cyan-400 cursor-pointer h-1.5 bg-white/15 rounded-lg" title="Drag to adjust zoom distance">
+
+        <!-- Zoom In Button -->
+        <button onclick="manualZoom(1)" id="btnZoomIn" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-zinc-200 hover:text-white border border-white/10 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer active:scale-95 shadow-sm" title="Zoom In (+ or Wheel Up)">
+          +
+        </button>
+      </div>
+
+      <!-- Silicon Die Focus Preset Buttons -->
+      <div class="grid grid-cols-4 gap-1 text-[10px] pt-0.5 border-t border-white/10">
+        <button onclick="focusPreset('OVERVIEW')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white transition cursor-pointer text-center" title="Wide Overview Framing">
+          Wide
+        </button>
+        <button onclick="focusPreset('CONTROLLER')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-cyan-500/20 text-zinc-300 hover:text-cyan-300 transition cursor-pointer text-center" title="Focus Gen5 Controller Die">
+          Ctrl
+        </button>
+        <button onclick="focusPreset('DRAM')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-amber-500/20 text-zinc-300 hover:text-amber-300 transition cursor-pointer text-center" title="Focus 3-Region DRAM Die">
+          DRAM
+        </button>
+        <button onclick="focusPreset('FLASH')" class="px-1.5 py-0.5 rounded-lg bg-white/5 hover:bg-emerald-500/20 text-zinc-300 hover:text-emerald-300 transition cursor-pointer text-center" title="Focus BiCS5 3D Flash Dies">
+          NAND
+        </button>
+      </div>
+
+      <!-- Reset to Current Step Framing -->
+      <button onclick="resetCameraZoom()" class="w-full py-0.5 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-400/40 text-[10px] text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center gap-1" title="Reset to current step preset (R or 0)">
+        <span>⟲</span>
+        <span>Reset Camera Angle</span>
+      </button>
+
+    </div>
+
+    <!-- Spacer to keep header anchored -->
+    <div class="flex-1 pointer-events-none"></div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. EXECUTIVE PRESENTATION DOCK (Professional, Large Fonts, High-Contrast) -->
+    <!-- ========================================================================= -->
+    <div id="presentationDock" class="fixed bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-3 sm:p-3.5 w-[96vw] max-w-5xl shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar" style="min-width: 320px; min-height: 130px; max-width: 1060px; max-height: 82vh; resize: both; overflow: hidden;">
+      
+      <!-- Top Stage Progress Header + Draggable Grip -->
+      <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1.5 border-b border-white/10 pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
+        
+        <!-- Glowing Level Progress Bar Track -->
+        <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+          <div id="dockProgressBar" class="h-full bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-400 transition-all duration-500 rounded-full" style="width: 5%;"></div>
+        </div>
+
+        <!-- Header Controls Row: Left Tabs & Right Pinned Controls -->
+        <div class="flex items-center justify-between gap-1.5 sm:gap-2 w-full">
+          
+          <!-- Left: Grip & Impressive Sideways Scrollable Stage Tabs Carousel -->
+          <div class="flex items-center gap-1 min-w-0 flex-1 relative py-0.5">
+            <span class="text-zinc-400 font-mono text-sm opacity-80 px-0.5 pointer-events-none shrink-0" title="Drag to move panel">⠿</span>
+
+            <!-- Left Scroll Chevron Button -->
+            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-6 sm:w-7 h-7 sm:h-8 rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-40 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps left">
+              ‹
+            </button>
+
+            <!-- Scrollable Tabs Track with Wheel & Touch Drag Support -->
+            <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar min-w-0 flex-1 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
+              <!-- Step Tab 0: Overview (Starts Active!) -->
+              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+                <span>🔍</span>
+                <span>Overview</span>
+              </button>
+
+              <!-- Step Tab 1: Workload -->
+              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+                <span>1</span>
+                <span>Workload</span>
+              </button>
+
+              <!-- Step Tab 2: Double-Read -->
+              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+                <span>2</span>
+                <span>Double-Read ⚠️</span>
+              </button>
+
+              <!-- Step Tab 3: Classifier -->
+              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+                <span>3</span>
+                <span>Classifier ⚡</span>
+              </button>
+
+              <!-- Step Tab 4: 3-Region -->
+              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+                <span>4</span>
+                <span>3-Region 🛡️</span>
+              </button>
+
+              <!-- Step Tab 5: Verdict (Now fully visible & scrollable!) -->
+              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+                <span>5</span>
+                <span>Verdict 🏆</span>
+              </button>
+            </div>
+
+            <!-- Right Scroll Chevron Button -->
+            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-6 sm:w-7 h-7 sm:h-8 rounded-xl bg-white/10 hover:bg-cyan-500/20 text-zinc-300 hover:text-white border border-white/15 hover:border-cyan-400/50 flex items-center justify-center font-bold text-sm sm:text-base transition cursor-pointer shrink-0 shadow-md opacity-80 hover:opacity-100 disabled:opacity-20 disabled:pointer-events-none" title="Scroll steps right (View Step 5)">
+              ›
+            </button>
+          </div>
+
+          <!-- Right: Pinned Window Controls (NEVER clipped, always on top right) -->
+          <div class="flex items-center gap-1.5 sm:gap-2 text-xs font-mono text-zinc-200 shrink-0 ml-auto pl-1">
+            <span id="dockStageCount" class="font-bold text-rose-400 text-xs sm:text-sm whitespace-nowrap">OVERVIEW</span>
+            
+            <button onclick="openSpecModal()" class="no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
+              Spec ↗
+            </button>
+
+            <button onclick="nextStep()" id="dockMiniNext" class="hidden no-drag px-2.5 py-1 rounded-xl bg-gradient-to-r from-rose-500 to-amber-400 text-black font-bold text-xs font-mono shadow-md transition cursor-pointer flex items-center gap-1 shrink-0 hover:scale-105">
+              <span>Next →</span>
+            </button>
+
+            <!-- Robust Minimize / Expand Toggle Button -->
+            <button onclick="toggleDockCollapse()" id="btnToggleDock" class="no-drag px-2.5 py-1 rounded-xl apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-100 hover:text-white transition cursor-pointer flex items-center gap-1.5 shrink-0 border border-white/20 shadow-md" title="Minimize / Expand Dock (Press D)">
+              <span id="dockToggleIcon">▾</span>
+              <span id="dockToggleLabel">Minimize</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Collapsible Body Area (Does not disturb 3D simulation when minimized or expanded) -->
+      <div id="dockBody" class="space-y-1.5 flex flex-col flex-1 min-h-0 transition-all duration-300">
+        
+        <!-- Main Step Narrative: Large Clear Title, Explanation & Key Highlights -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 flex-1 min-h-0 py-1">
+          
+          <!-- Left: Stage Banner, Big Title, Clear Paragraph, and Technical Tags -->
+          <div class="space-y-1 flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
+              <span class="text-zinc-500 text-xs">•</span>
+              <span class="text-[11px] sm:text-xs font-mono text-cyan-300 font-semibold" id="dockActiveChip">Focus: Complete Gen5 x4 NVMe SSD Silicon</span>
+            </div>
+            
+            <h2 class="text-sm sm:text-base lg:text-lg font-extrabold text-white tracking-tight leading-snug" id="dockStepTitle">
+              SanDisk NeuroFTL™ Silicon Architecture Overview
+            </h2>
+            
+            <!-- Clear, comfortably readable explanation -->
+            <p class="text-xs sm:text-sm text-zinc-200 leading-relaxed font-normal line-clamp-2 md:line-clamp-none" id="dockStepPara">
+              A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 100% firmware scheduling without modifying host software or SSD hardware.
+            </p>
+
+            <!-- Technical Highlight Chips (Large, readable font) -->
+            <div class="flex items-center gap-1.5 pt-0.5 flex-wrap font-mono text-[11px] sm:text-xs" id="dockPointsContainer">
+              <div id="point1" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span>
+                <strong class="text-white">Gen5 Controller:</strong> Embedded Spatial AI Classifier
+              </div>
+              <div id="point2" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium">
+                <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                <strong class="text-white">3-Region DRAM:</strong> Pinned L2P &amp; Direct DMA Bypass
+              </div>
+              <div id="point3" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl bg-white/5 border border-white/10 text-zinc-200 font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                <strong class="text-white">BiCS5 3D Flash:</strong> Dynamic pSLC Shield &amp; RUH Segregation
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Spacious Key Metric Cards with Large Numbers -->
+          <div class="flex flex-row md:flex-col gap-2 shrink-0 font-mono" id="dockMetricsGroup">
+            
+            <!-- Latency Card -->
+            <div class="flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardLatency">
+              <div class="text-[10px] sm:text-xs text-zinc-300 font-semibold">P99 Read Latency</div>
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-base sm:text-lg font-black text-emerald-400" id="metricP99">21.4 µs</span>
+                <span class="text-[10px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
+              </div>
+              <div class="text-[10px] sm:text-xs font-bold text-emerald-400" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
+            </div>
+
+            <!-- Secondary Metric Card -->
+            <div class="flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/15 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md" id="metricCardSecondary">
+              <div class="text-[10px] sm:text-xs text-zinc-300 font-semibold" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-base sm:text-lg font-black text-cyan-400" id="metricSecondaryVal">98.6%</span>
+                <span class="text-[10px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
+              </div>
+              <div class="text-[10px] sm:text-xs font-bold text-cyan-400" id="metricBadgeSecondary">🔒 METADATA LOCKED</div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Bottom Actions: Back, Auto-Play, Large Next CTA Button -->
+        <div class="flex items-center justify-between pt-1.5 border-t border-white/10 shrink-0">
+          <div class="flex items-center gap-2">
+            <button onclick="prevStep()" id="btnPrevStep" disabled class="no-drag px-3.5 py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+              ← Back
+            </button>
+            <button onclick="toggleAutoPlay()" id="btnAutoPlay" class="no-drag px-3.5 py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1.5">
+              <span id="autoIcon">▶</span>
+              <span>Auto</span>
+            </button>
+          </div>
+
+          <!-- Primary Call-to-Action Next Button -->
+          <button onclick="nextStep()" id="btnNextStep" class="no-drag px-5 sm:px-6 py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-400 hover:from-rose-400 hover:to-amber-300 text-black font-bold text-xs sm:text-sm font-mono shadow-xl shadow-rose-500/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-2 pulse-primary">
+            <span id="btnNextLabel">Next: Step 1 - Workload Arrival (PCIe Gen5) →</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Custom Visible Resize Grip Corner -->
+      <div id="presentationResizeHandle" class="absolute bottom-1 right-1 w-4 h-4 cursor-se-resize flex items-center justify-center text-zinc-400 hover:text-white select-none transition" title="Drag corner to resize">
+        <span class="text-xs leading-none">⤡</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. PROBLEM STATEMENT & FIRMWARE ARCHITECTURE MODAL                        -->
+  <!-- ========================================================================= -->
+  <div id="specModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-5 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="apple-glass p-5 sm:p-7 rounded-3xl max-w-3xl w-full relative shadow-2xl space-y-4 border border-white/15 max-h-[92vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-mono font-bold">EXECUTIVE SPECIFICATION</span>
+          <h2 class="text-base sm:text-lg font-bold text-white">How NeuroFTL™ Solves the Problem Statement</h2>
+        </div>
+        <button onclick="closeSpecModal()" class="text-zinc-300 hover:text-white p-1 rounded-full text-base cursor-pointer font-bold">✕</button>
+      </div>
+
+      <!-- Problem Statement vs NeuroFTL Solution Mapping -->
+      <div class="space-y-3.5 text-xs">
+        
+        <!-- The Problem -->
+        <div class="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 space-y-1.5">
+          <div class="text-rose-400 font-bold text-sm flex items-center gap-2">
+            <span>❌ Problem Statement: AI Storage Bottleneck &amp; Double-Read Trap</span>
+          </div>
+          <p class="text-zinc-200 text-xs leading-relaxed">
+            Modern NVMe SSDs deliver fast sequential bandwidth, but their firmware manages all I/O with a generic LRU strategy that treats every request equally. In AI workloads:
+          </p>
+          <ul class="text-zinc-200 space-y-1 list-disc pl-4 text-xs">
+            <li><strong>Cache Pollution:</strong> Large 64KB sequential PyTorch training streams sweep through DRAM, evicting the Logical-to-Physical (L2P) translation table.</li>
+            <li><strong>The Double-Read Trap:</strong> Subsequent small KV inference reads miss in DRAM. The SSD must perform <em>two consecutive flash reads</em>: 1st flash fetch for the L2P entry (+130µs penalty) + 2nd flash fetch for data (25µs).</li>
+            <li><strong>GPU Starvation:</strong> Tail read latency spikes to 168µs, causing 38% GPU DataLoader stalls.</li>
+            <li><strong>Flash Wear &amp; High WAF:</strong> Checkpoint writes and temporary scratch data collide in the same blocks, causing high GC overhead and spiking WAF to 2.84.</li>
+          </ul>
+        </div>
+
+        <!-- The Firmware Solution -->
+        <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-1.5">
+          <div class="text-emerald-400 font-bold text-sm flex items-center gap-2">
+            <span>✅ Our Solution: SanDisk NeuroFTL™ (100% Firmware Innovation)</span>
+          </div>
+          <p class="text-zinc-200 text-xs leading-relaxed">
+            Operates entirely within SSD controller firmware on standard commodity hardware with zero host driver changes:
+          </p>
+          <ul class="text-zinc-200 space-y-1 list-disc pl-4 text-xs">
+            <li><strong>Dynamic 3-Region DRAM Partitioning:</strong> Region 1 (65% DRAM) permanently locks L2P metadata in RAM with a 98.6% hit rate (0.1µs RAM access), completely eliminating the Double-Read Trap.</li>
+            <li><strong>Online Spatial Classifier &amp; Direct DMA Bypass:</strong> Nanosecond classifier detects sequential training streams (<code class="text-amber-300 font-mono font-bold">Seq_Score &gt; 0.85</code>) and routes them directly to NAND channel buffers with 0% DRAM eviction.</li>
+            <li><strong>pSLC Mode Shield:</strong> Firmware tracks read counters per block; hot KV blocks exceeding 50,000 reads auto-migrate to pSLC mode, bounding GC latency to &le;15µs.</li>
+            <li><strong>RUH Checkpoint Segregation:</strong> Segregates checkpoint writes into dedicated Reclaim Unit Handles, dropping WAF from 2.84 to 1.08 and extending flash lifespan by 2.6×.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Jury Verdict Matrix -->
+      <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
+        <div class="text-white font-bold text-xs uppercase tracking-wider font-mono">🏆 Silicon Benchmark Verdict</div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono pt-1">
+          <div class="p-2 rounded-xl bg-black/40 border border-white/5">
+            <div class="text-[9px] text-zinc-400">P99 Latency</div>
+            <div class="text-sm font-bold text-emerald-400">21.4 µs</div>
+            <div class="text-[8px] text-zinc-400 line-through">168.2 µs (7.8× faster)</div>
+          </div>
+          <div class="p-2 rounded-xl bg-black/40 border border-white/5">
+            <div class="text-[9px] text-zinc-400">L2P RAM Hit</div>
+            <div class="text-sm font-bold text-cyan-400">98.6%</div>
+            <div class="text-[8px] text-zinc-400 line-through">18.4% (+80.2% lock)</div>
+          </div>
+          <div class="p-2 rounded-xl bg-black/40 border border-white/5">
+            <div class="text-[9px] text-zinc-400">Flash WAF</div>
+            <div class="text-sm font-bold text-emerald-400">1.08</div>
+            <div class="text-[8px] text-zinc-400 line-through">2.84 (2.6× life)</div>
+          </div>
+          <div class="p-2 rounded-xl bg-black/40 border border-white/5">
+            <div class="text-[9px] text-zinc-400">GPU Stalls</div>
+            <div class="text-sm font-bold text-emerald-400">0.0%</div>
+            <div class="text-[8px] text-zinc-400 line-through">38.2% (100% fed)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-1 flex justify-end">
+        <button onclick="closeSpecModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-400 text-black text-xs font-bold font-mono transition cursor-pointer">
+          Close Specification
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 6. JAVASCRIPT: THREE.JS + LIVE GRAPH + STEP CONTROLS + TELEMETRY          -->
+  <!-- ========================================================================= -->
+  <script>
+    // --- Audio Feedback ---
+    let audioCtx = null;
+    let isSoundOn = true;
+
+    function getAudio() {
+      try {
+        if (!audioCtx) {
+          const Cls = window.AudioContext || window.webkitAudioContext;
+          if (Cls) audioCtx = new Cls();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+        return audioCtx;
+      } catch (e) { return null; }
+    }
+
+    function playTone(type) {
+      if (!isSoundOn) return;
+      try {
+        const ctx = getAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        if (type === 'click') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(900, now);
+          osc.frequency.exponentialRampToValueAtTime(400, now + 0.04);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.045);
+        } else if (type === 'problem') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.16);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.16);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.17);
+        } else if (type === 'success') {
+          [523.25, 659.25, 783.99].forEach((freq, idx) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + idx * 0.04);
+            g.gain.setValueAtTime(0.04, now + idx * 0.04);
+            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.04 + 0.18);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(now + idx * 0.04); o.stop(now + idx * 0.04 + 0.19);
+          });
+        }
+      } catch (e) {}
+    }
+
+    function toggleAudio() {
+      isSoundOn = !isSoundOn;
+      const icon = document.getElementById('audioIcon');
+      if (icon) icon.innerText = isSoundOn ? '🔊' : '🔇';
+      if (isSoundOn) playTone('click');
+    }
+
+    // Wide Panoramic Overview Coordinates (Framed high to prevent any UI overlay)
+    const OVERVIEW_CAM = { x: -0.5, y: 22.0, z: 27.0 };
+    const OVERVIEW_TARGET = { x: -0.5, y: -4.5, z: 0.0 };
+
+    // --- Researched Executive Steps: Overview (Stage 0) + 5 Deep-Dive Stages ---
+    const STEPS = [
+      {
+        num: 0,
+        category: "OVERVIEW: ARCHITECTURE & SYSTEM TOPOLOGY",
+        activeChip: "Focus: Complete Gen5 x4 NVMe SSD Silicon",
+        title: "SanDisk NeuroFTL™ Silicon Architecture Overview",
+        para: "Commodity off-the-shelf NVMe SSD hardware running 100% firmware scheduling. Connects via PCIe Gen5 x4 to AI host clusters, routing massive sequential PyTorch streams alongside latency-critical KV-cache inference lookups without host software modifications.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Gen5 Controller:</strong> Embedded Nanosecond Spatial AI Classifier`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">3-Region DRAM:</strong> Pinned L2P (65%) &amp; Direct DMA Bypass (5%)`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">BiCS5 3D TLC Flash:</strong> Dynamic pSLC Shield (30%) &amp; RUH Isolation`
+        ],
+        nextLabel: "Next: Step 1 - Workload Arrival (PCIe Gen5) →",
+        mode: "SOLUTION",
+        workload: "BASELINE",
+        cam: { x: -0.5, y: 22.0, z: 27.0 }, // Panoramic overview
+        target: { x: -0.5, y: -4.5, z: 0.0 },
+        metricP99: "21.4 µs",
+        metricP99Std: "168.2",
+        metricBadgeLatency: "⚡ 7.8× FASTER",
+        metricSecLabel: "L2P RAM Hit Rate",
+        metricSecVal: "98.6%",
+        metricSecStd: "18.4%",
+        metricBadgeSec: "🔒 METADATA LOCKED"
+      },
+      {
+        num: 1,
+        category: "STAGE 1: TRAFFIC ARRIVAL",
+        activeChip: "Focus: PCIe Gen5 Interface",
+        title: "1. AI Storage Workload Arrival (PCIe Gen5)",
+        para: "High-bandwidth sequential PyTorch training streams flood NVMe queues at 14.2 GB/s alongside latency-critical KV-cache inference requests. Standard SSD firmware treats every request equally, causing severe DRAM contention.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">PCIe Gen5 Ingress:</strong> 14.2 GB/s NVMe Queues`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Workload Clash:</strong> Bulk Training vs KV-Cache`,
+          `<span class="w-2 h-2 rounded-full bg-rose-400 shrink-0"></span><strong class="text-white">Firmware Flaw:</strong> Generic LRU Cache Contention`
+        ],
+        nextLabel: "Next: See Double-Read Failure ⚠️ →",
+        mode: "SOLUTION",
+        workload: "BASELINE",
+        cam: { x: -3.5, y: 14.0, z: 18.0 }, // Gentle, comfortable zoom showing whole SSD!
+        target: { x: -2.2, y: -3.2, z: 0.0 },
+        metricP99: "21.4 µs",
+        metricP99Std: "168.2",
+        metricBadgeLatency: "⚡ 7.8× FASTER",
+        metricSecLabel: "L2P RAM Hit Rate",
+        metricSecVal: "98.6%",
+        metricSecStd: "18.4%",
+        metricBadgeSec: "🔒 METADATA LOCKED"
+      },
+      {
+        num: 2,
+        category: "STAGE 2: CONVENTIONAL FAILURE",
+        activeChip: "Focus: Shared DRAM & Flash Array",
+        title: "2. The Double-Read Trap (Conventional FTL Failure)",
+        para: "Bulk 64KB training streams sweep through DRAM and evict the Logical-to-Physical (L2P) translation table. Subsequent KV reads miss in RAM, forcing two physical flash reads (+130µs penalty) that starve the host GPU.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Cache Eviction:</strong> L2P Translation Table Flushed`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Double-Read Trap:</strong> +130µs Flash Penalty`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">GPU Starvation:</strong> 38.2% DataLoader Stalls`
+        ],
+        nextLabel: "Next: Online Stream Classifier ⚡ →",
+        mode: "PROBLEM",
+        workload: "TRAINING_SURGE",
+        cam: { x: 1.5, y: 13.8, z: 18.0 }, // Gentle zoom viewing DRAM and crimson flash laser!
+        target: { x: 1.0, y: -3.2, z: 0.0 },
+        metricP99: "168.2 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "⚠️ +130µs FLASH PENALTY",
+        metricSecLabel: "GPU Compute Idle",
+        metricSecVal: "38.2% Stalled",
+        metricSecStd: "0.0%",
+        metricBadgeSec: "❌ GPU DATA-STARVED"
+      },
+      {
+        num: 3,
+        category: "STAGE 3: ONLINE STREAM CLASSIFIER",
+        activeChip: "Focus: SanDisk Controller SoC",
+        title: "3. Lightweight Online Stream Classifier (100% Firmware)",
+        para: "NeuroFTL embeds a 10-nanosecond online spatial classifier inside SSD controller firmware with zero host driver changes. It detects sequential streams in real time and routes them directly to NAND channel buffers.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">100% Firmware:</strong> Standard NVMe 2.0 Controller`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Online Classifier:</strong> Seq_Score > 0.85 Detect`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Direct DMA Bypass:</strong> 0% DRAM Eviction`
+        ],
+        nextLabel: "Next: 3-Region DRAM & pSLC Shield 🛡️ →",
+        mode: "SOLUTION",
+        workload: "BASELINE",
+        cam: { x: -3.0, y: 13.5, z: 17.5 }, // Gentle zoom viewing Controller SoC & Direct rail!
+        target: { x: -2.0, y: -3.2, z: 0.0 },
+        metricP99: "21.4 µs",
+        metricP99Std: "168.2",
+        metricBadgeLatency: "⚡ 0% DRAM POLLUTION",
+        metricSecLabel: "Classifier Seq_Score",
+        metricSecVal: "0.94 > 0.85",
+        metricSecStd: "0.00",
+        metricBadgeSec: "🚀 DIRECT DMA BYPASS"
+      },
+      {
+        num: 4,
+        category: "STAGE 4: 3-REGION DRAM & pSLC SHIELD",
+        activeChip: "Focus: 3-Region DRAM & BiCS Flash Pool",
+        title: "4. Dynamic 3-Region DRAM Partitioning & pSLC Shield",
+        para: "NeuroFTL permanently pins the L2P metadata in Region 1 (65% DRAM / 98.6% hit rate / 0.1µs RAM access). Hot KV blocks exceeding 50,000 reads auto-migrate to high-endurance pSLC mode, dropping WAF to 1.08.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Region 1 Pinning:</strong> 98.6% L2P RAM Hit (0.1µs)`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">pSLC Mode Shield:</strong> Hot KV Block Migration`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Flash Longevity:</strong> WAF 1.08 (2.6× Life)`
+        ],
+        nextLabel: "Next: View Silicon Verdict 🏆 →",
+        mode: "SOLUTION",
+        workload: "KV_STORM",
+        cam: { x: 1.6, y: 13.8, z: 17.8 }, // Gentle zoom viewing 3-Region DRAM & golden pSLC Flash!
+        target: { x: 1.2, y: -3.2, z: 0.0 },
+        metricP99: "21.4 µs",
+        metricP99Std: "168.2",
+        metricBadgeLatency: "⚡ FLAT 21µs LATENCY",
+        metricSecLabel: "BiCS Flash WAF",
+        metricSecVal: "1.08 WAF",
+        metricSecStd: "2.84",
+        metricBadgeSec: "🛡️ 2.6× FLASH LIFESPAN"
+      },
+      {
+        num: 5,
+        category: "STAGE 5: SILICON VERDICT",
+        activeChip: "Focus: Full M.2 NVMe SSD Assembly",
+        title: "5. Verified Benchmark Validation & Silicon Verdict",
+        para: "Through pure firmware innovation on standard commodity NVMe SSD hardware, SanDisk NeuroFTL eliminates the Double-Read Trap, locks tail latency at 21.4µs, extends flash life by 2.6×, and keeps GPUs 100% active.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Tail Latency:</strong> 21.4µs Flat (7.8× Faster)`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">GPU Compute:</strong> 0.0% Stalls (100% Active)`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Jury Ready:</strong> 100% Firmware Solution`
+        ],
+        nextLabel: "Restart Walkthrough (Overview) ↺",
+        mode: "SOLUTION",
+        workload: "BASELINE",
+        cam: { x: -0.5, y: 22.0, z: 27.0 }, // Panoramic Overview for Victory!
+        target: { x: -0.5, y: -4.5, z: 0.0 },
+        metricP99: "21.4 µs",
+        metricP99Std: "168.2",
+        metricBadgeLatency: "⚡ 7.8× LOWER TAIL LATENCY",
+        metricSecLabel: "GPU Utilization",
+        metricSecVal: "100% Active",
+        metricSecStd: "61.8%",
+        metricBadgeSec: "🚀 ZERO IDLE BUBBLES"
+      }
+    ];
+
+    let currentStepIdx = 0;
+    let isPitchRunning = false;
+    let currentArchMode = "SOLUTION";
+    let autoPlayTimer = null;
+    let isAutoPlaying = false;
+
+    // Fluid Flow Speed and Vanishing Opacity
+    let flowSpeedFactor = 1.0;
+    let targetFlowSpeedFactor = 1.0;
+    let flowOpacity = 1.0;
+    let targetFlowOpacity = 1.0;
+
+    // --- User Flow Controls ---
+    function startPitch() {
+      playTone('success');
+      const overlay = document.getElementById('startOverlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => overlay.style.display = 'none', 400);
+      }
+      isPitchRunning = true;
+      targetFlowSpeedFactor = 1.0;
+      targetFlowOpacity = 1.0;
+      updateFlowButtonUI(true);
+
+      // Open in Overview tab as requested!
+      goToStep(0);
+    }
+
+    function toggleSimulationFlow() {
+      playTone('click');
+      if (targetFlowSpeedFactor > 0.5) {
+        pauseSimulationFlow();
+      } else {
+        resumeSimulationFlow();
+      }
+    }
+
+    function pauseSimulationFlow() {
+      targetFlowSpeedFactor = 0.0;
+      targetFlowOpacity = 0.0; // Smoothly vanish particles and lasers!
+      updateFlowButtonUI(false);
+    }
+
+    function resumeSimulationFlow() {
+      targetFlowSpeedFactor = 1.0;
+      targetFlowOpacity = 1.0; // Smoothly return particles and lasers!
+      updateFlowButtonUI(true);
+    }
+
+    function updateFlowButtonUI(isRunning) {
+      const btn = document.getElementById('btnFlowToggle');
+      const icon = document.getElementById('flowToggleIcon');
+      const text = document.getElementById('flowToggleText');
+      const dot = document.getElementById('liveStatusDot');
+      const statusText = document.getElementById('liveStatusText');
+      const pill = document.getElementById('liveStatusPill');
+      const graphDot = document.getElementById('graphLiveDot');
+
+      if (!isRunning) {
+        if (btn) btn.className = "px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 transition cursor-pointer flex items-center gap-1 font-bold shadow-md";
+        if (icon) icon.innerText = "▶";
+        if (text) text.innerText = "Resume Flow";
+        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500";
+        if (statusText) statusText.innerText = "FLOW PAUSED";
+        if (pill) pill.className = "hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[11px]";
+        if (graphDot) graphDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+      } else {
+        if (btn) btn.className = "px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer flex items-center gap-1 font-bold shadow-md";
+        if (icon) icon.innerText = "⏸";
+        if (text) text.innerText = "Stop Flow";
+        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+        if (statusText) statusText.innerText = "8 Hz LIVE";
+        if (pill) pill.className = "hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px]";
+        if (graphDot) graphDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping";
+      }
+    }
+
+    function zoomOutOverview() {
+      goToStep(0);
+    }
+
+    function goToStep(stepNum) {
+      stepNum = Math.max(0, Math.min(5, parseInt(stepNum, 10)));
+      currentStepIdx = stepNum;
+      const step = STEPS[currentStepIdx];
+      playTone(step.mode === 'PROBLEM' ? 'problem' : 'click');
+
+      // Update Dock text & explanatory paragraph
+      setText('dockStageCount', step.num === 0 ? 'OVERVIEW' : `STAGE ${step.num} / 5`);
+      setText('dockStepCategory', step.category);
+      setText('dockActiveChip', step.activeChip);
+      setText('dockStepTitle', step.title);
+      setText('dockStepPara', step.para);
+      setText('btnNextLabel', step.nextLabel);
+
+      // Update Progress Bar
+      const bar = document.getElementById('dockProgressBar');
+      if (bar) bar.style.width = (stepNum === 0 ? 5 : stepNum * 20) + '%';
+
+      // Update Structured Bullet Points (High-Contrast Highlight Chips)
+      setHtml('point1', step.points[0]);
+      setHtml('point2', step.points[1]);
+      setHtml('point3', step.points[2]);
+
+      // Highlight Metric Cards according to mode
+      const cardLat = document.getElementById('metricCardLatency');
+      const badgeLat = document.getElementById('metricBadgeLatency');
+      const valP99 = document.getElementById('metricP99');
+
+      if (step.mode === 'PROBLEM') {
+        if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 min-w-[125px] sm:min-w-[140px] space-y-0.5 glow-problem shadow-md";
+        if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-rose-400";
+        if (valP99) valP99.className = "text-base sm:text-lg font-black text-rose-400 font-mono";
+      } else {
+        if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
+        if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-emerald-400";
+        if (valP99) valP99.className = "text-base sm:text-lg font-black text-emerald-400 font-mono";
+      }
+
+      // Update Stage Progress Pills (0 to 5)
+      for (let i = 0; i <= 5; i++) {
+        const tab = document.getElementById(`stepTab${i}`);
+        if (!tab) continue;
+        if (i === stepNum) {
+          tab.className = "no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+        } else if (i < stepNum && i > 0) {
+          tab.className = "no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+        } else {
+          tab.className = "no-drag px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+        }
+      }
+
+      // Automatically center active tab in sideways scroll container!
+      const activeTab = document.getElementById(`stepTab${stepNum}`);
+      if (activeTab) {
+        activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+      setTimeout(updateTabScrollButtons, 350);
+
+      // Prev Button State (disabled only on Overview)
+      const btnPrev = document.getElementById('btnPrevStep');
+      if (btnPrev) btnPrev.disabled = (stepNum === 0);
+
+      // Mode Switch
+      setMode(step.mode, false);
+
+      // Camera Glide to Specific Zoom-in Angle
+      targetCamPos.set(step.cam.x, step.cam.y, step.cam.z);
+      targetLookAt.set(step.target.x, step.target.y, step.target.z);
+      isCamLerping = true;
+      setTimeout(updateZoomUI, 400);
+
+      // Trigger Backend Workload
+      fetch('/api/workload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phase: step.workload })
+      }).catch(() => {});
+    }
+
+    function nextStep() {
+      if (currentStepIdx >= 5) {
+        goToStep(0); // Loops back to Overview
+      } else {
+        goToStep(currentStepIdx + 1);
+      }
+    }
+
+    function prevStep() {
+      if (currentStepIdx > 0) {
+        goToStep(currentStepIdx - 1);
+      }
+    }
+
+    function switchMode(mode) {
+      if (mode === 'PROBLEM') {
+        goToStep(2);
+      } else {
+        goToStep(4);
+      }
+    }
+
+    function setMode(mode, triggerStep = true) {
+      currentArchMode = mode;
+      const btnProb = document.getElementById('btnTopProblem');
+      const btnSol = document.getElementById('btnTopSolution');
+      const pillMode = document.getElementById('graphModePill');
+
+      if (mode === 'PROBLEM') {
+        if (btnProb) btnProb.className = "px-3 sm:px-4 py-1 rounded-full text-xs font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition cursor-pointer glow-problem";
+        if (btnSol) btnSol.className = "px-3 sm:px-4 py-1 rounded-full text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer";
+        if (pillMode) {
+          pillMode.innerText = "CONVENTIONAL ACTIVE";
+          pillMode.className = "text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-bold";
+        }
+        set3DProblem();
+      } else {
+        if (btnSol) btnSol.className = "px-3 sm:px-4 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/20 transition cursor-pointer";
+        if (btnProb) btnProb.className = "px-3 sm:px-4 py-1 rounded-full text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer";
+        if (pillMode) {
+          pillMode.innerText = "NEUROFTL ACTIVE";
+          pillMode.className = "text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold";
+        }
+        set3DSolution();
+      }
+    }
+
+    function toggleAutoPlay() {
+      isAutoPlaying = !isAutoPlaying;
+      const icon = document.getElementById('autoIcon');
+      const btn = document.getElementById('btnAutoPlay');
+
+      if (isAutoPlaying) {
+        if (icon) icon.innerText = '⏸';
+        if (btn) btn.className = "px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-medium transition cursor-pointer flex items-center gap-1";
+        autoPlayTimer = setInterval(() => {
+          if (targetFlowSpeedFactor > 0.5) nextStep();
+        }, 7000);
+      } else {
+        if (icon) icon.innerText = '▶';
+        if (btn) btn.className = "px-3 py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1";
+        if (autoPlayTimer) clearInterval(autoPlayTimer);
+      }
+    }
+
+    function resetDemo() {
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      isAutoPlaying = false;
+      targetFlowSpeedFactor = 1.0;
+      targetFlowOpacity = 1.0;
+      updateFlowButtonUI(true);
+      fetch('/api/reset', { method: 'POST' }).catch(() => {});
+      goToStep(0);
+    }
+
+    function openSpecModal() {
+      playTone('click');
+      const modal = document.getElementById('specModal');
+      if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function closeSpecModal() {
+      playTone('click');
+      const modal = document.getElementById('specModal');
+      if (modal) {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    // =========================================================================
+    // 6.5 MANUAL 3D ZOOM & TABS SIDEWAYS SCROLL CAROUSEL ENGINE
+    // =========================================================================
+    const MIN_ZOOM_DIST = 6.5;
+    const MAX_ZOOM_DIST = 58.0;
+    const BASE_OVERVIEW_DIST = 38.0;
+
+    function manualZoom(direction, stepFactor = 0.8) {
+      if (!camera || !controls) return;
+      playTone('click');
+      isCamLerping = false;
+
+      const eye = camera.position.clone().sub(controls.target);
+      let dist = eye.length();
+
+      if (direction > 0) {
+        dist = Math.max(MIN_ZOOM_DIST, dist * stepFactor);
+      } else {
+        dist = Math.min(MAX_ZOOM_DIST, dist * (1 / stepFactor));
+      }
+
+      eye.setLength(dist);
+      targetCamPos.copy(controls.target).add(eye);
+      targetLookAt.copy(controls.target);
+      isCamLerping = true;
+      updateZoomUI(dist);
+    }
+
+    function onZoomSliderInput(val) {
+      if (!camera || !controls) return;
+      isCamLerping = false;
+      const normalized = parseFloat(val) / 100; // 0 (far) to 1 (near)
+      const dist = MAX_ZOOM_DIST - normalized * (MAX_ZOOM_DIST - MIN_ZOOM_DIST);
+      const eye = camera.position.clone().sub(controls.target);
+      eye.setLength(dist);
+      camera.position.copy(controls.target).add(eye);
+      targetCamPos.copy(camera.position);
+      targetLookAt.copy(controls.target);
+      updateZoomUI(dist);
+    }
+
+    function resetCameraZoom() {
+      playTone('click');
+      const step = STEPS[currentStepIdx] || STEPS[0];
+      targetCamPos.set(step.cam.x, step.cam.y, step.cam.z);
+      targetLookAt.set(step.target.x, step.target.y, step.target.z);
+      isCamLerping = true;
+      setTimeout(updateZoomUI, 400);
+    }
+
+    function focusPreset(preset) {
+      playTone('click');
+      if (preset === 'OVERVIEW') {
+        goToStep(0);
+      } else if (preset === 'CONTROLLER') {
+        targetCamPos.set(-4.2, 13.5, 15.5);
+        targetLookAt.set(-3.8, 0.3, 0.0);
+        isCamLerping = true;
+      } else if (preset === 'DRAM') {
+        targetCamPos.set(-0.2, 13.0, 15.0);
+        targetLookAt.set(0.0, 0.3, 0.0);
+        isCamLerping = true;
+      } else if (preset === 'FLASH') {
+        targetCamPos.set(5.5, 13.5, 15.5);
+        targetLookAt.set(4.5, 0.3, 0.0);
+        isCamLerping = true;
+      }
+      setTimeout(updateZoomUI, 400);
+    }
+
+    function updateZoomUI(customDist) {
+      if (!camera || !controls) return;
+      const dist = customDist !== undefined ? customDist : camera.position.distanceTo(controls.target);
+      const pct = Math.round((BASE_OVERVIEW_DIST / Math.max(1, dist)) * 100);
+      const readout = document.getElementById('zoomReadout');
+      if (readout) readout.innerText = `${pct}%`;
+      const slider = document.getElementById('zoomSlider');
+      if (slider && customDist === undefined) {
+        const sliderVal = Math.round(((MAX_ZOOM_DIST - dist) / (MAX_ZOOM_DIST - MIN_ZOOM_DIST)) * 100);
+        slider.value = Math.max(0, Math.min(100, sliderVal));
+      }
+    }
+
+    function scrollStepTabs(direction) {
+      const container = document.getElementById('stageTabsScrollContainer');
+      if (!container) return;
+      playTone('click');
+      container.scrollBy({ left: direction * 180, behavior: 'smooth' });
+      setTimeout(updateTabScrollButtons, 350);
+    }
+
+    function updateTabScrollButtons() {
+      const container = document.getElementById('stageTabsScrollContainer');
+      const btnLeft = document.getElementById('btnScrollTabsLeft');
+      const btnRight = document.getElementById('btnScrollTabsRight');
+      if (!container || !btnLeft || !btnRight) return;
+
+      const atStart = container.scrollLeft <= 4;
+      const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 6;
+
+      btnLeft.style.opacity = atStart ? '0.25' : '1.0';
+      btnLeft.disabled = atStart;
+
+      btnRight.style.opacity = atEnd ? '0.25' : '1.0';
+      btnRight.disabled = atEnd;
+    }
+
+    function initTabsSidewaysScroll() {
+      const container = document.getElementById('stageTabsScrollContainer');
+      if (!container) return;
+
+      // Mouse wheel horizontal scroll
+      container.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          container.scrollLeft += e.deltaY * 0.9;
+          updateTabScrollButtons();
+        }
+      }, { passive: false });
+
+      // Pointer drag to scroll
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+
+      container.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('button')) return;
+        isDown = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.cursor = 'grabbing';
+      });
+
+      window.addEventListener('pointerup', () => {
+        isDown = false;
+        if (container) container.style.cursor = '';
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isDown || !container) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        container.scrollLeft = scrollLeft - walk;
+        updateTabScrollButtons();
+      });
+
+      container.addEventListener('scroll', updateTabScrollButtons);
+      window.addEventListener('resize', updateTabScrollButtons);
+      updateTabScrollButtons();
+    }
+
+    function setText(id, txt) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = txt;
+    }
+
+    function setHtml(id, html) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = html;
+    }
+
+    let isDockCollapsed = false;
+    let savedDockHeight = '';
+
+    function toggleDockCollapse() {
+      playTone('click');
+      isDockCollapsed = !isDockCollapsed;
+      const dock = document.getElementById('presentationDock');
+      const header = document.getElementById('presentationDockHeader');
+      const body = document.getElementById('dockBody');
+      const icon = document.getElementById('dockToggleIcon');
+      const label = document.getElementById('dockToggleLabel');
+      const miniNext = document.getElementById('dockMiniNext');
+      const resizeHandle = document.getElementById('presentationResizeHandle');
+      const btnToggle = document.getElementById('btnToggleDock');
+
+      if (!dock || !body) return;
+
+      if (isDockCollapsed) {
+        savedDockHeight = dock.style.height || '';
+        body.classList.add('hidden');
+        dock.style.minHeight = '0px';
+        dock.style.maxHeight = 'none';
+        dock.style.height = 'auto';
+        dock.style.padding = '8px 12px';
+        dock.style.resize = 'none';
+        if (header) {
+          header.style.borderBottom = 'none';
+          header.style.paddingBottom = '0px';
+        }
+        if (icon) icon.innerText = '▲';
+        if (label) label.innerText = 'Expand';
+        if (btnToggle) {
+          btnToggle.className = "no-drag px-3 py-1 rounded-xl bg-emerald-500/25 border border-emerald-400 text-emerald-200 hover:bg-emerald-500/40 text-xs font-mono font-bold transition cursor-pointer flex items-center gap-1.5 shrink-0 shadow-lg shadow-emerald-500/20";
+        }
+        if (miniNext) miniNext.classList.remove('hidden');
+        if (resizeHandle) resizeHandle.style.display = 'none';
+      } else {
+        body.classList.remove('hidden');
+        dock.style.minHeight = '130px';
+        dock.style.maxHeight = '82vh';
+        dock.style.height = savedDockHeight || 'auto';
+        dock.style.padding = '';
+        dock.style.resize = 'both';
+        if (header) {
+          header.style.borderBottom = '';
+          header.style.paddingBottom = '';
+        }
+        if (icon) icon.innerText = '▼';
+        if (label) label.innerText = 'Minimize';
+        if (btnToggle) {
+          btnToggle.className = "no-drag px-2.5 py-1 rounded-xl apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-100 hover:text-white transition cursor-pointer flex items-center gap-1.5 shrink-0 border border-white/20 shadow-md";
+        }
+        if (miniNext) miniNext.classList.add('hidden');
+        if (resizeHandle) resizeHandle.style.display = 'flex';
+      }
+    }
+
+    // --- Keyboard Navigation ---
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' || e.code === 'ArrowRight') {
+        e.preventDefault();
+        if (!isPitchRunning) startPitch();
+        else nextStep();
+      } else if (e.code === 'ArrowLeft') {
+        e.preventDefault();
+        prevStep();
+      } else if (e.code === 'Digit0' || e.code === 'Numpad0') {
+        goToStep(0);
+      } else if (e.code === 'Digit1' || e.code === 'Numpad1') {
+        goToStep(1);
+      } else if (e.code === 'Digit2' || e.code === 'Numpad2') {
+        goToStep(2);
+      } else if (e.code === 'Digit3' || e.code === 'Numpad3') {
+        goToStep(3);
+      } else if (e.code === 'Digit4' || e.code === 'Numpad4') {
+        goToStep(4);
+      } else if (e.code === 'Digit5' || e.code === 'Numpad5') {
+        goToStep(5);
+      } else if (e.code === 'KeyM') {
+        switchMode(currentArchMode === 'SOLUTION' ? 'PROBLEM' : 'SOLUTION');
+      } else if (e.code === 'KeyP') {
+        toggleSimulationFlow();
+      } else if (e.code === 'KeyO') {
+        goToStep(0);
+      } else if (e.code === 'KeyA') {
+        toggleAutoPlay();
+      } else if (e.code === 'KeyD') {
+        toggleDockCollapse();
+      } else if (e.key === '+' || e.key === '=' || e.code === 'NumpadAdd') {
+        manualZoom(1);
+      } else if (e.key === '-' || e.key === '_' || e.code === 'NumpadSubtract') {
+        manualZoom(-1);
+      } else if (e.code === 'KeyR') {
+        resetCameraZoom();
+      } else if (e.code === 'Escape') {
+        closeSpecModal();
+      }
+    });
+
+    // =========================================================================
+    // 7. REAL-TIME STREAMING LATENCY GRAPH ENGINE WITH PROPER MARKINGS
+    // =========================================================================
+    const graphCanvas = document.getElementById('liveGraphCanvas');
+    const graphCtx = graphCanvas ? graphCanvas.getContext('2d') : null;
+    const HISTORY_LEN = 36;
+    let histStdLatency = new Array(HISTORY_LEN).fill(168.2);
+    let histAdpLatency = new Array(HISTORY_LEN).fill(21.4);
+
+    function resizeGraph() {
+      if (!graphCanvas) return;
+      const rect = graphCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const targetW = Math.max(100, Math.floor((rect.width || 380) * dpr));
+      const targetH = Math.max(60, Math.floor((rect.height || 100) * dpr));
+      if (graphCanvas.width !== targetW || graphCanvas.height !== targetH) {
+        graphCanvas.width = targetW;
+        graphCanvas.height = targetH;
+      }
+    }
+
+    function addGraphPoint(stdVal, adpVal) {
+      if (flowSpeedFactor < 0.05) return;
+      histStdLatency.shift();
+      histStdLatency.push(stdVal);
+
+      histAdpLatency.shift();
+      histAdpLatency.push(adpVal);
+    }
+
+    function drawGraph() {
+      if (!graphCtx || !graphCanvas) return;
+      
+      // Keep canvas resolution synced to CSS bounds
+      const rect = graphCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const targetW = Math.max(100, Math.floor((rect.width || 380) * dpr));
+      const targetH = Math.max(60, Math.floor((rect.height || 100) * dpr));
+      if (graphCanvas.width !== targetW || graphCanvas.height !== targetH) {
+        graphCanvas.width = targetW;
+        graphCanvas.height = targetH;
+      }
+
+      const w = graphCanvas.width;
+      const h = graphCanvas.height;
+      graphCtx.clearRect(0, 0, w, h);
+
+      // Defend against overflow: explicit strict paddings on all 4 borders
+      const topPad = 14 * dpr;
+      const bottomPad = 16 * dpr;
+      const leftPad = 46 * dpr;
+      const rightPad = 18 * dpr;
+      const plotW = Math.max(20, w - leftPad - rightPad);
+      const plotH = Math.max(20, h - topPad - bottomPad);
+
+      // Auto-scaling ceiling with safety clamp
+      const peak = Math.max(...histStdLatency, ...histAdpLatency, 240);
+      const maxVal = Math.min(360, Math.max(250, Math.ceil(peak / 50) * 50));
+      const minVal = 0;
+
+      const getX = (i) => leftPad + (i / (HISTORY_LEN - 1)) * plotW;
+      const getY = (val) => {
+        const clamped = Math.min(maxVal, Math.max(minVal, val));
+        return topPad + plotH * (1 - (clamped - minVal) / (maxVal - minVal));
+      };
+
+      // 1. Draw Y-Axis Markings & Horizontal Grid Lines
+      const levels = [350, 300, 250, 200, 150, 100, 50, 0].filter(lvl => lvl <= maxVal);
+      graphCtx.font = `${9 * dpr}px monospace`;
+      graphCtx.fillStyle = '#94a3b8';
+      graphCtx.textAlign = 'right';
+
+      levels.forEach(level => {
+        const y = getY(level);
+
+        // Horizontal grid line
+        graphCtx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+        graphCtx.lineWidth = 1;
+        graphCtx.beginPath();
+        graphCtx.moveTo(leftPad, y);
+        graphCtx.lineTo(w - rightPad, y);
+        graphCtx.stroke();
+
+        // Y-axis numerical label
+        graphCtx.fillText(`${level}µs`, leftPad - 5 * dpr, y + 3 * dpr);
+      });
+
+      // 2. Reference Threshold Line: Conventional Double-Read Spike (~168µs)
+      const yStdRef = getY(168.2);
+      graphCtx.strokeStyle = 'rgba(225, 29, 72, 0.45)';
+      graphCtx.lineWidth = 1.2 * dpr;
+      graphCtx.setLineDash([4 * dpr, 4 * dpr]);
+      graphCtx.beginPath();
+      graphCtx.moveTo(leftPad, yStdRef);
+      graphCtx.lineTo(w - rightPad, yStdRef);
+      graphCtx.stroke();
+      graphCtx.setLineDash([]); // reset dash
+
+      graphCtx.fillStyle = 'rgba(244, 63, 94, 0.85)';
+      graphCtx.font = `${8.5 * dpr}px monospace`;
+      graphCtx.textAlign = 'right';
+      graphCtx.fillText('Spike 168µs', w - rightPad - 4 * dpr, yStdRef - 3 * dpr);
+
+      // 3. Reference Target Line: NeuroFTL Locked Target (21.4µs)
+      const yAdpRef = getY(21.4);
+      graphCtx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
+      graphCtx.lineWidth = 1.2 * dpr;
+      graphCtx.setLineDash([3 * dpr, 3 * dpr]);
+      graphCtx.beginPath();
+      graphCtx.moveTo(leftPad, yAdpRef);
+      graphCtx.lineTo(w - rightPad, yAdpRef);
+      graphCtx.stroke();
+      graphCtx.setLineDash([]); // reset dash
+
+      graphCtx.fillStyle = 'rgba(52, 211, 153, 0.85)';
+      graphCtx.fillText('NeuroFTL 21µs', w - rightPad - 4 * dpr, yAdpRef - 3 * dpr);
+
+      // 4. Draw Conventional Curve (Crimson with subtle gradient area fill)
+      const gradStd = graphCtx.createLinearGradient(0, topPad, 0, topPad + plotH);
+      gradStd.addColorStop(0, 'rgba(225, 29, 72, 0.16)');
+      gradStd.addColorStop(1, 'rgba(225, 29, 72, 0.01)');
+
+      graphCtx.beginPath();
+      histStdLatency.forEach((val, i) => {
+        const x = getX(i);
+        const y = getY(val);
+        if (i === 0) graphCtx.moveTo(x, y);
+        else graphCtx.lineTo(x, y);
+      });
+      graphCtx.lineTo(getX(HISTORY_LEN - 1), topPad + plotH);
+      graphCtx.lineTo(getX(0), topPad + plotH);
+      graphCtx.closePath();
+      graphCtx.fillStyle = gradStd;
+      graphCtx.fill();
+
+      // Conventional Line Stroke
+      graphCtx.beginPath();
+      graphCtx.strokeStyle = '#e11d48';
+      graphCtx.lineWidth = 2.4 * dpr;
+      histStdLatency.forEach((val, i) => {
+        const x = getX(i);
+        const y = getY(val);
+        if (i === 0) graphCtx.moveTo(x, y);
+        else graphCtx.lineTo(x, y);
+      });
+      graphCtx.stroke();
+
+      // Pulsing head dot on Conventional line
+      const lastStdX = getX(HISTORY_LEN - 1);
+      const lastStdY = getY(histStdLatency[HISTORY_LEN - 1]);
+      graphCtx.fillStyle = '#e11d48';
+      graphCtx.beginPath();
+      graphCtx.arc(lastStdX, lastStdY, 3.5 * dpr, 0, Math.PI * 2);
+      graphCtx.fill();
+
+      // 5. Draw NeuroFTL Curve (Emerald with solid line & glowing head)
+      graphCtx.beginPath();
+      graphCtx.strokeStyle = '#34d399';
+      graphCtx.lineWidth = 3.0 * dpr;
+      histAdpLatency.forEach((val, i) => {
+        const x = getX(i);
+        const y = getY(val);
+        if (i === 0) graphCtx.moveTo(x, y);
+        else graphCtx.lineTo(x, y);
+      });
+      graphCtx.stroke();
+
+      // Pulsing head dot on NeuroFTL line
+      const lastAdpX = getX(HISTORY_LEN - 1);
+      const lastAdpY = getY(histAdpLatency[HISTORY_LEN - 1]);
+      graphCtx.fillStyle = '#34d399';
+      graphCtx.beginPath();
+      graphCtx.arc(lastAdpX, lastAdpY, 4.0 * dpr, 0, Math.PI * 2);
+      graphCtx.fill();
+
+      // Outer glow ring on latest NeuroFTL point
+      graphCtx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
+      graphCtx.lineWidth = 2.0 * dpr;
+      graphCtx.beginPath();
+      graphCtx.arc(lastAdpX, lastAdpY, 7.0 * dpr, 0, Math.PI * 2);
+      graphCtx.stroke();
+    }
+
+    // =========================================================================
+    // 8. REALISTIC THREE.JS HARDWARE RENDERING ENGINE
+    // =========================================================================
+    let scene, camera, renderer, controls;
+    let targetCamPos = new THREE.Vector3();
+    let targetLookAt = new THREE.Vector3();
+    let isCamLerping = false;
+
+    let pcbMesh, socMesh, dramMesh, nandMesh1, nandMesh2;
+    let doubleReadBeam, bypassSpline;
+    let particles, particleData;
+    const NUM_PARTICLES = 160;
+
+    let dramCanvas, dramCtx, dramTexture;
+    let socCanvas, socCtx, socTexture;
+    let dramAnimTime = 0;
+
+    // Procedural PCB Texture with Gold Pins & Traces
+    function createPcbCanvasTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#0b0f16';
+      ctx.fillRect(0, 0, 1024, 512);
+
+      // Copper Traces
+      ctx.strokeStyle = '#223048';
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < 35; i++) {
+        ctx.beginPath();
+        const y = 30 + i * 13;
+        ctx.moveTo(120, y);
+        ctx.lineTo(280 + (i % 6) * 40, y);
+        ctx.lineTo(400, y + (i % 2 === 0 ? 15 : -15));
+        ctx.lineTo(880, y);
+        ctx.stroke();
+      }
+
+      // Ground Vias
+      ctx.fillStyle = '#c89528';
+      for (let x = 140; x < 960; x += 32) {
+        for (let y = 40; y < 480; y += 38) {
+          ctx.beginPath();
+          ctx.arc(x + (y % 16), y, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Gold PCIe Edge Connector Fingers with standard M-Key notch
+      ctx.fillStyle = '#eab308';
+      for (let y = 45; y < 465; y += 11) {
+        if (y > 280 && y < 330) continue;
+        ctx.fillRect(10, y, 75, 7.5);
+      }
+
+      // Mounting Notch Ring
+      ctx.strokeStyle = '#eab308';
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.arc(1015, 256, 45, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Silkscreen
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 18px "SF Pro Display", sans-serif';
+      ctx.fillText('SanDisk® NeuroFTL™ Gen5 x4 NVMe SSD', 140, 485);
+      ctx.font = '12px monospace';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('MODEL: SD-AI-8TB  •  PCIe 5.0 x4  •  BiCS™ 3D TLC  •  FW: v2.4.0', 140, 502);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.anisotropy = 8;
+      return texture;
+    }
+
+    // Procedural SoC Lid Texture
+    function createSocLidTexture() {
+      socCanvas = document.createElement('canvas');
+      socCanvas.width = 512;
+      socCanvas.height = 512;
+      socCtx = socCanvas.getContext('2d');
+      updateSocLidTexture(true);
+
+      socTexture = new THREE.CanvasTexture(socCanvas);
+      return socTexture;
+    }
+
+    function updateSocLidTexture(isNeuroFTL) {
+      if (!socCtx) return;
+      socCtx.fillStyle = '#161922';
+      socCtx.fillRect(0, 0, 512, 512);
+
+      socCtx.strokeStyle = '#2d3345';
+      socCtx.lineWidth = 8;
+      socCtx.strokeRect(8, 8, 496, 496);
+
+      socCtx.fillStyle = '#fbbf24';
+      socCtx.beginPath();
+      socCtx.arc(36, 36, 12, 0, Math.PI * 2);
+      socCtx.fill();
+
+      socCtx.fillStyle = '#cbd5e1';
+      socCtx.font = 'bold 32px "SF Pro Display", sans-serif';
+      socCtx.fillText('SanDisk®', 60, 140);
+      socCtx.font = 'bold 24px monospace';
+      socCtx.fillText(isNeuroFTL ? 'NEURO-FTL Gen5' : 'STATIC-FTL Gen5', 60, 180);
+      socCtx.font = '16px monospace';
+      socCtx.fillStyle = '#94a3b8';
+      socCtx.fillText('20-82-10048-A1', 60, 220);
+      socCtx.fillText('NVMe 2.0 AI ACCEL', 60, 245);
+      socCtx.fillText('TAIWAN 2432', 60, 270);
+
+      // In-Chip Holographic Circuit Status
+      socCtx.fillStyle = isNeuroFTL ? 'rgba(56, 189, 248, 0.15)' : 'rgba(225, 29, 72, 0.18)';
+      socCtx.fillRect(40, 330, 432, 140);
+      socCtx.strokeStyle = isNeuroFTL ? '#38bdf8' : '#e11d48';
+      socCtx.lineWidth = 2;
+      socCtx.strokeRect(40, 330, 432, 140);
+
+      socCtx.font = 'bold 16px monospace';
+      socCtx.fillStyle = isNeuroFTL ? '#38bdf8' : '#fda4af';
+      socCtx.fillText(isNeuroFTL ? '⚡ ONLINE CLASSIFIER ACTIVE' : '⚠️ STATIC LRU CONTROLLER', 60, 365);
+
+      socCtx.font = '14px monospace';
+      socCtx.fillStyle = '#ffffff';
+      if (isNeuroFTL) {
+        socCtx.fillText('• Seq_Score: 0.94 > 0.85 (DMA Bypass)', 60, 395);
+        socCtx.fillText('• Pinned L2P Hits: 98.6% (Flat 21µs)', 60, 420);
+        socCtx.fillText('• Host GPU Stalls: 0.0% (Zero Bubbles)', 60, 445);
+      } else {
+        socCtx.fillText('• Shared Cache Swept by DataLoader', 60, 395);
+        socCtx.fillText('• L2P Eviction: Thrashing 4.1k/s', 60, 420);
+        socCtx.fillText('• Double-Read Penalty: +130µs Active', 60, 445);
+      }
+
+      if (socTexture) socTexture.needsUpdate = true;
+    }
+
+    // Dynamic Live Process Canvas for DRAM
+    function createDramLiveTexture() {
+      dramCanvas = document.createElement('canvas');
+      dramCanvas.width = 512;
+      dramCanvas.height = 384;
+      dramCtx = dramCanvas.getContext('2d');
+      updateDramLiveTexture();
+
+      dramTexture = new THREE.CanvasTexture(dramCanvas);
+      return dramTexture;
+    }
+
+    function updateDramLiveTexture() {
+      if (!dramCtx) return;
+      dramAnimTime += 0.08 * flowSpeedFactor;
+
+      if (currentArchMode === 'PROBLEM') {
+        dramCtx.fillStyle = '#1c070d';
+        dramCtx.fillRect(0, 0, 512, 384);
+
+        const pulse = Math.sin(dramAnimTime * 4) * 0.5 + 0.5;
+        dramCtx.strokeStyle = `rgba(225, 29, 72, ${0.5 + pulse * 0.5})`;
+        dramCtx.lineWidth = 10;
+        dramCtx.strokeRect(5, 5, 502, 374);
+
+        dramCtx.fillStyle = '#fda4af';
+        dramCtx.font = 'bold 22px monospace';
+        dramCtx.fillText('❌ CONVENTIONAL: SHARED DRAM', 25, 45);
+
+        dramCtx.font = 'bold 26px monospace';
+        dramCtx.fillStyle = '#ff2b56';
+        dramCtx.fillText('L2P METADATA EVICTED!', 25, 90);
+
+        dramCtx.fillStyle = 'rgba(255, 43, 86, 0.2)';
+        dramCtx.fillRect(25, 120, 462, 140);
+        dramCtx.strokeStyle = '#e11d48';
+        dramCtx.strokeRect(25, 120, 462, 140);
+
+        for (let x = 35; x < 470; x += 28) {
+          for (let y = 130; y < 250; y += 28) {
+            const isCorrupt = Math.sin(x + y + dramAnimTime * 5) > 0.1;
+            dramCtx.fillStyle = isCorrupt ? '#e11d48' : '#711328';
+            dramCtx.fillRect(x, y, 22, 22);
+          }
+        }
+
+        dramCtx.font = '16px monospace';
+        dramCtx.fillStyle = '#ffffff';
+        dramCtx.fillText('• 64KB training streams sweep cache', 25, 295);
+        dramCtx.fillText('• KV Inference Miss ➔ Double-Read Trap', 25, 325);
+        dramCtx.fillStyle = '#ff6b8b';
+        dramCtx.fillText('👉 +130µs NAND latency • 38% GPU Stalls', 25, 355);
+
+      } else {
+        dramCtx.fillStyle = '#080d16';
+        dramCtx.fillRect(0, 0, 512, 384);
+
+        dramCtx.fillStyle = '#38bdf8';
+        dramCtx.font = 'bold 20px monospace';
+        dramCtx.fillText('✨ NEUROFTL: 3-REGION MANAGED DRAM', 20, 35);
+
+        // Region 1 (Cyan - 65%)
+        dramCtx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+        dramCtx.fillRect(20, 55, 300, 200);
+        dramCtx.strokeStyle = '#38bdf8';
+        dramCtx.lineWidth = 2;
+        dramCtx.strokeRect(20, 55, 300, 200);
+
+        dramCtx.fillStyle = '#38bdf8';
+        dramCtx.font = 'bold 15px monospace';
+        dramCtx.fillText('REGION 1: PINNED L2P (65%)', 30, 80);
+        dramCtx.font = '13px monospace';
+        dramCtx.fillStyle = '#e2e8f0';
+        dramCtx.fillText('• Metadata Lock: 98.6% Hit', 30, 105);
+        dramCtx.fillText('• Access Time: 0.1 µs RAM', 30, 128);
+        dramCtx.fillText('• Zero Eviction Thrash', 30, 151);
+
+        for (let gx = 30; gx < 300; gx += 20) {
+          const active = Math.sin(gx + dramAnimTime * 3) > 0.2;
+          dramCtx.fillStyle = active ? '#38bdf8' : '#0c4a6e';
+          dramCtx.fillRect(gx, 175, 14, 60);
+        }
+
+        // Region 2 (Amber - 5%)
+        dramCtx.fillStyle = 'rgba(251, 191, 36, 0.18)';
+        dramCtx.fillRect(330, 55, 162, 95);
+        dramCtx.strokeStyle = '#fbbf24';
+        dramCtx.strokeRect(330, 55, 162, 95);
+
+        dramCtx.fillStyle = '#fbbf24';
+        dramCtx.font = 'bold 13px monospace';
+        dramCtx.fillText('REGION 2: BYPASS (5%)', 338, 80);
+        dramCtx.font = '11px monospace';
+        dramCtx.fillStyle = '#fde68a';
+        dramCtx.fillText('Direct DMA Rail', 338, 105);
+        dramCtx.fillText('0% DRAM Pollution', 338, 125);
+
+        // Region 3 (Emerald - 30%)
+        dramCtx.fillStyle = 'rgba(52, 211, 153, 0.18)';
+        dramCtx.fillRect(330, 160, 162, 95);
+        dramCtx.strokeStyle = '#34d399';
+        dramCtx.strokeRect(330, 160, 162, 95);
+
+        dramCtx.fillStyle = '#34d399';
+        dramCtx.font = 'bold 13px monospace';
+        dramCtx.fillText('REGION 3: KV TIER (30%)', 338, 185);
+        dramCtx.font = '11px monospace';
+        dramCtx.fillStyle = '#a7f3d0';
+        dramCtx.fillText('Inference Cache', 338, 210);
+        dramCtx.fillText('Auto pSLC Migrate', 338, 230);
+
+        dramCtx.fillStyle = '#34d399';
+        dramCtx.font = 'bold 15px monospace';
+        dramCtx.fillText('👉 Tail Latency Locked at 21.4 µs • 0 Stalls', 20, 290);
+        dramCtx.fillStyle = '#94a3b8';
+        dramCtx.font = '12px monospace';
+        dramCtx.fillText('100% Firmware Partitioning • Standard LPDDR4 DRAM', 20, 320);
+      }
+
+      if (dramTexture) dramTexture.needsUpdate = true;
+    }
+
+    // Procedural NAND Flash IC Texture
+    function createNandTexture(dieNum, isPslc) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = isPslc ? '#1c1507' : '#11151f';
+      ctx.fillRect(0, 0, 512, 512);
+
+      ctx.strokeStyle = isPslc ? '#d97706' : '#273142';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(6, 6, 500, 500);
+
+      ctx.fillStyle = isPslc ? '#f59e0b' : '#94a3b8';
+      ctx.beginPath();
+      ctx.arc(36, 36, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 30px "SF Pro Display", sans-serif';
+      ctx.fillText('SanDisk® BiCS5', 60, 130);
+      ctx.font = '22px monospace';
+      ctx.fillStyle = isPslc ? '#fbbf24' : '#94a3b8';
+      ctx.fillText(isPslc ? 'pSLC MODE SHIELD POOL' : '112L 3D TLC FLASH', 60, 175);
+      ctx.font = '16px monospace';
+      ctx.fillText(`DIE #${dieNum} • 1Tb (128GB)`, 60, 215);
+
+      if (isPslc) {
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
+        ctx.fillRect(40, 260, 432, 200);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(40, 260, 432, 200);
+
+        ctx.font = 'bold 16px monospace';
+        ctx.fillStyle = '#fef08a';
+        ctx.fillText('🛡️ pSLC HIGH-ENDURANCE TIER', 60, 300);
+        ctx.font = '13px monospace';
+        ctx.fillStyle = '#fef9c3';
+        ctx.fillText('• Auto-Migrated at >50,000 Reads', 60, 335);
+        ctx.fillText('• Eliminates Read-Disturb Bit Flips', 60, 365);
+        ctx.fillText('• Checkpoint RUH Segregation: WAF 1.08', 60, 395);
+        ctx.fillText('• Bounded GC Pauses ≤15µs', 60, 425);
+      } else {
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.1)';
+        ctx.fillRect(40, 260, 432, 200);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.strokeRect(40, 260, 432, 200);
+
+        ctx.font = 'bold 16px monospace';
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText('📦 MASS TRAINING DATASET STORE', 60, 300);
+        ctx.font = '13px monospace';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillText('• Direct DMA Write Ingestion Rail', 60, 340);
+        ctx.fillText('• Sequential Stream Buffering', 60, 375);
+        ctx.fillText('• Zero DRAM Cache Pollution', 60, 410);
+      }
+
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    // Initialize 3D Scene
+    function init3D() {
+      const container = document.getElementById('threeContainer');
+      if (!container) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(36, w / h, 0.1, 1000);
+      camera.position.set(OVERVIEW_CAM.x, OVERVIEW_CAM.y, OVERVIEW_CAM.z);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.maxPolarAngle = Math.PI / 2 - 0.05;
+      controls.enableZoom = true;
+      controls.zoomSpeed = 1.2;
+      controls.minDistance = 6.0;
+      controls.maxDistance = 60.0;
+      controls.target.set(OVERVIEW_TARGET.x, OVERVIEW_TARGET.y, OVERVIEW_TARGET.z);
+
+      controls.addEventListener('start', () => {
+        isCamLerping = false;
+      });
+      controls.addEventListener('change', () => {
+        if (!isCamLerping) {
+          targetCamPos.copy(camera.position);
+          targetLookAt.copy(controls.target);
+          updateZoomUI();
+        }
+      });
+
+      targetCamPos.copy(camera.position);
+      targetLookAt.copy(controls.target);
+
+      // Lighting
+      const ambient = new THREE.AmbientLight(0xffffff, 1.4);
+      scene.add(ambient);
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+      keyLight.position.set(15, 25, 20);
+      keyLight.castShadow = true;
+      scene.add(keyLight);
+
+      const rimLight = new THREE.DirectionalLight(0xe11d48, 1.6);
+      rimLight.position.set(-20, 10, -15);
+      scene.add(rimLight);
+
+      const cyanRim = new THREE.DirectionalLight(0x38bdf8, 1.3);
+      cyanRim.position.set(20, 10, -10);
+      scene.add(cyanRim);
+
+      // Realistic M.2 2280 PCB
+      const pcbTex = createPcbCanvasTexture();
+      const pcbGeo = new THREE.BoxGeometry(24, 0.35, 8.5);
+      const pcbMat = new THREE.MeshStandardMaterial({
+        map: pcbTex,
+        roughness: 0.35,
+        metalness: 0.25
+      });
+      pcbMesh = new THREE.Mesh(pcbGeo, pcbMat);
+      pcbMesh.receiveShadow = true;
+      scene.add(pcbMesh);
+
+      // SoC
+      const socTex = createSocLidTexture();
+      const socGeo = new THREE.BoxGeometry(4.8, 0.55, 4.8);
+      const socMat = [
+        new THREE.MeshStandardMaterial({ color: 0x1e2430, metalness: 0.7, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ color: 0x1e2430, metalness: 0.7, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ map: socTex, metalness: 0.8, roughness: 0.2 }),
+        new THREE.MeshStandardMaterial({ color: 0x0f141c }),
+        new THREE.MeshStandardMaterial({ color: 0x1e2430, metalness: 0.7, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ color: 0x1e2430, metalness: 0.7, roughness: 0.3 })
+      ];
+      socMesh = new THREE.Mesh(socGeo, socMat);
+      socMesh.position.set(-5.5, 0.45, 0);
+      socMesh.castShadow = true;
+      scene.add(socMesh);
+
+      // Decoupling Capacitors
+      const capMat = new THREE.MeshStandardMaterial({ color: 0x92400e, metalness: 0.5, roughness: 0.3 });
+      for (let i = 0; i < 9; i++) {
+        const cap = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.25, 0.5), capMat);
+        cap.position.set(-8.6 + (i * 0.7), 0.25, -2.8);
+        scene.add(cap);
+      }
+
+      // DRAM
+      const dramTex = createDramLiveTexture();
+      const dramGeo = new THREE.BoxGeometry(4.2, 0.45, 3.4);
+      const dramMat = [
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.6, roughness: 0.35 }),
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.6, roughness: 0.35 }),
+        new THREE.MeshStandardMaterial({ map: dramTex, roughness: 0.25, metalness: 0.4 }),
+        new THREE.MeshStandardMaterial({ color: 0x0a0d14 }),
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.6, roughness: 0.35 }),
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.6, roughness: 0.35 })
+      ];
+      dramMesh = new THREE.Mesh(dramGeo, dramMat);
+      dramMesh.position.set(-0.2, 0.40, 0);
+      dramMesh.castShadow = true;
+      scene.add(dramMesh);
+
+      // Flash Die 1
+      const nandTex1 = createNandTexture(0, false);
+      const nandGeo = new THREE.BoxGeometry(4.0, 0.5, 3.4);
+      const nandMat1 = [
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.5, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.5, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ map: nandTex1, metalness: 0.6, roughness: 0.25 }),
+        new THREE.MeshStandardMaterial({ color: 0x0a0d14 }),
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.5, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ color: 0x121722, metalness: 0.5, roughness: 0.3 })
+      ];
+      nandMesh1 = new THREE.Mesh(nandGeo, nandMat1);
+      nandMesh1.position.set(5.0, 0.42, -1.9);
+      nandMesh1.castShadow = true;
+      scene.add(nandMesh1);
+
+      // Flash Die 2 (pSLC Mode Pool)
+      const nandTex2 = createNandTexture(1, true);
+      const nandMat2 = [
+        new THREE.MeshStandardMaterial({ color: 0x1e180d, metalness: 0.6, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ color: 0x1e180d, metalness: 0.6, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ map: nandTex2, metalness: 0.7, roughness: 0.2 }),
+        new THREE.MeshStandardMaterial({ color: 0x0a0d14 }),
+        new THREE.MeshStandardMaterial({ color: 0x1e180d, metalness: 0.6, roughness: 0.3 }),
+        new THREE.MeshStandardMaterial({ color: 0x1e180d, metalness: 0.6, roughness: 0.3 })
+      ];
+      nandMesh2 = new THREE.Mesh(nandGeo, nandMat2);
+      nandMesh2.position.set(5.0, 0.42, 1.9);
+      nandMesh2.castShadow = true;
+      scene.add(nandMesh2);
+
+      // Laser Beam (Double-Read Penalty)
+      const beamGeo = new THREE.CylinderGeometry(0.12, 0.12, 5.5, 8);
+      beamGeo.rotateZ(Math.PI / 2);
+      beamGeo.rotateY(0.35);
+      const beamMat = new THREE.MeshBasicMaterial({ color: 0xff0044, transparent: true, opacity: 0.85 });
+      doubleReadBeam = new THREE.Mesh(beamGeo, beamMat);
+      doubleReadBeam.position.set(2.4, 0.85, -0.9);
+      doubleReadBeam.visible = false;
+      scene.add(doubleReadBeam);
+
+      // Bypass Rail (NeuroFTL)
+      const curve = new THREE.QuadraticBezierCurve3(
+        new THREE.Vector3(-3.2, 0.7, -1.6),
+        new THREE.Vector3(0.0, 1.3, -3.6),
+        new THREE.Vector3(4.8, 0.7, -2.0)
+      );
+      const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.08, 8, false);
+      const tubeMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.8 });
+      bypassSpline = new THREE.Mesh(tubeGeo, tubeMat);
+      bypassSpline.visible = true;
+      scene.add(bypassSpline);
+
+      // Particles
+      const pGeo = new THREE.BufferGeometry();
+      const pPos = new Float32Array(NUM_PARTICLES * 3);
+      const pColors = new Float32Array(NUM_PARTICLES * 3);
+      particleData = [];
+
+      for (let i = 0; i < NUM_PARTICLES; i++) {
+        const isStreaming = Math.random() < 0.65;
+        pPos[i * 3] = -12 + Math.random() * 22;
+        pPos[i * 3 + 1] = 0.5 + Math.random() * 0.7;
+        pPos[i * 3 + 2] = -2.5 + Math.random() * 5.0;
+
+        particleData.push({
+          speed: 0.12 + Math.random() * 0.14,
+          isStreaming: isStreaming,
+          originX: -12
+        });
+
+        if (isStreaming) {
+          pColors[i * 3] = 0.98; pColors[i * 3 + 1] = 0.75; pColors[i * 3 + 2] = 0.14;
+        } else {
+          pColors[i * 3] = 0.22; pColors[i * 3 + 1] = 0.74; pColors[i * 3 + 2] = 0.97;
+        }
+      }
+
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+      pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+
+      const pMat = new THREE.PointsMaterial({
+        size: 0.42,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.88
+      });
+      particles = new THREE.Points(pGeo, pMat);
+      scene.add(particles);
+
+      window.addEventListener('resize', onWindowResize);
+      resizeGraph();
+      animate3D();
+    }
+
+    function set3DProblem() {
+      if (doubleReadBeam) doubleReadBeam.visible = true;
+      if (bypassSpline) bypassSpline.visible = false;
+      updateSocLidTexture(false);
+      updateDramLiveTexture();
+
+      if (particles) {
+        const colors = particles.geometry.attributes.color.array;
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          colors[i * 3] = 0.98; colors[i * 3 + 1] = 0.15; colors[i * 3 + 2] = 0.28;
+        }
+        particles.geometry.attributes.color.needsUpdate = true;
+      }
+    }
+
+    function set3DSolution() {
+      if (doubleReadBeam) doubleReadBeam.visible = false;
+      if (bypassSpline) bypassSpline.visible = true;
+      updateSocLidTexture(true);
+      updateDramLiveTexture();
+
+      if (particles) {
+        const colors = particles.geometry.attributes.color.array;
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          if (particleData[i].isStreaming) {
+            colors[i * 3] = 0.98; colors[i * 3 + 1] = 0.75; colors[i * 3 + 2] = 0.14;
+          } else {
+            colors[i * 3] = 0.22; colors[i * 3 + 1] = 0.74; colors[i * 3 + 2] = 0.97;
+          }
+        }
+        particles.geometry.attributes.color.needsUpdate = true;
+      }
+    }
+
+    function onWindowResize() {
+      if (!camera || !renderer) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      resizeGraph();
+    }
+
+    let frameCount = 0;
+    function animate3D() {
+      requestAnimationFrame(animate3D);
+      frameCount++;
+
+      // Smooth Fluid Flow Speed and Vanishing Opacity (Inertia physics)
+      flowSpeedFactor += (targetFlowSpeedFactor - flowSpeedFactor) * 0.08;
+      if (flowSpeedFactor < 0.002 && targetFlowSpeedFactor === 0) flowSpeedFactor = 0;
+
+      flowOpacity += (targetFlowOpacity - flowOpacity) * 0.08;
+      if (flowOpacity < 0.002 && targetFlowOpacity === 0) flowOpacity = 0;
+
+      // Update Particles Opacity & Visibility (Vanish on Stop Flow!)
+      if (particles) {
+        particles.material.opacity = 0.88 * flowOpacity;
+        particles.visible = flowOpacity > 0.01;
+      }
+
+      // Update Bypass Spline Opacity
+      if (bypassSpline) {
+        bypassSpline.material.opacity = 0.8 * flowOpacity;
+      }
+
+      // Update DRAM Canvas Live Function
+      if (frameCount % 3 === 0 && flowSpeedFactor > 0.01) {
+        updateDramLiveTexture();
+      }
+
+      // Draw Live Latency Graph with Proper Markings
+      if (frameCount % 4 === 0) {
+        drawGraph();
+      }
+
+      // Smooth Camera Interpolation (Silky glide to target chip!)
+      if (isCamLerping) {
+        camera.position.lerp(targetCamPos, 0.055);
+        controls.target.lerp(targetLookAt, 0.055);
+        if (camera.position.distanceTo(targetCamPos) < 0.08 && controls.target.distanceTo(targetLookAt) < 0.08) {
+          camera.position.copy(targetCamPos);
+          controls.target.copy(targetLookAt);
+          isCamLerping = false;
+        }
+      }
+
+      // Fluid Particle Flow Animation
+      if (flowSpeedFactor > 0.01 && particles && particles.visible) {
+        const pos = particles.geometry.attributes.position.array;
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+          pos[i * 3] += particleData[i].speed * flowSpeedFactor;
+          if (pos[i * 3] > 11.5) {
+            pos[i * 3] = -12.0;
+            pos[i * 3 + 1] = 0.5 + Math.random() * 0.7;
+            pos[i * 3 + 2] = -2.5 + Math.random() * 5.0;
+          }
+        }
+        particles.geometry.attributes.position.needsUpdate = true;
+      }
+
+      // Double-Read Laser Pulse
+      if (doubleReadBeam && doubleReadBeam.visible) {
+        doubleReadBeam.material.opacity = (0.4 + (Math.sin(Date.now() * 0.015) * 0.35 + 0.35)) * flowOpacity;
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // --- SSE Telemetry Sync with Backend Server ---
+    function initTelemetrySync() {
+      try {
+        const evtSource = new EventSource('/telemetry');
+        evtSource.onmessage = function(e) {
+          if (targetFlowSpeedFactor === 0) return;
+          try {
+            const data = JSON.parse(e.data);
+            const std = data.standard_ftl || {};
+            const adp = data.adaptive_ftl || {};
+
+            const stdP99 = (typeof std.p99_latency_us === 'number') ? std.p99_latency_us : 168.2;
+            const adpP99 = (typeof adp.p99_latency_us === 'number') ? adp.p99_latency_us : 21.4;
+            const stdHit = (typeof std.l2p_hit_rate_pct === 'number') ? std.l2p_hit_rate_pct : 18.4;
+            const adpHit = (typeof adp.l2p_hit_rate_pct === 'number') ? adp.l2p_hit_rate_pct : 98.6;
+            const stdWaf = (typeof std.waf === 'number') ? std.waf : 2.84;
+            const adpWaf = (typeof adp.waf === 'number') ? adp.waf : 1.08;
+
+            const stdStall = (stdP99 > 80.0) ? (35.0 + Math.random() * 5.0) : 12.0;
+            const adpStall = 0.0;
+
+            // Push to rolling graph
+            addGraphPoint(stdP99, adpP99);
+
+            // Update live telemetry HUD in top-right
+            setText('statP99Adp', adpP99.toFixed(1) + ' µs');
+            setText('statP99Std', stdP99.toFixed(1));
+            setText('statHitAdp', adpHit.toFixed(1) + '%');
+            setText('statHitStd', stdHit.toFixed(1) + '%');
+            setText('statWafAdp', adpWaf.toFixed(2));
+            setText('statWafStd', stdWaf.toFixed(2));
+            setText('statStallAdp', adpStall.toFixed(1) + '%');
+            setText('statStallStd', stdStall.toFixed(1) + '%');
+
+            const curVal = currentArchMode === 'SOLUTION' ? adpP99 : stdP99;
+            setText('graphCurrentP99', curVal.toFixed(1) + ' µs');
+
+            // Update bottom dock metric
+            if (currentArchMode === 'SOLUTION') {
+              setText('metricP99', adpP99.toFixed(1) + ' µs');
+              setText('metricP99Std', stdP99.toFixed(1));
+              setText('metricSecondaryVal', adpHit.toFixed(1) + '%');
+              setText('metricSecondaryStd', stdHit.toFixed(1) + '%');
+            } else {
+              setText('metricP99', stdP99.toFixed(1) + ' µs');
+              setText('metricP99Std', adpP99.toFixed(1));
+              setText('metricSecondaryVal', stdStall.toFixed(1) + '% Stalled');
+              setText('metricSecondaryStd', '0.0%');
+            }
+          } catch (err) {
+            console.error("Telemetry sync error:", err);
+          }
+        };
+        evtSource.onerror = function() {};
+      } catch (err) {}
+    }
+
+    // =========================================================================
+    // 9. DRAGGABLE & RESIZABLE PANELS (Telemetry HUD & Presentation Dock)
+    // =========================================================================
+    function initDraggableAndResizable() {
+      const telemetryPanel = document.getElementById('telemetryHud');
+      const telemetryHeader = document.getElementById('telemetryHudHeader');
+      const telemetryResize = document.getElementById('telemetryResizeHandle');
+
+      const dockPanel = document.getElementById('presentationDock');
+      const dockHeader = document.getElementById('presentationDockHeader');
+      const dockResize = document.getElementById('presentationResizeHandle');
+
+      const zoomControls = document.getElementById('viewportZoomControls');
+
+      // Prevent 3D scene manipulation when interacting with panels
+      [telemetryPanel, dockPanel, zoomControls].forEach(panel => {
+        if (!panel) return;
+        panel.addEventListener('pointerdown', (e) => e.stopPropagation());
+        panel.addEventListener('wheel', (e) => e.stopPropagation(), { passive: true });
+      });
+
+      // Draggable helper
+      function makeDraggable(panel, handle, resetFn) {
+        if (!panel || !handle) return;
+        handle.style.cursor = 'grab';
+
+        // Double click resets position
+        if (resetFn) {
+          handle.addEventListener('dblclick', (e) => {
+            if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
+            resetFn();
+            playTone('click');
+          });
+        }
+
+        handle.addEventListener('pointerdown', (e) => {
+          if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input') || e.target.closest('.no-drag')) {
+            return;
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const rect = panel.getBoundingClientRect();
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const initialLeft = rect.left;
+          const initialTop = rect.top;
+
+          // Convert from relative / flex / translated to fixed pixel coordinates
+          panel.style.position = 'fixed';
+          panel.style.left = initialLeft + 'px';
+          panel.style.top = initialTop + 'px';
+          panel.style.right = 'auto';
+          panel.style.bottom = 'auto';
+          panel.style.transform = 'none';
+          panel.style.margin = '0';
+          panel.style.width = rect.width + 'px';
+
+          handle.style.cursor = 'grabbing';
+          document.body.style.userSelect = 'none';
+
+          try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+
+          function onPointerMove(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            const dx = ev.clientX - startX;
+            const dy = ev.clientY - startY;
+
+            let newLeft = initialLeft + dx;
+            let newTop = initialTop + dy;
+
+            // Clamping within screen bounds
+            const maxLeft = Math.max(4, window.innerWidth - panel.offsetWidth - 4);
+            const maxTop = Math.max(4, window.innerHeight - panel.offsetHeight - 4);
+            newLeft = Math.max(4, Math.min(maxLeft, newLeft));
+            newTop = Math.max(4, Math.min(maxTop, newTop));
+
+            panel.style.left = newLeft + 'px';
+            panel.style.top = newTop + 'px';
+          }
+
+          function onPointerUp(ev) {
+            handle.style.cursor = 'grab';
+            document.body.style.userSelect = '';
+            try { handle.releasePointerCapture(ev.pointerId); } catch (_) {}
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+          }
+
+          window.addEventListener('pointermove', onPointerMove, { passive: false });
+          window.addEventListener('pointerup', onPointerUp);
+        });
+      }
+
+      // Resizable helper
+      function makeResizable(panel, handle, minW, minH, onResize) {
+        if (!panel || !handle) return;
+
+        handle.addEventListener('pointerdown', (e) => {
+          if (panel.id === 'presentationDock' && isDockCollapsed) return;
+          e.preventDefault();
+          e.stopPropagation();
+
+          const rect = panel.getBoundingClientRect();
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const startW = panel.offsetWidth;
+          const startH = panel.offsetHeight;
+
+          // Ensure panel is in fixed pixel positioning
+          panel.style.position = 'fixed';
+          panel.style.left = rect.left + 'px';
+          panel.style.top = rect.top + 'px';
+          panel.style.right = 'auto';
+          panel.style.bottom = 'auto';
+          panel.style.transform = 'none';
+          panel.style.margin = '0';
+
+          document.body.style.userSelect = 'none';
+          document.body.style.cursor = 'se-resize';
+
+          try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+
+          function onPointerMove(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            const dx = ev.clientX - startX;
+            const dy = ev.clientY - startY;
+
+            const maxW = window.innerWidth - rect.left - 10;
+            const maxH = window.innerHeight - rect.top - 10;
+
+            const newW = Math.max(minW, Math.min(maxW, startW + dx));
+            const newH = Math.max(minH, Math.min(maxH, startH + dy));
+
+            panel.style.width = newW + 'px';
+            panel.style.height = newH + 'px';
+
+            if (onResize) onResize(newW, newH);
+          }
+
+          function onPointerUp(ev) {
+            document.body.style.userSelect = '';
+            document.body.style.cursor = '';
+            try { handle.releasePointerCapture(ev.pointerId); } catch (_) {}
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+          }
+
+          window.addEventListener('pointermove', onPointerMove, { passive: false });
+          window.addEventListener('pointerup', onPointerUp);
+        });
+      }
+
+      // Setup Telemetry HUD
+      makeDraggable(telemetryPanel, telemetryHeader, () => {
+        telemetryPanel.style.left = 'auto';
+        telemetryPanel.style.top = '48px';
+        telemetryPanel.style.right = '12px';
+        telemetryPanel.style.bottom = 'auto';
+        telemetryPanel.style.width = '';
+        telemetryPanel.style.height = '';
+      });
+      makeResizable(telemetryPanel, telemetryResize, 260, 190, () => {
+        drawGraph();
+      });
+
+      // Setup Presentation Dock
+      makeDraggable(dockPanel, dockHeader, () => {
+        dockPanel.style.left = '50%';
+        dockPanel.style.top = 'auto';
+        dockPanel.style.right = 'auto';
+        dockPanel.style.bottom = '8px';
+        dockPanel.style.transform = 'translateX(-50%)';
+        dockPanel.style.width = '';
+        dockPanel.style.height = '';
+      });
+      makeResizable(dockPanel, dockResize, 320, 150, null);
+
+      // ResizeObserver to ensure live graph redraws smoothly on any resize
+      if (window.ResizeObserver && telemetryPanel) {
+        const ro = new ResizeObserver(() => {
+          drawGraph();
+        });
+        ro.observe(telemetryPanel);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      init3D();
+      initTelemetrySync();
+      initDraggableAndResizable();
+      initTabsSidewaysScroll();
+      updateZoomUI();
+
+      // Support direct step jumping via URL query parameter (e.g. ?step=1 or ?autostart)
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('autostart') || params.has('step')) {
+        const overlay = document.getElementById('startOverlay');
+        if (overlay) overlay.style.display = 'none';
+        isPitchRunning = true;
+        targetFlowSpeedFactor = 1.0;
+        targetFlowOpacity = 1.0;
+        updateFlowButtonUI(true);
+        const stepParam = params.get('step');
+        const targetStep = stepParam !== null ? parseInt(stepParam, 10) : 0;
+        goToStep(targetStep >= 0 && targetStep <= 5 ? targetStep : 0);
+        if (params.has('minimized')) {
+          toggleDockCollapse();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

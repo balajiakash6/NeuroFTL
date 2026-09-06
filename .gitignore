@@ -1,0 +1,15 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.venv/
+env/
+
+# Scratch & Debug artifacts
+debug*.py
+crop_check.py
+measure.js
+dom_dump.html
+test_*.png
+*.log
