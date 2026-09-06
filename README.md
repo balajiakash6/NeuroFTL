@@ -11,6 +11,18 @@
 
 ---
 
+## Visual Previews
+
+| Interactive 3D Digital Twin | Silicon Controller & Die Close-up |
+|:---:|:---:|
+| ![SanDisk NeuroFTL 3D Overview](sandisk_overview_final.png) | ![Silicon Controller Zoom](sandisk_manual_zoomed_controller.png) |
+
+| Engineering Team & Executive Start | Minimized Floating HUD Dock |
+|:---:|:---:|
+| ![Team & Start Modal](sandisk_team_start.png) | ![Dock Minimized](sandisk_dock_minimized_final.png) |
+
+---
+
 ## Executive Summary & Problem Statement
 
 ### Context & Bottleneck
@@ -114,8 +126,8 @@ The included WebGL Digital Twin provides an interactive executive walkthrough:
 ### Quick Run
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/sandisk-neuroftl.git
-cd sandisk-neuroftl
+git clone https://github.com/balajiakash6/Sandisk.git
+cd Sandisk
 
 # 2. Run the real-time simulation server
 python server.py 8000
@@ -134,26 +146,27 @@ python tests.py
 ## File Structure
 
 ```
-adaptive-fdp-sim/
+Sandisk/
 ├── index.html        # Interactive 3D WebGL Digital Twin & Executive Presentation UI
 ├── server.py         # Python Threading HTTP & SSE Real-Time Telemetry Server
 ├── simulator.py      # DualWorkloadSimulator (Conventional LRU FTL vs NeuroFTL)
 ├── models.py         # Hardware specifications and telemetry data models
 ├── tests.py          # Automated verification test suite
 ├── .gitignore        # Git ignore configuration
-└── README.md         # Architecture documentation and presentation guide
+├── README.md         # Architecture documentation, team credits, and presentation guide
+└── sandisk_*.png     # High-resolution architectural screenshots and diagrams
 ```
 
 ---
 
 ## Engineering Team & Authors
 
-- **Balaji Akash S**
-- **Karthick P**
-- **Padmanabhan S**
-- **Benit D Binu**
+- **Balaji Akash S** — Research Lead
+- **Karthick P** — Firmware Architect
+- **Padmanabhan S** — Systems & Simulation
+- **Benit D Binu** — Performance & Telemetry
 
-Developed for the AI-SSD Firmware Hackathon Track.
+Developed for the SanDisk / AI-SSD Firmware Hackathon Track.
 
 ---
 
