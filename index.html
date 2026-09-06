@@ -128,6 +128,29 @@
       padding-bottom: max(8px, env(safe-area-inset-bottom));
     }
 
+    /* Mobile Touchscreen Responsiveness & Vertical Component Stacking (< 768px) */
+    @media (max-width: 767px) {
+      #presentationDock {
+        left: 8px !important;
+        right: 8px !important;
+        bottom: 8px !important;
+        transform: none !important;
+        width: auto !important;
+        max-width: calc(100vw - 16px) !important;
+        touch-action: pan-y !important;
+      }
+      #telemetryHud {
+        left: 8px !important;
+        right: 8px !important;
+        width: auto !important;
+        max-width: calc(100vw - 16px) !important;
+        touch-action: pan-y !important;
+      }
+      .cursor-grab {
+        cursor: default !important;
+      }
+    }
+
     /* Compact text scaling on short laptop viewports (600px - 850px height) */
     @media (max-height: 850px) {
       #presentationDock {
@@ -277,11 +300,18 @@
         </div>
       </div>
 
-      <div class="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
-        <button onclick="startPitch()" id="btnStart" class="w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 transition-all transform hover:scale-105 cursor-pointer pulse-primary flex items-center justify-center gap-2">
+      <div class="pt-1 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2.5">
+        <button onclick="startPitch()" id="btnStart" class="w-full sm:w-auto px-5 sm:px-7 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-black font-bold text-xs sm:text-sm shadow-xl shadow-rose-500/30 transition-all transform hover:scale-105 cursor-pointer pulse-primary flex items-center justify-center gap-2">
           <span>🚀 Start Interactive Pitch</span>
           <span class="text-xs font-mono font-normal opacity-90 hidden sm:inline">(Space)</span>
         </button>
+        <button onclick="openPowModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono shadow-md" title="View Simulation Methodology & Proof of Work">
+          <span>🔬 Proof of Work</span>
+        </button>
+        <a href="https://github.com/balajiakash6/NeuroFTL" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono shadow-md" title="Open GitHub Repository">
+          <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
       </div>
 
       <div class="text-[10px] sm:text-[11px] text-zinc-400 font-mono">
@@ -351,6 +381,18 @@
             <span class="hidden md:inline text-[11px]">Spec</span>
           </button>
 
+          <!-- Proof of Work & Simulation Methodology Button -->
+          <button onclick="openPowModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="View Simulation Methodology & Proof of Work">
+            <span>🔬</span>
+            <span class="hidden md:inline text-[11px]">Proof</span>
+          </button>
+
+          <!-- GitHub Repository Link -->
+          <a href="https://github.com/balajiakash6/NeuroFTL" target="_blank" rel="noopener noreferrer" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/20 bg-white/10 hover:bg-white/20 font-bold" title="View Architecture & Source Code on GitHub">
+            <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span class="hidden sm:inline text-[11px]">Repo</span>
+          </a>
+
           <!-- Audio Toggle -->
           <button onclick="toggleAudio()" id="btnAudio" class="apple-pill p-1.5 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer" title="Toggle Sound">
             <span id="audioIcon">🔊</span>
@@ -369,18 +411,24 @@
     <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 space-y-1.5 sm:space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-[310px] md:w-[320px] lg:w-[325px] xl:w-[330px] 2xl:w-[340px] select-none flex flex-col no-scrollbar transition-all duration-300" style="min-width: 250px; min-height: 44px; max-width: 95vw; max-height: calc(100vh - 75px); overflow-y: auto; overflow-x: hidden; resize: both;">
       
       <!-- Draggable Header with Minimize Toggle -->
-      <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex items-center justify-between border-b border-white/10 pb-1.5 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
-        <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-none min-w-0">
-          <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5">⠿</span>
-          <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" id="graphLiveDot"></span>
-          <span class="text-[11px] sm:text-xs md:text-sm font-mono font-bold tracking-wider text-white truncate"><span class="hidden xs:inline">LIVE </span>TELEMETRY<span class="hidden md:inline"> STREAM</span></span>
-        </div>
-        
-        <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
-          <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden xs:inline" id="graphModePill">NEUROFTL</span>
-          <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Minimize / Expand Telemetry HUD">
-            <span id="telemetryToggleIcon">▾</span>
-          </button>
+      <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex flex-col border-b border-white/10 pb-1.5 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
+        <!-- Visual Drag Handle -->
+        <div class="w-12 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-1.5 cursor-grab active:cursor-grabbing transition" title="Drag to reposition panel"></div>
+
+        <div class="flex items-center justify-between w-full">
+          <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-none min-w-0">
+            <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5">⠿</span>
+            <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" id="graphLiveDot"></span>
+            <span class="text-[11px] sm:text-xs md:text-sm font-mono font-bold tracking-wider text-white truncate"><span class="hidden xs:inline">LIVE </span>TELEMETRY</span>
+          </div>
+          
+          <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
+            <span class="text-[8.5px] sm:text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 pointer-events-none hidden xs:inline" title="10Hz Discrete-Event Simulation Engine Trace Playback">SIM PLAYBACK (10Hz)</span>
+            <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden sm:inline" id="graphModePill">NEUROFTL</span>
+            <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Minimize / Expand Telemetry HUD">
+              <span id="telemetryToggleIcon">▾</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -403,6 +451,12 @@
             <span class="text-rose-400 flex items-center gap-1 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Conv (~168µs)</span>
             <span class="text-emerald-400 flex items-center gap-1 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> NeuroFTL (21µs)</span>
             <span class="text-zinc-400 font-medium hidden sm:inline">Time ➔</span>
+          </div>
+
+          <!-- Simulation Model Parameters Footnote -->
+          <div class="px-2 py-1 rounded-lg bg-black/50 border border-white/10 text-[9px] font-mono text-zinc-300 flex items-center justify-between gap-1 shrink-0">
+            <span class="text-zinc-400 truncate">🔬 Model: <span class="text-white font-semibold">Python Sim</span> (tR=25µs, L2P=0.1µs)</span>
+            <button onclick="openPowModal()" class="text-rose-400 hover:text-rose-300 font-bold underline cursor-pointer shrink-0 ml-auto" title="View Full Simulation Methodology & Proof of Work">Proof ↗</button>
           </div>
         </div>
 
@@ -459,8 +513,9 @@
     <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-14 md:top-16 sm:left-3 md:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono transition-all duration-300" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
       
       <!-- Top Title & Live Scale Indicator -->
-      <div id="viewportZoomHeader" onclick="toggleZoomCollapse()" class="flex items-center justify-between gap-1.5 border-b border-white/10 pb-1 px-0.5 cursor-pointer select-none" title="Click to minimize/expand • Drag to move">
+      <div id="viewportZoomHeader" onclick="toggleZoomCollapse()" class="flex items-center justify-between gap-1.5 border-b border-white/10 pb-1 px-0.5 cursor-grab active:cursor-grabbing select-none" title="Click to minimize/expand • Drag to move">
         <div class="flex items-center gap-1 text-zinc-300 text-[10px] sm:text-xs font-bold pointer-events-none">
+          <span class="text-zinc-400 font-mono text-[10px] opacity-70">⠿</span>
           <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           <span>3D ZOOM</span>
         </div>
@@ -529,6 +584,9 @@
       <!-- Top Stage Progress Header + Draggable Grip -->
       <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
         
+        <!-- Centered Visual Drag Grip Handle -->
+        <div class="w-12 sm:w-16 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-0.5 cursor-grab active:cursor-grabbing transition" title="Drag to move panel"></div>
+
         <!-- Glowing Level Progress Bar Track -->
         <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
           <div id="dockProgressBar" class="h-full bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-400 transition-all duration-500 rounded-full" style="width: 5%;"></div>
@@ -539,7 +597,10 @@
           
           <!-- Left: Grip & Impressive Sideways Scrollable Stage Tabs Carousel -->
           <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-1 relative py-0.5 overflow-hidden">
-            <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5 pointer-events-none shrink-0" title="Drag to move panel">⠿</span>
+            <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5 pointer-events-none shrink-0 flex items-center gap-1" title="Drag to move panel">
+              <span>⠿</span>
+              <span class="text-[9px] hidden lg:inline font-bold tracking-wider opacity-70">DRAG</span>
+            </span>
 
             <!-- Left Scroll Chevron Button -->
             <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps left">
@@ -752,11 +813,11 @@
           <p class="text-zinc-200 text-xs leading-relaxed">
             Operates entirely within SSD controller firmware on standard commodity hardware with zero host driver changes:
           </p>
-          <ul class="text-zinc-200 space-y-1 list-disc pl-4 text-xs">
-            <li><strong>Dynamic 3-Region DRAM Partitioning:</strong> Region 1 (65% DRAM) permanently locks L2P metadata in RAM with a 98.6% hit rate (0.1µs RAM access), completely eliminating the Double-Read Trap.</li>
-            <li><strong>Online Spatial Classifier &amp; Direct DMA Bypass:</strong> Nanosecond classifier detects sequential training streams (<code class="text-amber-300 font-mono font-bold">Seq_Score &gt; 0.85</code>) and routes them directly to NAND channel buffers with 0% DRAM eviction.</li>
-            <li><strong>pSLC Mode Shield:</strong> Firmware tracks read counters per block; hot KV blocks exceeding 50,000 reads auto-migrate to pSLC mode, bounding GC latency to &le;15µs.</li>
-            <li><strong>RUH Checkpoint Segregation:</strong> Segregates checkpoint writes into dedicated Reclaim Unit Handles, dropping WAF from 2.84 to 1.08 and extending flash lifespan by 2.6×.</li>
+          <ul class="text-zinc-200 space-y-1.5 list-disc pl-4 text-xs">
+            <li><strong>Dynamic 3-Region DRAM Partitioning:</strong> Region 1 (65% DRAM) <strong>permanently locks L2P metadata in RAM with a 98.6% hit rate (0.1µs RAM access)</strong>, completely eliminating the Double-Read Trap.</li>
+            <li><strong>Online Spatial Classifier &amp; Direct DMA Bypass:</strong> 10ns classifier detects sequential training streams (<code class="text-amber-300 font-mono font-bold">Seq_Score &gt; 0.85</code>) and <strong>routes them directly to NAND channel buffers with 0% DRAM eviction</strong>.</li>
+            <li><strong>pSLC Mode Shield:</strong> Tracks block read counts; hot KV blocks exceeding 50,000 reads <strong>auto-migrate to high-endurance pSLC mode, bounding tail latency to &le;15µs</strong>.</li>
+            <li><strong>RUH Checkpoint Segregation:</strong> Segregates checkpoint writes into dedicated Reclaim Unit Handles, <strong>dropping WAF from 2.84 to 1.08 and extending flash lifespan by 2.6×</strong>.</li>
           </ul>
         </div>
 
@@ -818,6 +879,105 @@
       <div class="pt-1 flex justify-end">
         <button onclick="closeSpecModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-amber-400 text-black text-xs font-bold font-mono transition cursor-pointer">
           Close Specification
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5.5 PROOF OF WORK & SIMULATION METHODOLOGY MODAL                           -->
+  <!-- ========================================================================= -->
+  <div id="powModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-5 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="apple-glass p-5 sm:p-7 rounded-3xl max-w-3xl w-full relative shadow-2xl space-y-4 border border-white/15 max-h-[92vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold">PROOF OF WORK &amp; METHODOLOGY</span>
+          <h2 class="text-base sm:text-lg font-bold text-white">Simulation Engine &amp; Benchmark Rig</h2>
+        </div>
+        <button onclick="closePowModal()" class="text-zinc-300 hover:text-white p-1 rounded-full text-base cursor-pointer font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        
+        <!-- Simulation Architecture -->
+        <div class="p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 space-y-2 font-mono">
+          <div class="text-cyan-300 font-bold text-sm flex items-center gap-2">
+            <span>⚙️ Discrete-Event Simulation Stack</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-200 border border-cyan-500/30 font-normal">100% Python Engine</span>
+          </div>
+          <p class="text-zinc-200 text-xs leading-relaxed font-sans">
+            NeuroFTL is modeled via a standalone <strong>Python Discrete-Event Simulator</strong> (<code class="text-cyan-300">simulator.py</code>, <code class="text-cyan-300">models.py</code>, <code class="text-cyan-300">server.py</code>) implementing cycle-accurate queue arbitration, cache hierarchies, and NAND bus physics.
+          </p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+            <div class="p-2 rounded-xl bg-black/50 border border-white/10 text-center">
+              <div class="text-[9px] text-zinc-400">Flash Read (tR)</div>
+              <div class="text-xs font-bold text-white">25.0 µs</div>
+              <div class="text-[8px] text-zinc-400">BiCS5 3D TLC</div>
+            </div>
+            <div class="p-2 rounded-xl bg-black/50 border border-white/10 text-center">
+              <div class="text-[9px] text-zinc-400">Flash Prog (tPROG)</div>
+              <div class="text-xs font-bold text-white">300.0 µs</div>
+              <div class="text-[8px] text-zinc-400">Page Program</div>
+            </div>
+            <div class="p-2 rounded-xl bg-black/50 border border-white/10 text-center">
+              <div class="text-[9px] text-zinc-400">RAM Lookup</div>
+              <div class="text-xs font-bold text-emerald-400">0.1 µs</div>
+              <div class="text-[8px] text-zinc-400">L2P In-DRAM</div>
+            </div>
+            <div class="p-2 rounded-xl bg-black/50 border border-white/10 text-center">
+              <div class="text-[9px] text-zinc-400">Double-Read</div>
+              <div class="text-xs font-bold text-rose-400">168.2 µs</div>
+              <div class="text-[8px] text-zinc-400">Flash Miss Penalty</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trace Input & Workload Modeling -->
+        <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-1.5 font-mono">
+          <div class="text-amber-300 font-bold text-sm flex items-center gap-2">
+            <span>📊 AI Workload Synthetic Trace Generator</span>
+          </div>
+          <p class="text-zinc-200 text-xs leading-relaxed font-sans">
+            Evaluated against 10,000 discrete I/O commands modeling production multi-GPU AI cluster storage traffic:
+          </p>
+          <ul class="text-zinc-200 space-y-1 list-disc pl-4 text-xs font-sans">
+            <li><strong>PyTorch Training DataLoader:</strong> Bulk 64KB sequential batch reads saturating PCIe Gen5 ingress at 14.2 GB/s.</li>
+            <li><strong>LLM KV-Cache &amp; Vector Search:</strong> Small 4KB random lookups requiring sub-30µs tail response time.</li>
+            <li><strong>Model Checkpointing:</strong> Periodic heavy burst writes causing background Garbage Collection wear.</li>
+          </ul>
+        </div>
+
+        <!-- Reproducibility & Local Test Suite -->
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2 font-mono">
+          <div class="text-white font-bold text-xs uppercase tracking-wider flex items-center justify-between">
+            <span>🧪 Reproducibility &amp; Local Verification</span>
+            <span class="text-emerald-400 text-[10px]">ALL TESTS PASSING (4/4)</span>
+          </div>
+          <p class="text-zinc-300 text-xs leading-relaxed font-sans">
+            Anyone can clone and run the benchmark directly from the terminal without special proprietary dependencies:
+          </p>
+          <div class="p-2.5 rounded-xl bg-black/70 border border-white/10 text-[11px] text-zinc-300 space-y-1">
+            <div class="text-zinc-400"># 1. Run automated test suite</div>
+            <div class="text-emerald-300">python tests.py</div>
+            <div class="text-zinc-400 pt-1"># 2. Run discrete-event benchmark simulation</div>
+            <div class="text-cyan-300">python simulator.py</div>
+            <div class="text-zinc-400 pt-1"># 3. Launch live digital twin web server</div>
+            <div class="text-amber-300">python server.py 8000</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Links & Close Action -->
+      <div class="pt-1 flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-white/10">
+        <a href="https://github.com/balajiakash6/NeuroFTL" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs font-mono border border-white/20 transition flex items-center gap-2">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>Explore Source Code on GitHub ↗</span>
+        </a>
+        <button onclick="closePowModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-400 text-black text-xs font-bold font-mono transition cursor-pointer">
+          Close Methodology
         </button>
       </div>
 
@@ -901,7 +1061,7 @@
         category: "OVERVIEW: ARCHITECTURE & SYSTEM TOPOLOGY",
         activeChip: "Focus: Complete Gen5 x4 NVMe SSD Silicon",
         title: "SanDisk NeuroFTL™ Silicon Architecture Overview",
-        para: "Commodity off-the-shelf NVMe SSD hardware running 100% firmware scheduling. Connects via PCIe Gen5 x4 to AI host clusters, routing massive sequential PyTorch streams alongside latency-critical KV-cache inference lookups without host software modifications.",
+        para: "Commodity NVMe SSD hardware running <strong>100% firmware innovation</strong>. Connects via <strong>PCIe Gen5 x4</strong>, isolating bulk PyTorch sequential streams from sub-30µs KV inference lookups with <strong>zero host software changes</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Gen5 Controller:</strong> Embedded Nanosecond Spatial AI Classifier`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">3-Region DRAM:</strong> Pinned L2P (65%) &amp; Direct DMA Bypass (5%)`,
@@ -925,7 +1085,7 @@
         category: "STAGE 1: TRAFFIC ARRIVAL",
         activeChip: "Focus: PCIe Gen5 Interface",
         title: "1. AI Storage Workload Arrival (PCIe Gen5)",
-        para: "High-bandwidth sequential PyTorch training streams flood NVMe queues at 14.2 GB/s alongside latency-critical KV-cache inference requests. Standard SSD firmware treats every request equally, causing severe DRAM contention.",
+        para: "Bulk training streams flood NVMe queues at <strong>14.2 GB/s</strong> alongside latency-critical KV-cache lookups. Standard SSD firmware treats every request equally with a single generic LRU cache, triggering <strong>catastrophic DRAM contention</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">PCIe Gen5 Ingress:</strong> 14.2 GB/s NVMe Queues`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Workload Clash:</strong> Bulk Training vs KV-Cache`,
@@ -949,7 +1109,7 @@
         category: "STAGE 2: CONVENTIONAL FAILURE",
         activeChip: "Focus: Shared DRAM & Flash Array",
         title: "2. The Double-Read Trap (Conventional FTL Failure)",
-        para: "Bulk 64KB training streams sweep through DRAM and evict the Logical-to-Physical (L2P) translation table. Subsequent KV reads miss in RAM, forcing two physical flash reads (+130µs penalty) that starve the host GPU.",
+        para: "Large 64KB training streams sweep through DRAM, <strong>evicting L2P address mapping entries</strong>. Subsequent KV reads miss in RAM, triggering the <strong>Double-Read Trap</strong> (+130µs flash read penalty) and driving <strong>GPU stall rate to 38.2%</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Cache Eviction:</strong> L2P Translation Table Flushed`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Double-Read Trap:</strong> +130µs Flash Penalty`,
@@ -973,7 +1133,7 @@
         category: "STAGE 3: ONLINE STREAM CLASSIFIER",
         activeChip: "Focus: SanDisk Controller SoC",
         title: "3. Lightweight Online Stream Classifier (100% Firmware)",
-        para: "NeuroFTL embeds a 10-nanosecond online spatial classifier inside SSD controller firmware with zero host driver changes. It detects sequential streams in real time and routes them directly to NAND channel buffers.",
+        para: "NeuroFTL embeds a <strong>10ns online spatial classifier</strong> inside firmware. It detects sequential streams (<code>Seq_Score &gt; 0.85</code>) and activates <strong>Direct DMA Bypass to NAND</strong> with <strong>0% DRAM cache eviction</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">100% Firmware:</strong> Standard NVMe 2.0 Controller`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Online Classifier:</strong> Seq_Score > 0.85 Detect`,
@@ -997,7 +1157,7 @@
         category: "STAGE 4: 3-REGION DRAM & pSLC SHIELD",
         activeChip: "Focus: 3-Region DRAM & BiCS Flash Pool",
         title: "4. Dynamic 3-Region DRAM Partitioning & pSLC Shield",
-        para: "NeuroFTL permanently pins the L2P metadata in Region 1 (65% DRAM / 98.6% hit rate / 0.1µs RAM access). Hot KV blocks exceeding 50,000 reads auto-migrate to high-endurance pSLC mode, dropping WAF to 1.08.",
+        para: "Region 1 (65% DRAM) <strong>permanently locks L2P metadata with 98.6% hit rate (0.1µs RAM access)</strong>, completely eliminating the Double-Read Trap. Hot KV blocks auto-migrate to <strong>pSLC mode</strong>, dropping <strong>WAF to 1.08</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Region 1 Pinning:</strong> 98.6% L2P RAM Hit (0.1µs)`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">pSLC Mode Shield:</strong> Hot KV Block Migration`,
@@ -1021,7 +1181,7 @@
         category: "STAGE 5: SILICON VERDICT",
         activeChip: "Focus: Full M.2 NVMe SSD Assembly",
         title: "5. Verified Benchmark Validation & Silicon Verdict",
-        para: "Through pure firmware innovation on standard commodity NVMe SSD hardware, SanDisk NeuroFTL eliminates the Double-Read Trap, locks tail latency at 21.4µs, extends flash life by 2.6×, and keeps GPUs 100% active.",
+        para: "<strong>100% firmware innovation</strong> on commodity NVMe hardware. Eliminates the Double-Read Trap, locks <strong>P99 read latency at 21.4µs (7.8× faster)</strong>, extends <strong>flash endurance by 2.6×</strong>, and keeps GPUs <strong>100% compute-active</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Tail Latency:</strong> 21.4µs Flat (7.8× Faster)`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">GPU Compute:</strong> 0.0% Stalls (100% Active)`,
@@ -1311,6 +1471,22 @@
     function closeSpecModal() {
       playTone('click');
       const modal = document.getElementById('specModal');
+      if (modal) {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function openPowModal() {
+      playTone('click');
+      const modal = document.getElementById('powModal');
+      if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function closePowModal() {
+      playTone('click');
+      const modal = document.getElementById('powModal');
       if (modal) {
         modal.classList.add('opacity-0', 'pointer-events-none');
       }
@@ -2750,6 +2926,8 @@
         }
 
         handle.addEventListener('pointerdown', (e) => {
+          // Disable dragging on touchscreens / mobile (<768px)
+          if (window.innerWidth < 768) return;
           if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input') || e.target.closest('.no-drag')) {
             return;
           }
@@ -2816,6 +2994,8 @@
         if (!panel || !handle) return;
 
         handle.addEventListener('pointerdown', (e) => {
+          // Disable resizing on touchscreens / mobile (<768px)
+          if (window.innerWidth < 768) return;
           if (panel.id === 'presentationDock' && isDockCollapsed) return;
           e.preventDefault();
           e.stopPropagation();
