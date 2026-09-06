@@ -1606,104 +1606,53 @@
       const container = document.getElementById('stageTabsScrollContainer');
       if (!container) return;
 
-      // Mouse wheel horizontal scroll (immediate, smooth)
+      // 1. Mouse wheel horizontal scrolling (smooth & responsive)
       container.addEventListener('wheel', (e) => {
         if (e.deltaY !== 0 || e.deltaX !== 0) {
           e.preventDefault();
-          container.style.scrollBehavior = 'auto';
-          container.scrollLeft += (e.deltaY !== 0 ? e.deltaY : e.deltaX) * 0.9;
+          container.scrollLeft += (e.deltaY !== 0 ? e.deltaY : e.deltaX) * 0.85;
           updateTabScrollButtons();
         }
       }, { passive: false });
 
-      // Ultra-smooth pointer drag-to-scroll with momentum
-      let isDown = false;
-      let startClientX = 0;
-      let startScrollLeft = 0;
-      let hasDragged = false;
-      let prevClientX = 0;
-      let velocity = 0;
-      let momentumId = null;
+      // 2. Mouse drag-to-scroll (only activates if actually dragged > 8px, preserving normal clicks!)
+      let isMouseDown = false;
+      let startX = 0;
+      let scrollStart = 0;
+      let hasMovedSignificantly = false;
 
-      container.addEventListener('pointerdown', (e) => {
-        if (momentumId) {
-          cancelAnimationFrame(momentumId);
-          momentumId = null;
-        }
-
-        isDown = true;
-        hasDragged = false;
-        startClientX = e.clientX;
-        prevClientX = e.clientX;
-        startScrollLeft = container.scrollLeft;
-        velocity = 0;
-
-        container.style.scrollBehavior = 'auto';
-        try { container.setPointerCapture(e.pointerId); } catch (_) {}
+      container.addEventListener('mousedown', (e) => {
+        isMouseDown = true;
+        hasMovedSignificantly = false;
+        startX = e.clientX;
+        scrollStart = container.scrollLeft;
       });
 
-      window.addEventListener('pointermove', (e) => {
-        if (!isDown || !container) return;
-        const dx = e.clientX - startClientX;
-
-        // If moved more than 3px, mark as drag
-        if (!hasDragged && Math.abs(dx) > 3) {
-          hasDragged = true;
+      window.addEventListener('mousemove', (e) => {
+        if (!isMouseDown || !container) return;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 8) {
+          hasMovedSignificantly = true;
           container.style.cursor = 'grabbing';
-        }
-
-        if (hasDragged) {
-          e.preventDefault();
-          velocity = e.clientX - prevClientX;
-          prevClientX = e.clientX;
-          container.scrollLeft = startScrollLeft - dx;
+          container.scrollLeft = scrollStart - dx;
           updateTabScrollButtons();
         }
-      }, { passive: false });
+      });
 
-      function endDrag(e) {
-        if (!isDown) return;
-        isDown = false;
-        if (container) {
-          container.style.cursor = '';
-          try { container.releasePointerCapture(e.pointerId); } catch (_) {}
+      window.addEventListener('mouseup', () => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        if (container) container.style.cursor = '';
+      });
+
+      // Prevent button click ONLY if user was actively dragging (> 8px)
+      container.addEventListener('click', (e) => {
+        if (hasMovedSignificantly) {
+          e.stopPropagation();
+          e.preventDefault();
+          hasMovedSignificantly = false;
         }
-
-        // Suppress button click if user was dragging
-        if (hasDragged) {
-          const captureClick = (ev) => {
-            ev.preventDefault();
-            ev.stopPropagation();
-            window.removeEventListener('click', captureClick, true);
-          };
-          window.addEventListener('click', captureClick, true);
-          setTimeout(() => window.removeEventListener('click', captureClick, true), 100);
-
-          // Momentum / inertial glide
-          if (Math.abs(velocity) > 1.2) {
-            let currentVel = velocity * 1.5;
-            function momentumStep() {
-              if (Math.abs(currentVel) > 0.3 && container) {
-                container.scrollLeft -= currentVel;
-                currentVel *= 0.93; // smooth friction
-                updateTabScrollButtons();
-                momentumId = requestAnimationFrame(momentumStep);
-              } else {
-                momentumId = null;
-                if (container) container.style.scrollBehavior = 'smooth';
-              }
-            }
-            momentumId = requestAnimationFrame(momentumStep);
-          } else {
-            if (container) container.style.scrollBehavior = 'smooth';
-          }
-        } else {
-          if (container) container.style.scrollBehavior = 'smooth';
-        }
-      }
-
-      window.addEventListener('pointerup', endDrag);
-      window.addEventListener('pointercancel', endDrag);
+      }, true);
 
       container.addEventListener('scroll', updateTabScrollButtons, { passive: true });
       window.addEventListener('resize', updateTabScrollButtons, { passive: true });
