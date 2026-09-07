@@ -1282,23 +1282,296 @@
     const OVERVIEW_CAM = { x: -0.5, y: 22.0, z: 27.0 };
     const OVERVIEW_TARGET = { x: -0.5, y: -4.5, z: 0.0 };
 
-    // --- Researched Executive Steps: Overview (Stage 0) + 5 Deep-Dive Stages ---
-    const STEPS = [
+    // --- 3 DEDICATED WALKTHROUGH TOURS & SILICON TWIN STEP DEFINITIONS ---
+    let currentTrackKey = "V2"; // "CONVENTIONAL", "V1", or "V2"
+
+    // TRACK 1: CONVENTIONAL FTL (Problem Statement & Failure Cascade) - 5 Dedicated Steps
+    const TRACK_CONVENTIONAL = [
       {
         num: 0,
-        category: "STAGE 0: ARCHITECTURAL OVERVIEW",
-        activeChip: "Focus: Complete Gen5 x4 NVMe SSD Silicon",
-        title: "Silicon Digital Twin: 3-Generation Architecture Evolution",
-        para: "Comparing the 3 generations of SSD firmware on commodity Gen5 hardware: <strong>Conventional FTL</strong> (Double-Read trap, 168µs tail), <strong>Firmware v1.0</strong> (Early static heuristic, 84.2% accuracy), and <strong>NeuroFTL™ v2.0</strong> (10ns online classifier, 100% accuracy, 21.4µs flat latency).",
+        tabIcon: "🔍",
+        tabShort: "Overview",
+        category: "TRACK 1: CONVENTIONAL FTL • TOPOLOGY",
+        activeChip: "Focus: Legacy Gen5 x4 NVMe SSD Silicon",
+        title: "Conventional FTL: Architecture & Unsegregated Controller",
+        para: "Modern enterprise NVMe SSDs use legacy FTL firmware that processes all host traffic through a single generic FIFO queue. PyTorch checkpoint writes and vLLM KV-cache lookups fight for the same internal resources with <strong>zero workload awareness</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Conventional:</strong> Legacy LRU, Double-Read Trap (0% Accuracy)`,
-          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">v1.0 Heuristic:</strong> Static Stride Threshold (84.2% Accuracy)`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">v2.0 Adaptive:</strong> 10ns Zero-Overhead Classifier (100% Accuracy)`
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Generic FIFO Queue:</strong> Bulk 64KB writes & 4KB reads intermixed`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Shared DRAM:</strong> L2P mapping table unprotected in RAM`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Unsegregated Flash:</strong> High GC write amplification (2.84 WAF)`
         ],
-        nextLabel: "Next: Step 1 - Workload Arrival (PCIe Gen5) →",
+        nextLabel: "Next: Step 1 - Traffic Ingress Collision →",
+        mode: "CONVENTIONAL",
+        workload: "BASELINE",
+        cam: { x: -0.5, y: 22.0, z: 27.0 },
+        target: { x: -0.5, y: -4.5, z: 0.0 },
+        metricP99: "168.2 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "❌ 7.8× SLOWER",
+        metricSecLabel: "L2P RAM Hit Rate",
+        metricSecVal: "18.4%",
+        metricSecStd: "98.6%",
+        metricBadgeSec: "❌ 81.6% MISSES"
+      },
+      {
+        num: 1,
+        tabIcon: "1",
+        tabShort: "Ingress ⚠️",
+        category: "STAGE 1: TRAFFIC INGRESS COLLISION",
+        activeChip: "Focus: PCIe Gen5 Interface Gold Pins",
+        title: "1. AI Storage Ingress: 14.2 GB/s NVMe Queue Clash",
+        para: "High-throughput 64KB PyTorch training checkpoints flood the PCIe Gen5 interface at <strong>14.2 GB/s</strong> alongside latency-sensitive 4KB KV-cache inference reads (120K IOPS). The host cannot signal I/O priority to commodity SSDs.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">SQ0 Ingress:</strong> 64KB PyTorch checkpoints at 14.2 GB/s`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">SQ1 Ingress:</strong> 4KB KV-cache random reads (&lt;30µs SLA)`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Blind Admission:</strong> Controller cannot distinguish stream priorities`
+        ],
+        nextLabel: "Next: Step 2 - DRAM Cache Pollution ⚠️ →",
+        mode: "CONVENTIONAL",
+        workload: "TRAINING_SURGE",
+        cam: { x: -9.2, y: 6.8, z: 8.2 },
+        target: { x: -8.5, y: 0.2, z: 0.0 },
+        metricP99: "168.2 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "⚠️ QUEUE CLASH",
+        metricSecLabel: "Ingress Traffic",
+        metricSecVal: "14.2 GB/s",
+        metricSecStd: "0.0",
+        metricBadgeSec: "⚠️ UNSEGREGATED"
+      },
+      {
+        num: 2,
+        tabIcon: "2",
+        tabShort: "Eviction ⚠️",
+        category: "STAGE 2: DRAM CACHE POLLUTION",
+        activeChip: "Focus: Shared DRAM Memory Cache",
+        title: "2. The Eviction Cascade: L2P Table Flushed from RAM",
+        para: "Because the controller routes all incoming writes through DRAM, the massive 64KB checkpoint stream aggressively evicts the <strong>Logical-to-Physical (L2P) address mapping table</strong>. RAM hit rate collapses from 98.6% down to <strong>18.4%</strong>.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">DRAM Flooding:</strong> 64KB training blocks overwhelm SRAM/DRAM buffer`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">L2P Purged:</strong> Active KV-cache address pointers evicted to flash`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Hit Rate Crash:</strong> 98.6% → 18.4% L2P RAM hit rate`
+        ],
+        nextLabel: "Next: Step 3 - The Double-Read Trap ⚠️ →",
+        mode: "CONVENTIONAL",
+        workload: "TRAINING_SURGE",
+        cam: { x: -0.2, y: 6.8, z: 7.5 },
+        target: { x: -0.2, y: 0.4, z: 0.0 },
+        metricP99: "168.2 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "⚠️ DRAM THRASHING",
+        metricSecLabel: "L2P Eviction Rate",
+        metricSecVal: "81.6% Flushed",
+        metricSecStd: "0.0%",
+        metricBadgeSec: "❌ L2P MISS CASCADE"
+      },
+      {
+        num: 3,
+        tabIcon: "3",
+        tabShort: "Double-Read ⚠️",
+        category: "STAGE 3: THE DOUBLE-READ TRAP",
+        activeChip: "Focus: BiCS Flash Array & Optical Laser Interconnect",
+        title: "3. The Double-Read Trap: +130µs Flash Sensing Penalty",
+        para: "When a 4KB KV read misses in DRAM, the SSD must perform <strong>two sequential flash reads</strong>: Flash Read 1 to fetch the L2P page from NAND (+25µs tR), followed by Flash Read 2 to fetch the actual user data. With GC channel contention, latency spikes to <strong>168.2µs</strong>.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Read 1 (Metadata):</strong> Controller reads L2P translation page from Die 0`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Double-Read Trap:</strong> +130µs cumulative flash read penalty`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Read 2 (Data):</strong> Second sensing cycle delayed by active GC locks`
+        ],
+        nextLabel: "Next: Step 4 - Host GPU Starvation 💥 →",
+        mode: "CONVENTIONAL",
+        workload: "TRAINING_SURGE",
+        cam: { x: 3.2, y: 7.2, z: 8.5 },
+        target: { x: 3.0, y: 0.4, z: 0.0 },
+        metricP99: "168.2 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "💥 +130µs FLASH PENALTY",
+        metricSecLabel: "Flash Penalty",
+        metricSecVal: "2× Flash Fetch",
+        metricSecStd: "1×",
+        metricBadgeSec: "❌ CONTROLLER STALLED"
+      },
+      {
+        num: 4,
+        tabIcon: "4",
+        tabShort: "GPU Stalls 💥",
+        category: "STAGE 4: HOST GPU STARVATION & WAF",
+        activeChip: "Focus: Full SSD Assembly & Host Impact",
+        title: "4. Host Starvation: 38.2% GPU Compute Idle Bubbles",
+        para: "Because the storage controller is paralyzed in the Double-Read Trap, PyTorch DataLoader threads stall waiting for KV tensors. GPUs waste <strong>38.2% of compute time idle</strong>, while unsegregated NAND blocks drive write amplification to <strong>2.84 WAF</strong>.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">GPU Starvation:</strong> 38.2% CUDA compute idle bubbles`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Write Amplification:</strong> 2.84 WAF rapidly wears 3D NAND cells`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">P99 Read Tail:</strong> 168.2µs tail latency destroys interactive LLM SLAs`
+        ],
+        nextLabel: "Explore Firmware v1.0 Attempt →",
+        mode: "CONVENTIONAL",
+        workload: "TRAINING_SURGE",
+        cam: { x: -0.5, y: 22.0, z: 27.0 },
+        target: { x: -0.5, y: -4.5, z: 0.0 },
+        metricP99: "168.2 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "❌ 168.2µs P99 TAIL",
+        metricSecLabel: "GPU Compute Idle",
+        metricSecVal: "38.2% Stalled",
+        metricSecStd: "0.0%",
+        metricBadgeSec: "💥 CUDA DATA-STARVED"
+      }
+    ];
+
+    // TRACK 2: FIRMWARE v1.0 (Early Heuristic Prototype & The RAG Blind Spot) - 5 Dedicated Steps
+    const TRACK_V1 = [
+      {
+        num: 0,
+        tabIcon: "🔍",
+        tabShort: "Overview",
+        category: "TRACK 2: FIRMWARE v1.0 • OVERVIEW",
+        activeChip: "Focus: Prototype Heuristic Controller",
+        title: "Firmware v1.0: The Early Static Heuristic Attempt",
+        para: "Our early prototype firmware attempted to isolate training writes using a simple static stride rule (<code>ΔLBA &gt; 16</code>) and a fixed 50/50 DRAM split. While it improved simple sequential streaming, it suffered severe blind spots on interleaved AI workloads.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Static Heuristic:</strong> Single threshold (ΔLBA &gt; 16) without temporal context`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Rigid 50/50 DRAM:</strong> Hard-partitioned buffer unable to adapt dynamically`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">84.2% Accuracy:</strong> 15.8% false bypass rate triggers 84.6µs tail jitter`
+        ],
+        nextLabel: "Next: Step 1 - The Static Stride Rule →",
+        mode: "V1",
+        workload: "BASELINE",
+        cam: { x: -0.5, y: 22.0, z: 27.0 },
+        target: { x: -0.5, y: -4.5, z: 0.0 },
+        metricP99: "84.6 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "⚠️ 84.6µs TAIL JITTER",
+        metricSecLabel: "Stream Accuracy",
+        metricSecVal: "84.2%",
+        metricSecStd: "100.0%",
+        metricBadgeSec: "⚠️ 15.8% MISCLASSIFIED"
+      },
+      {
+        num: 1,
+        tabIcon: "1",
+        tabShort: "Stride Rule",
+        category: "STAGE 1: STATIC STRIDE ALGORITHM",
+        activeChip: "Focus: ARM Cortex-R8 SoC Controller",
+        title: "1. The Static Stride Rule & Fixed 50/50 DRAM Split",
+        para: "Firmware v1.0 inspects incoming LBA addresses in software: if the difference between consecutive LBAs exceeds 16 blocks (<code>ΔLBA &gt; 16</code>) and request size is ≥ 64KB, it marks the request as sequential. DRAM is statically halved into 50% metadata and 50% data.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Rule Logic:</strong> If (ΔLBA &gt; 16 && Size ≥ 64KB) → Bypass; Else → DRAM`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Fixed 50/50 DRAM:</strong> 50% L2P Cache (2GB) / 50% Host Data Buffer (2GB)`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">No Temporal Memory:</strong> Ignores arrival frequency and spatial distribution`
+        ],
+        nextLabel: "Next: Step 2 - Sequential Hit Success →",
+        mode: "V1",
+        workload: "BASELINE",
+        cam: { x: -5.5, y: 7.5, z: 8.0 },
+        target: { x: -5.5, y: 0.4, z: 0.0 },
+        metricP99: "84.6 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "⚠️ STATIC HEURISTIC",
+        metricSecLabel: "DRAM Split",
+        metricSecVal: "Fixed 50/50",
+        metricSecStd: "Dynamic",
+        metricBadgeSec: "⚠️ INFLEXIBLE SPLIT"
+      },
+      {
+        num: 2,
+        tabIcon: "2",
+        tabShort: "Sequential Hit",
+        category: "STAGE 2: SEQUENTIAL STREAM DETECTION",
+        activeChip: "Focus: Sequential Bypass Path Spline",
+        title: "2. Partial Success: 96.4% Detection on Pure Streams",
+        para: "On synthetic benchmarks with continuous sequential writes (single-stream checkpoint dumps), Firmware v1.0 successfully identifies <strong>96.4% of sequential blocks</strong>, bypassing them around the DRAM data buffer and providing partial relief.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Sequential Detection:</strong> 96.4% accuracy on isolated linear streams`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">WAF Reduction:</strong> WAF drops from 2.84 down to 1.62`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Latency Drop:</strong> P99 latency improves from 168.2µs to 84.6µs`
+        ],
+        nextLabel: "Next: Step 3 - The RAG & Attention Blind Spot ⚠️ →",
+        mode: "V1",
+        workload: "BASELINE",
+        cam: { x: 0.5, y: 7.8, z: 8.5 },
+        target: { x: 0.5, y: 0.5, z: -1.2 },
+        metricP99: "84.6 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "PARTIAL RELIEF",
+        metricSecLabel: "Pure Stride Acc",
+        metricSecVal: "96.4%",
+        metricSecStd: "100.0%",
+        metricBadgeSec: "✓ DETECTS LINEAR"
+      },
+      {
+        num: 3,
+        tabIcon: "3",
+        tabShort: "RAG Blind Spot ⚠️",
+        category: "STAGE 3: THE RAG & ATTENTION BLIND SPOT",
+        activeChip: "Focus: Shared DRAM & Controller Interface",
+        title: "3. The RAG Blind Spot: 15.8% False Bypasses",
+        para: "In modern production LLM architectures (vLLM, DeepSeek, RAG), multi-head attention and vector similarity lookups interleave requests. Stride jumps frequently drop below 16 blocks, causing v1.0 to <strong>misclassify 15.8% of requests</strong>.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Interleaved Vectors:</strong> RAG retrieval bursts have variable stride (ΔLBA &lt; 16)`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">False Bypasses:</strong> 15.8% of KV reads misrouted or training writes dumped into RAM`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">DRAM Thrash:</strong> Fixed 50% metadata space overflows under high KV load`
+        ],
+        nextLabel: "Next: Step 4 - Jitter & GPU Stalls ⚠️ →",
+        mode: "V1",
+        workload: "TRAINING_SURGE",
+        cam: { x: -2.8, y: 7.2, z: 7.8 },
+        target: { x: -2.5, y: 0.4, z: 0.0 },
+        metricP99: "84.6 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "⚠️ 84.6µs SPIKES",
+        metricSecLabel: "False Bypasses",
+        metricSecVal: "15.8% Error",
+        metricSecStd: "0.0%",
+        metricBadgeSec: "❌ RAG MISCLASSIFIED"
+      },
+      {
+        num: 4,
+        tabIcon: "4",
+        tabShort: "Jitter Verdict ⚠️",
+        category: "STAGE 4: JITTER & COMPUTE STALLS",
+        activeChip: "Focus: Complete SSD Assembly & Host Interface",
+        title: "4. Persistent 84.6µs Tail Jitter & 14.3% GPU Stalls",
+        para: "Due to the 15.8% misclassification rate, the Double-Read Trap still strikes intermittently. P99 tail latency fluctuates wildly around <strong>84.6µs</strong> (4× slower than production requirement), leaving GPUs <strong>14.3% data-starved</strong>.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Persistent Tail Jitter:</strong> P99 latency spikes up to 84.6µs`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">GPU Starvation:</strong> 14.3% compute cycles lost to storage wait states`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Architectural Limit:</strong> Static rules cannot handle dynamic AI traffic`
+        ],
+        nextLabel: "Explore NeuroFTL™ v2.0 Production Solution 🏆 →",
+        mode: "V1",
+        workload: "TRAINING_SURGE",
+        cam: { x: -0.5, y: 22.0, z: 27.0 },
+        target: { x: -0.5, y: -4.5, z: 0.0 },
+        metricP99: "84.6 µs",
+        metricP99Std: "21.4",
+        metricBadgeLatency: "⚠️ 84.6µs P99 TAIL",
+        metricSecLabel: "GPU Compute Idle",
+        metricSecVal: "14.3% Stalled",
+        metricSecStd: "0.0%",
+        metricBadgeSec: "⚠️ JITTER TRAP"
+      }
+    ];
+
+    // TRACK 3: NEUROFTL™ v2.0 (100% Production Solution) - 6 Dedicated Steps
+    const TRACK_V2 = [
+      {
+        num: 0,
+        tabIcon: "🔍",
+        tabShort: "Overview",
+        category: "TRACK 3: NEUROFTL™ v2.0 • OVERVIEW",
+        activeChip: "Focus: Complete Gen5 x4 NVMe SSD Silicon",
+        title: "NeuroFTL™ v2.0: 100% Firmware Breakthrough",
+        para: "NeuroFTL™ v2.0 is an adaptive, zero-overhead firmware architecture deployed on standard NVMe Gen5 hardware. It eliminates the Double-Read Trap, locks P99 latency flat at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 ASIC respin</strong>.",
+        points: [
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Online Classifier:</strong> 100% accurate stream separation in ARM TCM`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Direct DMA Bypass:</strong> 14.2 GB/s checkpoints routed straight to flash`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">3-Region DRAM:</strong> 98.6% L2P RAM hit rate • 0.0% GPU compute stalls`
+        ],
+        nextLabel: "Next: Step 1 - 10ns Multi-Feature Classifier ⚡ →",
         mode: "V2",
         workload: "BASELINE",
-        cam: { x: -0.5, y: 22.0, z: 27.0 }, // Panoramic overview
+        cam: { x: -0.5, y: 22.0, z: 27.0 },
         target: { x: -0.5, y: -4.5, z: 0.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
@@ -1310,110 +1583,120 @@
       },
       {
         num: 1,
-        category: "STAGE 1: TRAFFIC INGRESS",
-        activeChip: "Focus: PCIe Gen5 Interface",
-        title: "1. AI Storage Ingress Collision (PCIe Gen5)",
-        para: "Bulk training streams flood NVMe queues at <strong>14.2 GB/s</strong> alongside latency-critical KV-cache lookups. Standard SSD firmware treats every request equally with a single generic LRU cache, triggering <strong>catastrophic DRAM contention</strong>.",
+        tabIcon: "1",
+        tabShort: "Classifier ⚡",
+        category: "STAGE 1: 10ns MULTI-FEATURE CLASSIFIER",
+        activeChip: "Focus: SanDisk ARM Cortex-R8 SoC & TCM",
+        title: "1. Zero-Overhead 10ns Online Classifier in TCM",
+        para: "Executing inside the controller's Tightly Coupled Memory (TCM), NeuroFTL's online classifier computes three hardware features per request: <strong>LBA Stride</strong>, <strong>Inter-Arrival Delta</strong>, and <strong>Spatial Entropy</strong>. Classification takes just <strong>10 nanoseconds</strong> with <strong>100% accuracy</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">PCIe Gen5 Ingress:</strong> 14.2 GB/s NVMe Queues`,
-          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Workload Clash:</strong> Bulk Training vs KV-Cache`,
-          `<span class="w-2 h-2 rounded-full bg-rose-400 shrink-0"></span><strong class="text-white">Firmware Flaw:</strong> Generic LRU Cache Contention`
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Inference:</strong> Runs in ARM TCM registers with 0 CPU cache pollution`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">3-Feature Fusion:</strong> Stride + Inter-Arrival + Spatial Entropy window`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">100.0% Accuracy:</strong> Distinguishes RAG vectors from bulk training writes`
         ],
-        nextLabel: "Next: See Double-Read Failure ⚠️ →",
+        nextLabel: "Next: Step 2 - Direct DMA Bypass Rail →",
         mode: "V2",
         workload: "BASELINE",
-        cam: { x: -3.5, y: 14.0, z: 18.0 },
-        target: { x: -2.2, y: -3.2, z: 0.0 },
+        cam: { x: -5.5, y: 7.5, z: 8.0 },
+        target: { x: -5.5, y: 0.4, z: 0.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
-        metricBadgeLatency: "⚡ 7.8× FASTER",
-        metricSecLabel: "L2P RAM Hit Rate",
-        metricSecVal: "98.6%",
-        metricSecStd: "18.4%",
-        metricBadgeSec: "🔒 METADATA LOCKED"
+        metricBadgeLatency: "⚡ 10ns DECISION",
+        metricSecLabel: "Classifier Cycles",
+        metricSecVal: "10 ns (TCM)",
+        metricSecStd: "250ns",
+        metricBadgeSec: "🔒 ZERO HOST OVERHEAD"
       },
       {
         num: 2,
-        category: "STAGE 2: CONVENTIONAL FAILURE",
-        activeChip: "Focus: Shared DRAM & Flash Array",
-        title: "2. The Double-Read Trap (Conventional FTL Failure)",
-        para: "Large 64KB training streams sweep through DRAM, <strong>evicting L2P address mapping entries</strong>. Subsequent KV reads miss in RAM, triggering the <strong>Double-Read Trap</strong> (+130µs flash read penalty) and driving <strong>GPU stall rate to 38.2%</strong>.",
+        tabIcon: "2",
+        tabShort: "Direct DMA",
+        category: "STAGE 2: DIRECT DMA BYPASS RAIL",
+        activeChip: "Focus: Direct DMA Bypass Rail Spline",
+        title: "2. Direct DMA Bypass: Zero-Copy DRAM Isolation",
+        para: "Identified 64KB sequential checkpoints are assigned directly to the <strong>Direct DMA Bypass Rail</strong>. Data streams straight from PCIe NVMe queues to NAND flash channels via a circular descriptor ring, achieving <strong>0.0% DRAM cache pollution</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Cache Eviction:</strong> L2P Translation Table Flushed`,
-          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Double-Read Trap:</strong> +130µs Flash Penalty`,
-          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">GPU Starvation:</strong> 38.2% DataLoader Stalls`
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Zero-Copy Ingress:</strong> 14.2 GB/s checkpoint streams bypass DRAM cache`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Zero DRAM Pollution:</strong> 0.0% L2P table eviction • Cache stays 100% clean`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Line-Rate Throughput:</strong> Saturates PCIe Gen5 x4 physical bus bandwidth`
         ],
-        nextLabel: "Next: What We Tried First (v1.0 Heuristic) ⚠️ →",
-        mode: "CONVENTIONAL",
+        nextLabel: "Next: Step 3 - Dynamic 3-Region DRAM 🛡️ →",
+        mode: "V2",
         workload: "TRAINING_SURGE",
-        cam: { x: 1.5, y: 13.8, z: 18.0 },
-        target: { x: 1.0, y: -3.2, z: 0.0 },
-        metricP99: "168.2 µs",
-        metricP99Std: "21.4",
-        metricBadgeLatency: "⚠️ +130µs FLASH PENALTY",
-        metricSecLabel: "GPU Compute Idle",
-        metricSecVal: "38.2% Stalled",
-        metricSecStd: "0.0%",
-        metricBadgeSec: "❌ GPU DATA-STARVED"
+        cam: { x: 0.5, y: 7.8, z: 8.5 },
+        target: { x: 0.5, y: 0.5, z: -1.2 },
+        metricP99: "21.4 µs",
+        metricP99Std: "168.2",
+        metricBadgeLatency: "⚡ ZERO DRAM FLUSH",
+        metricSecLabel: "DRAM Pollution",
+        metricSecVal: "0.0% Eviction",
+        metricSecStd: "81.6%",
+        metricBadgeSec: "🔒 ISOLATED RAIL"
       },
       {
         num: 3,
-        category: "STAGE 3: FIRMWARE EVOLUTION (v1.0 vs v2.0)",
-        activeChip: "Focus: SanDisk Controller SoC",
-        title: "3. Early Heuristic (v1.0) vs. 10ns Classifier (v2.0)",
-        para: "Our early prototype (<strong>Firmware v1.0</strong>) used a static stride threshold (<code>ΔLBA &gt; 16</code>) achieving only <strong>84.2% accuracy</strong> with 84.6µs tail spikes. <strong>NeuroFTL™ v2.0</strong> introduces a <strong>10ns multi-feature classifier</strong> in TCM registers, achieving <strong>100% accuracy</strong> and <strong>0% DRAM eviction</strong>.",
+        tabIcon: "3",
+        tabShort: "3-Region 🛡️",
+        category: "STAGE 3: DYNAMIC 3-REGION DRAM",
+        activeChip: "Focus: 3-Region DRAM Partitioning",
+        title: "3. Dynamic 3-Region DRAM: 98.6% L2P Hit Rate",
+        para: "NeuroFTL divides DRAM into three adaptive regions: <strong>Region 1 (65%)</strong> locks the hot L2P address table with a <strong>98.6% hit rate (0.1µs RAM access)</strong>; <strong>Region 2 (5%)</strong> serves the DMA ring; and <strong>Region 3 (30%)</strong> buffers hot KV reads.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">v1.0 Limitation:</strong> Static Stride Heuristic (84.2% Accuracy)`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">v2.0 Breakthrough:</strong> 10ns Multi-Feature Classifier (100% Acc)`,
-          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Zero Eviction:</strong> Direct DMA Bypass to NAND`
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Region 1 (65% DRAM):</strong> Pinned L2P Table • 98.6% RAM hit (0.1µs access)`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Region 2 (5% DRAM):</strong> DMA ring descriptors for zero-copy bulk transfers`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Region 3 (30% DRAM):</strong> Dynamic hot KV cache for instant inference serving`
         ],
-        nextLabel: "Next: 3-Region DRAM & pSLC Shield 🛡️ →",
-        mode: "V1",
+        nextLabel: "Next: Step 4 - Dynamic pSLC Wear Shield 🛡️ →",
+        mode: "V2",
         workload: "BASELINE",
-        cam: { x: -3.0, y: 13.5, z: 17.5 },
-        target: { x: -2.0, y: -3.2, z: 0.0 },
-        metricP99: "84.6 µs",
-        metricP99Std: "21.4",
-        metricBadgeLatency: "⚠️ 84.6µs JITTER TAIL (v1.0)",
-        metricSecLabel: "Stream Accuracy",
-        metricSecVal: "84.2% (v1.0)",
-        metricSecStd: "100.0%",
-        metricBadgeSec: "⚠️ 15.8% MISCLASSIFIED"
+        cam: { x: -0.2, y: 6.8, z: 7.5 },
+        target: { x: -0.2, y: 0.4, z: 0.0 },
+        metricP99: "21.4 µs",
+        metricP99Std: "168.2",
+        metricBadgeLatency: "⚡ 0.1µs RAM ACCESS",
+        metricSecLabel: "L2P Hit Rate",
+        metricSecVal: "98.6%",
+        metricSecStd: "18.4%",
+        metricBadgeSec: "🔒 METADATA PINNED"
       },
       {
         num: 4,
-        category: "STAGE 4: 3-REGION DRAM & pSLC SHIELD",
-        activeChip: "Focus: 3-Region DRAM & BiCS Flash Pool",
-        title: "4. Dynamic 3-Region DRAM Partitioning & pSLC Shield",
-        para: "Region 1 (65% DRAM) <strong>permanently locks L2P metadata with 98.6% hit rate (0.1µs RAM access)</strong>, completely eliminating the Double-Read Trap. Hot KV blocks auto-migrate to <strong>pSLC mode</strong>, dropping <strong>WAF to 1.08 (2.6× lifespan)</strong>.",
+        tabIcon: "4",
+        tabShort: "pSLC Shield",
+        category: "STAGE 4: DYNAMIC pSLC WEAR SHIELD",
+        activeChip: "Focus: BiCS5 Flash Die 2 (pSLC Mode Pool)",
+        title: "4. Dynamic pSLC Wear Shield: WAF 1.08 & 2.6× Life",
+        para: "Hot, high-frequency random KV-cache updates are dynamically routed to <strong>BiCS5 Flash Die 2 configured in 1-bit pSLC mode</strong>. This eliminates write amplification during attention updates, lowering <strong>WAF to 1.08</strong> and extending <strong>flash lifespan by 2.6×</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Region 1 Pinning:</strong> 98.6% L2P RAM Hit (0.1µs)`,
-          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">pSLC Mode Shield:</strong> Hot KV Block Migration`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Flash Longevity:</strong> WAF 1.08 (2.6× Life)`
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">pSLC Mode Pool:</strong> Die 2 operates in 1-bit pseudo-SLC mode for 10× endurance`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">WAF 1.08:</strong> Eliminates garbage collection thrashing (vs 2.84 Conv)`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">2.6× Lifespan:</strong> Extends SSD drive life under 24/7 AI cluster training`
         ],
-        nextLabel: "Next: View Silicon Verdict 🏆 →",
+        nextLabel: "Next: Step 5 - Silicon Scorecard Verdict 🏆 →",
         mode: "V2",
         workload: "KV_STORM",
-        cam: { x: 1.6, y: 13.8, z: 17.8 },
-        target: { x: 1.2, y: -3.2, z: 0.0 },
+        cam: { x: 5.2, y: 6.5, z: 7.2 },
+        target: { x: 5.0, y: 0.4, z: 1.9 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
-        metricBadgeLatency: "⚡ FLAT 21µs LATENCY",
-        metricSecLabel: "BiCS Flash WAF",
-        metricSecVal: "1.08 WAF",
-        metricSecStd: "2.84",
-        metricBadgeSec: "🛡️ 2.6× FLASH LIFESPAN"
+        metricBadgeLatency: "⚡ 1.08 WAF",
+        metricSecLabel: "Flash Longevity",
+        metricSecVal: "2.6× Lifespan",
+        metricSecStd: "1.0×",
+        metricBadgeSec: "🛡️ pSLC WEAR SHIELD"
       },
       {
         num: 5,
-        category: "STAGE 5: 3-WAY SILICON VERDICT",
+        tabIcon: "5",
+        tabShort: "Verdict 🏆",
+        category: "STAGE 5: 3-GENERATION SILICON VERDICT",
         activeChip: "Focus: Full M.2 NVMe SSD Assembly",
-        title: "5. Verified 3-Generation Benchmark Scorecard & Verdict",
-        para: "<strong>100% firmware innovation</strong> on commodity NVMe hardware. Eliminates the Double-Read Trap, locks <strong>P99 read latency at 21.4µs (7.8× faster)</strong>, extends <strong>flash endurance by 2.6×</strong>, and keeps GPUs <strong>100% compute-active</strong> with <strong>$0 ASIC respin</strong>.",
+        title: "5. Verified Scorecard: Flat 21.4µs Latency & $0 ASIC Respin",
+        para: "NeuroFTL™ v2.0 delivers <strong>100% firmware innovation</strong> on commodity NVMe hardware. It eliminates the Double-Read Trap, locks P99 read latency at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 hardware redesign cost</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Tail Latency:</strong> 21.4µs Flat (7.8× Faster)`,
-          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">GPU Compute:</strong> 0.0% Stalls (100% Active)`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Stream Accuracy:</strong> 100.0% Zero Eviction`
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">P99 Read Tail:</strong> 21.4µs flat (7.8× faster than Conventional, 4× faster than v1)`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">GPU Compute:</strong> 0.0% Stalls (100% CUDA core utilization)`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Cost:</strong> $0 ASIC respin • Deploys as a drop-in firmware binary update`
         ],
         nextLabel: "Restart Walkthrough (Overview) ↺",
         mode: "V2",
@@ -1422,7 +1705,7 @@
         target: { x: -0.5, y: -4.5, z: 0.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
-        metricBadgeLatency: "⚡ 7.8× LOWER TAIL LATENCY",
+        metricBadgeLatency: "⚡ 7.8× FASTER",
         metricSecLabel: "GPU Utilization",
         metricSecVal: "100% Active",
         metricSecStd: "61.8%",
@@ -1430,6 +1713,13 @@
       }
     ];
 
+    function getCurrentTrackSteps() {
+      if (currentTrackKey === 'CONVENTIONAL' || currentTrackKey === 'PROBLEM') return TRACK_CONVENTIONAL;
+      if (currentTrackKey === 'V1') return TRACK_V1;
+      return TRACK_V2;
+    }
+
+    let STEPS = TRACK_V2;
     let currentStepIdx = 0;
     let isPitchRunning = false;
     let currentArchMode = "V2";
@@ -1456,7 +1746,7 @@
       targetFlowOpacity = 1.0;
       updateFlowButtonUI(true);
 
-      // Open in Overview tab as requested!
+      renderTrackTabs();
       goToStep(0);
     }
 
@@ -1471,13 +1761,13 @@
 
     function pauseSimulationFlow() {
       targetFlowSpeedFactor = 0.0;
-      targetFlowOpacity = 0.0; // Smoothly vanish particles and lasers!
+      targetFlowOpacity = 0.0;
       updateFlowButtonUI(false);
     }
 
     function resumeSimulationFlow() {
       targetFlowSpeedFactor = 1.0;
-      targetFlowOpacity = 1.0; // Smoothly return particles and lasers!
+      targetFlowOpacity = 1.0;
       updateFlowButtonUI(true);
     }
 
@@ -1516,17 +1806,17 @@
     function focusChipIn3D(chipName) {
       playTone('click');
       if (chipName === 'soc') {
-        targetCamPos.set(-3.0, 13.5, 17.5);
-        targetLookAt.set(-2.0, -3.2, 0.0);
+        targetCamPos.set(-5.5, 7.5, 8.0);
+        targetLookAt.set(-5.5, 0.4, 0.0);
       } else if (chipName === 'dram') {
-        targetCamPos.set(1.5, 13.8, 18.0);
-        targetLookAt.set(1.0, -3.2, 0.0);
+        targetCamPos.set(-0.2, 6.8, 7.5);
+        targetLookAt.set(-0.2, 0.4, 0.0);
       } else if (chipName === 'nand' || chipName === 'pslc') {
-        targetCamPos.set(5.0, 14.0, 18.0);
-        targetLookAt.set(4.5, -3.2, 0.0);
+        targetCamPos.set(5.2, 6.5, 7.2);
+        targetLookAt.set(5.0, 0.4, 1.9);
       } else if (chipName === 'pcie') {
-        targetCamPos.set(-7.5, 13.5, 17.5);
-        targetLookAt.set(-6.5, -3.2, 0.0);
+        targetCamPos.set(-9.2, 6.8, 8.2);
+        targetLookAt.set(-8.5, 0.2, 0.0);
       } else {
         targetCamPos.set(OVERVIEW_CAM.x, OVERVIEW_CAM.y, OVERVIEW_CAM.z);
         targetLookAt.set(OVERVIEW_TARGET.x, OVERVIEW_TARGET.y, OVERVIEW_TARGET.z);
@@ -1536,46 +1826,89 @@
     }
 
     function updateStep3DVisuals(stepNum) {
-      if (stepNum === 1) {
-        if (doubleReadBeam) doubleReadBeam.visible = false;
-        if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (bypassSpline) bypassSpline.visible = true;
-        if (socDieOutline) socDieOutline.material.opacity = 0.5;
-        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.3;
-      } else if (stepNum === 2) {
-        if (doubleReadBeam) doubleReadBeam.visible = true;
-        if (doubleReadBeam2) doubleReadBeam2.visible = true;
-        if (bypassSpline) bypassSpline.visible = false;
-        if (socDieOutline) socDieOutline.material.opacity = 0.2;
-        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.0;
-      } else if (stepNum === 3) {
+      if (currentTrackKey === 'CONVENTIONAL') {
+        if (stepNum === 3) {
+          if (doubleReadBeam) doubleReadBeam.visible = true;
+          if (doubleReadBeam2) doubleReadBeam2.visible = true;
+          if (bypassSpline) bypassSpline.visible = false;
+          if (socDieOutline) socDieOutline.material.opacity = 0.2;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.0;
+        } else if (stepNum === 1) {
+          if (doubleReadBeam) doubleReadBeam.visible = false;
+          if (doubleReadBeam2) doubleReadBeam2.visible = false;
+          if (bypassSpline) bypassSpline.visible = false;
+          if (socDieOutline) socDieOutline.material.opacity = 0.7;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.0;
+        } else {
+          if (doubleReadBeam) doubleReadBeam.visible = (stepNum === 4);
+          if (doubleReadBeam2) doubleReadBeam2.visible = (stepNum === 4);
+          if (bypassSpline) bypassSpline.visible = false;
+          if (socDieOutline) socDieOutline.material.opacity = 0.4;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.0;
+        }
+      } else if (currentTrackKey === 'V1') {
+        if (stepNum === 1) {
+          if (doubleReadBeam) doubleReadBeam.visible = false;
+          if (doubleReadBeam2) doubleReadBeam2.visible = false;
+          if (bypassSpline) { bypassSpline.visible = true; bypassSpline.material.color.setHex(0xf59e0b); }
+          if (socDieOutline) socDieOutline.material.opacity = 0.9;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.3;
+        } else if (stepNum === 3) {
+          if (doubleReadBeam) doubleReadBeam.visible = true;
+          if (doubleReadBeam2) doubleReadBeam2.visible = false;
+          if (bypassSpline) { bypassSpline.visible = true; bypassSpline.material.color.setHex(0xf59e0b); }
+          if (socDieOutline) socDieOutline.material.opacity = 0.6;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.3;
+        } else {
+          if (doubleReadBeam) doubleReadBeam.visible = false;
+          if (doubleReadBeam2) doubleReadBeam2.visible = false;
+          if (bypassSpline) { bypassSpline.visible = true; bypassSpline.material.color.setHex(0xf59e0b); }
+          if (socDieOutline) socDieOutline.material.opacity = 0.5;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.3;
+        }
+      } else {
+        // Track 3: V2 (NeuroFTL 100%)
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
         if (bypassSpline) {
           bypassSpline.visible = true;
-          bypassSpline.material.color.setHex(0xf59e0b);
+          bypassSpline.material.color.setHex(0x10b981);
         }
-        if (socDieOutline) socDieOutline.material.opacity = 0.9;
-        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.4;
-      } else if (stepNum === 4) {
-        if (doubleReadBeam) doubleReadBeam.visible = false;
-        if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (bypassSpline) bypassSpline.visible = true;
-        if (socDieOutline) socDieOutline.material.opacity = 0.4;
-        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.95;
-      } else if (stepNum === 5) {
-        if (doubleReadBeam) doubleReadBeam.visible = false;
-        if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (bypassSpline) bypassSpline.visible = true;
-        if (socDieOutline) socDieOutline.material.opacity = 0.6;
-        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.6;
-      } else {
-        if (doubleReadBeam) doubleReadBeam.visible = false;
-        if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (bypassSpline) bypassSpline.visible = true;
-        if (socDieOutline) socDieOutline.material.opacity = 0.4;
-        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.4;
+        if (stepNum === 1) {
+          if (socDieOutline) socDieOutline.material.opacity = 0.95;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.4;
+        } else if (stepNum === 4) {
+          if (socDieOutline) socDieOutline.material.opacity = 0.4;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.95;
+        } else {
+          if (socDieOutline) socDieOutline.material.opacity = 0.5;
+          if (pslcDieOutline) pslcDieOutline.material.opacity = 0.5;
+        }
       }
+    }
+
+    // Dynamic Tab Rendering: Swaps tabs for the current track
+    function renderTrackTabs() {
+      const container = document.getElementById('stageTabsScrollContainer');
+      if (!container) return;
+
+      const steps = getCurrentTrackSteps();
+      let html = '';
+
+      for (let i = 0; i < steps.length; i++) {
+        const s = steps[i];
+        let tabShort = s.tabShort || (i === 0 ? 'Overview' : `Step ${i}`);
+        let icon = s.tabIcon || (i === 0 ? '🔍' : `${i}`);
+
+        html += `
+          <button onclick="goToStep(${i})" id="stepTab${i}" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+            <span>${icon}</span>
+            <span>${tabShort}</span>
+          </button>
+        `;
+      }
+      container.innerHTML = html;
+      setTimeout(updateTabScrollButtons, 50);
     }
 
     function renderStepProcess(stepNum) {
@@ -1585,262 +1918,573 @@
       const container = document.getElementById('stepProcessContent');
       if (!container) return;
 
-      if (stepNum === 0) {
-        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping";
-        if (label) label.innerText = "TOPOLOGY • COMPLETE SILICON DATA PATH";
-        if (badge) {
-          badge.innerText = "GEN5 X4 ARCHITECTURE";
-          badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
-        }
-        container.innerHTML = `
-          <div class="flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5">
-            <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[75px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-              <span class="text-zinc-400 font-bold text-[9px] uppercase">Host PCIe 5.0</span>
-              <span class="text-white font-bold">14.2 GB/s</span>
-              <span class="text-[9px] text-cyan-400 font-semibold">x4 NVMe Link</span>
-            </button>
-            <span class="text-cyan-400 font-bold text-xs shrink-0 animate-pulse">➔</span>
-            <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-              <span class="text-cyan-300 font-bold text-[9px] uppercase">NVMe Controller</span>
-              <span class="text-white font-bold">ARM Cortex-R8</span>
-              <span class="text-[9px] text-emerald-400 font-semibold">10ns Classifier</span>
-            </button>
-            <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-            <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-              <span class="text-amber-300 font-bold text-[9px] uppercase">3-Region DRAM</span>
-              <span class="text-white font-bold">65% Pinned L2P</span>
-              <span class="text-[9px] text-cyan-400 font-semibold">98.6% RAM Hit</span>
-            </button>
-            <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-            <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 shrink-0 min-w-[90px] sm:min-w-[115px] text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
-              <span class="text-emerald-300 font-bold text-[9px] uppercase">BiCS5 3D Flash</span>
-              <span class="text-white font-bold">pSLC Shield</span>
-              <span class="text-[9px] text-emerald-400 font-semibold">WAF 1.08</span>
-            </button>
-          </div>
-        `;
-      } else if (stepNum === 1) {
-        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping";
-        if (label) label.innerText = "INGRESS • CONCURRENT NVMe QUEUE TRACE";
-        if (badge) {
-          badge.innerText = "TRAFFIC CONTENTION";
-          badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
-        }
-        container.innerHTML = `
-          <div class="space-y-1 text-[10px] sm:text-xs font-mono">
-            <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/25">
-              <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span class="text-amber-300 font-bold">QUEUE SQ0 (PyTorch Checkpoint):</span>
-                <span class="text-zinc-200">64KB Sequential Writes</span>
+      if (currentTrackKey === 'CONVENTIONAL') {
+        // ==================== TRACK 1: CONVENTIONAL FTL ====================
+        if (stepNum === 0) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping";
+          if (label) label.innerText = "TOPOLOGY • CONVENTIONAL UNSEGREGATED PIPELINE";
+          if (badge) {
+            badge.innerText = "STATUS QUO BASELINE";
+            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/30";
+          }
+          container.innerHTML = `
+            <div class="flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5">
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[75px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[9px] uppercase">Host PCIe 5.0</span>
+                <span class="text-white font-bold">14.2 GB/s</span>
+                <span class="text-[9px] text-rose-400 font-semibold">Unsegregated</span>
+              </button>
+              <span class="text-rose-400 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-rose-300 font-bold text-[9px] uppercase">Legacy Controller</span>
+                <span class="text-white font-bold">Generic FIFO</span>
+                <span class="text-[9px] text-rose-400 font-semibold">0% Awareness</span>
+              </button>
+              <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-rose-300 font-bold text-[9px] uppercase">Shared DRAM</span>
+                <span class="text-white font-bold">Unprotected Table</span>
+                <span class="text-[9px] text-rose-400 font-semibold">18.4% Hit Rate</span>
+              </button>
+              <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 shrink-0 min-w-[90px] sm:min-w-[115px] text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
+                <span class="text-rose-300 font-bold text-[9px] uppercase">BiCS Flash</span>
+                <span class="text-white font-bold">No Wear Shield</span>
+                <span class="text-[9px] text-rose-400 font-semibold">WAF 2.84</span>
+              </button>
+            </div>
+          `;
+        } else if (stepNum === 1) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping";
+          if (label) label.innerText = "INGRESS • CONCURRENT NVMe QUEUE TRACE";
+          if (badge) {
+            badge.innerText = "TRAFFIC CONTENTION";
+            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+          }
+          container.innerHTML = `
+            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
+              <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/25">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                  <span class="text-amber-300 font-bold">QUEUE SQ0 (PyTorch Checkpoint):</span>
+                  <span class="text-zinc-200">64KB Sequential Writes</span>
+                </div>
+                <div class="flex items-center gap-2 text-right">
+                  <span class="text-zinc-400 hidden sm:inline">LBA 0x1000..0x103F</span>
+                  <span class="text-amber-400 font-bold">14.2 GB/s Bandwidth</span>
+                </div>
               </div>
-              <div class="flex items-center gap-2 text-right">
-                <span class="text-zinc-400 hidden sm:inline">LBA 0x1000..0x103F</span>
-                <span class="text-amber-400 font-bold">14.2 GB/s Bandwidth</span>
+              <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/25">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                  <span class="text-cyan-300 font-bold">QUEUE SQ1 (vLLM KV Inference):</span>
+                  <span class="text-zinc-200">4KB Random Reads</span>
+                </div>
+                <div class="flex items-center gap-2 text-right">
+                  <span class="text-zinc-400 hidden sm:inline">LBA 0x8A420</span>
+                  <span class="text-cyan-400 font-bold">120K IOPS (&lt;30µs SLA)</span>
+                </div>
+              </div>
+              <div class="text-[9px] sm:text-[10px] text-rose-300/90 flex items-center justify-between pt-0.5 font-sans">
+                <span>⚠️ <strong>Conventional FTL Flaw:</strong> Unsegregated LRU cache allows massive 64KB writes to flush 4KB KV page tables out of DRAM.</span>
               </div>
             </div>
-            <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/25">
-              <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-                <span class="text-cyan-300 font-bold">QUEUE SQ1 (vLLM KV Inference):</span>
-                <span class="text-zinc-200">4KB Random Reads</span>
-              </div>
-              <div class="flex items-center gap-2 text-right">
-                <span class="text-zinc-400 hidden sm:inline">LBA 0x8A420</span>
-                <span class="text-cyan-400 font-bold">120K IOPS (&lt;30µs SLA)</span>
-              </div>
-            </div>
-            <div class="text-[9px] sm:text-[10px] text-rose-300/90 flex items-center justify-between pt-0.5 font-sans">
-              <span>⚠️ <strong>Conventional FTL Flaw:</strong> Unsegregated LRU cache allows massive 64KB writes to flush 4KB KV page tables out of DRAM.</span>
-            </div>
-          </div>
-        `;
-      } else if (stepNum === 2) {
-        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping";
-        if (label) label.innerText = "FAILURE • DOUBLE-READ CASCADE TRACE";
-        if (badge) {
-          badge.innerText = "⚠️ +130µs FLASH PENALTY";
-          badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
-        }
-        container.innerHTML = `
-          <div class="space-y-1 text-[10px] sm:text-xs font-mono">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-1 sm:gap-1.5">
+          `;
+        } else if (stepNum === 2) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping";
+          if (label) label.innerText = "POLLUTION • DRAM CACHE EVICTION TRACE";
+          if (badge) {
+            badge.innerText = "81.6% EVICTION RATE";
+            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+          }
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
               <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-0.5">
                 <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">T = 0.2 µs</span>
-                  <span class="text-rose-300">DRAM MISS</span>
+                  <span class="text-rose-400 font-bold">STEP 1: INGRESS</span>
+                  <span class="text-amber-400">14.2 GB/s</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">1. L2P Evicted</div>
-                <div class="text-[9px] text-zinc-300">64KB training write purged KV page table from RAM</div>
+                <div class="text-white font-bold text-[11px]">Training Stream Flood</div>
+                <div class="text-[9px] text-zinc-300">PyTorch weights sweep through DRAM buffer uncontrollably</div>
               </div>
               <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 space-y-0.5">
                 <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">T = 25.0 µs</span>
-                  <span class="text-amber-400 font-bold">+25µs tR</span>
+                  <span class="text-rose-400 font-bold">STEP 2: FLUSH</span>
+                  <span class="text-rose-300 font-bold">L2P PURGED</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">2. FLASH READ 1</div>
-                <div class="text-[9px] text-zinc-300">Controller stalls to read L2P page from Die 0</div>
+                <div class="text-white font-bold text-[11px]">Metadata Table Evicted</div>
+                <div class="text-[9px] text-zinc-300">KV address translation entries cast out to make room for writes</div>
               </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-0.5">
+              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/25 border border-rose-500/50 space-y-0.5">
                 <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">T = 26.8 µs</span>
-                  <span class="text-zinc-300">PBA DECODE</span>
+                  <span class="text-rose-300 font-bold">STEP 3: PENALTY</span>
+                  <span class="text-rose-400 font-black">+130µs tR</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">3. Address Resolved</div>
-                <div class="text-[9px] text-zinc-300">Target resolved: Die 1, Plane 0, Blk 412, Pg 68</div>
+                <div class="text-rose-300 font-bold text-[11px]">Subsequent KV Miss</div>
+                <div class="text-[9px] text-rose-200">Hit rate drops from 98.6% down to 18.4% • Double-Read triggered</div>
               </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/25 border border-rose-500/50 space-y-0.5 animate-pulse">
+            </div>
+          `;
+        } else if (stepNum === 3) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping";
+          if (label) label.innerText = "FAILURE • DOUBLE-READ CASCADE TRACE";
+          if (badge) {
+            badge.innerText = "⚠️ +130µs FLASH PENALTY";
+            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+          }
+          container.innerHTML = `
+            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-1 sm:gap-1.5">
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-0.5">
+                  <div class="flex items-center justify-between text-[9px]">
+                    <span class="text-rose-400 font-bold">T = 0.2 µs</span>
+                    <span class="text-rose-300">DRAM MISS</span>
+                  </div>
+                  <div class="text-white font-bold text-[11px]">1. L2P Evicted</div>
+                  <div class="text-[9px] text-zinc-300">64KB training write purged KV page table from RAM</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 space-y-0.5">
+                  <div class="flex items-center justify-between text-[9px]">
+                    <span class="text-rose-400 font-bold">T = 25.0 µs</span>
+                    <span class="text-amber-400 font-bold">+25µs tR</span>
+                  </div>
+                  <div class="text-white font-bold text-[11px]">2. FLASH READ 1</div>
+                  <div class="text-[9px] text-zinc-300">Controller stalls to read L2P page from Die 0</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-0.5">
+                  <div class="flex items-center justify-between text-[9px]">
+                    <span class="text-rose-400 font-bold">T = 26.8 µs</span>
+                    <span class="text-zinc-300">PBA DECODE</span>
+                  </div>
+                  <div class="text-white font-bold text-[11px]">3. Address Resolved</div>
+                  <div class="text-[9px] text-zinc-300">Target resolved: Die 1, Plane 0, Blk 412, Pg 68</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/25 border border-rose-500/50 space-y-0.5 animate-pulse">
+                  <div class="flex items-center justify-between text-[9px]">
+                    <span class="text-rose-300 font-bold">T = 52µs..168µs</span>
+                    <span class="text-rose-400 font-black">TAIL SPIKE!</span>
+                  </div>
+                  <div class="text-rose-300 font-bold text-[11px]">4. FLASH READ 2</div>
+                  <div class="text-[9px] text-rose-200">Second sensing + GC lock ➔ 168.2µs tail latency</div>
+                </div>
+              </div>
+              <div class="text-[9px] sm:text-[10px] text-rose-300 flex items-center justify-between pt-0.5 font-sans">
+                <span>💥 <strong>Host Impact:</strong> GPU DataLoader starved • <strong>38.2% compute idle bubbles</strong> while CUDA cores wait</span>
+              </div>
+            </div>
+          `;
+        } else if (stepNum === 4) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping";
+          if (label) label.innerText = "IMPACT • HOST GPU STARVATION & FLASH WEAR";
+          if (badge) {
+            badge.innerText = "38.2% COMPUTE LOSS";
+            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+          }
+          container.innerHTML = `
+            <div class="space-y-1.5 text-[10px] sm:text-xs font-mono">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">P99 READ TAIL</div>
+                  <div class="text-sm sm:text-base font-black text-rose-400">168.2 µs</div>
+                  <div class="text-[8.5px] text-rose-300 font-semibold">❌ 7.8× Higher vs Target</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">GPU IDLE BUBBLES</div>
+                  <div class="text-sm sm:text-base font-black text-rose-400">38.2%</div>
+                  <div class="text-[8.5px] text-rose-300 font-semibold">💥 CUDA Cores Starved</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">WRITE AMPLIFICATION</div>
+                  <div class="text-sm sm:text-base font-black text-rose-400">2.84 WAF</div>
+                  <div class="text-[8.5px] text-rose-300 font-semibold">⚠️ 62% Shorter Flash Life</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">L2P RAM HIT RATE</div>
+                  <div class="text-sm sm:text-base font-black text-rose-400">18.4%</div>
+                  <div class="text-[8.5px] text-rose-300 font-semibold">❌ Severe Cache Thrash</div>
+                </div>
+              </div>
+              <button onclick="switchMode('V1')" class="w-full py-1.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
+                <span>See What We Tried First: Firmware v1.0 (Heuristic Prototype) ➔</span>
+              </button>
+            </div>
+          `;
+        }
+      } else if (currentTrackKey === 'V1') {
+        // ==================== TRACK 2: FIRMWARE v1.0 ====================
+        if (stepNum === 0) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping";
+          if (label) label.innerText = "TOPOLOGY • FIRMWARE v1.0 STATIC HEURISTIC";
+          if (badge) {
+            badge.innerText = "EARLY PROTOTYPE (84.2%)";
+            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+          }
+          container.innerHTML = `
+            <div class="flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5">
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[75px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[9px] uppercase">Host PCIe 5.0</span>
+                <span class="text-white font-bold">14.2 GB/s</span>
+                <span class="text-[9px] text-amber-400 font-semibold">Unchanged Link</span>
+              </button>
+              <span class="text-amber-400 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-amber-300 font-bold text-[9px] uppercase">v1.0 Controller</span>
+                <span class="text-white font-bold">ΔLBA &gt; 16 Rule</span>
+                <span class="text-[9px] text-amber-400 font-semibold">84.2% Accuracy</span>
+              </button>
+              <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-amber-300 font-bold text-[9px] uppercase">Static DRAM</span>
+                <span class="text-white font-bold">Fixed 50/50 Split</span>
+                <span class="text-[9px] text-amber-400 font-semibold">Rigid Partition</span>
+              </button>
+              <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[90px] sm:min-w-[115px] text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
+                <span class="text-amber-300 font-bold text-[9px] uppercase">BiCS Flash</span>
+                <span class="text-white font-bold">Partial Bypass</span>
+                <span class="text-[9px] text-amber-400 font-semibold">WAF 1.62</span>
+              </button>
+            </div>
+          `;
+        } else if (stepNum === 1) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping";
+          if (label) label.innerText = "ALGORITHM • STATIC STRIDE THRESHOLD & 50/50 SPLIT";
+          if (badge) {
+            badge.innerText = "ΔLBA > 16 RULE";
+            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+          }
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono">
+              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
                 <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-300 font-bold">T = 52µs..168µs</span>
-                  <span class="text-rose-400 font-black">TAIL SPIKE!</span>
+                  <span class="text-amber-300 font-bold">HEURISTIC LOGIC</span>
+                  <span class="text-white font-mono">SOFTWARE CHECK</span>
                 </div>
-                <div class="text-rose-300 font-bold text-[11px]">4. FLASH READ 2</div>
-                <div class="text-[9px] text-rose-200">Second sensing + GC lock ➔ 168.2µs tail latency</div>
+                <div class="text-[10px] text-zinc-200 leading-snug">
+                  <code>if (req.lba - last_lba &gt; 16 &amp;&amp; req.size &gt;= 64KB) {</code><br/>
+                  &nbsp;&nbsp;<code>route_to_stream_bypass();</code><br/>
+                  <code>} else { route_to_dram_cache(); }</code>
+                </div>
+                <div class="text-[9px] text-amber-300 font-sans">⚠️ Only checks current address distance — has zero temporal memory or request entropy awareness.</div>
+              </div>
+              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
+                <div class="flex items-center justify-between text-[9px]">
+                  <span class="text-amber-300 font-bold">STATIC 50/50 DRAM SPLIT</span>
+                  <span class="text-amber-400">HARD-CODED</span>
+                </div>
+                <div class="space-y-0.5 text-[10px]">
+                  <div class="flex justify-between text-zinc-300"><span>• Metadata Region:</span> <strong class="text-white">50% (2.0 GB)</strong></div>
+                  <div class="flex justify-between text-zinc-300"><span>• Host Data Buffer:</span> <strong class="text-white">50% (2.0 GB)</strong></div>
+                </div>
+                <div class="text-[9px] text-zinc-400 font-sans">Inflexible: Under heavy KV-cache reads, the 50% metadata partition overflows, causing cache thrash.</div>
               </div>
             </div>
-            <div class="text-[9px] sm:text-[10px] text-rose-300 flex items-center justify-between pt-0.5 font-sans">
-              <span>💥 <strong>Host Impact:</strong> GPU DataLoader starved • <strong>38.2% compute idle bubbles</strong> while CUDA cores wait</span>
+          `;
+        } else if (stepNum === 2) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+          if (label) label.innerText = "BENCHMARK • SYNTHETIC SEQUENTIAL TEST (PARTIAL SUCCESS)";
+          if (badge) {
+            badge.innerText = "96.4% DETECTION";
+            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+          }
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[10px] sm:text-xs font-mono">
+              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
+                <div class="text-[9px] text-zinc-400">SEQUENTIAL STREAMS</div>
+                <div class="text-base font-bold text-emerald-400">96.4% Correct</div>
+                <div class="text-[9px] text-zinc-300">Clean linear PyTorch checkpoints successfully identified</div>
+              </div>
+              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
+                <div class="text-[9px] text-zinc-400">WAF REDUCTION</div>
+                <div class="text-base font-bold text-emerald-400">1.62 WAF</div>
+                <div class="text-[9px] text-zinc-300">Reduced from 2.84 Conv (43% flash wear relief)</div>
+              </div>
+              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
+                <div class="text-[9px] text-zinc-400">P99 LATENCY IMPROVEMENT</div>
+                <div class="text-base font-bold text-amber-400">84.6 µs</div>
+                <div class="text-[9px] text-zinc-300">Better than 168µs Conv, but 4× worse than 21µs target</div>
+              </div>
             </div>
-          </div>
-        `;
-      } else if (stepNum === 3) {
-        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping";
-        if (label) label.innerText = "FIRMWARE EVOLUTION • v1.0 HEURISTIC (84%) vs v2.0 CLASSIFIER (100%)";
-        if (badge) {
-          badge.innerText = "ACCURACY COMPARISON";
-          badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+          `;
+        } else if (stepNum === 3) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping";
+          if (label) label.innerText = "FAILURE • THE RAG & ATTENTION BLIND SPOT";
+          if (badge) {
+            badge.innerText = "15.8% FALSE BYPASSES";
+            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+          }
+          container.innerHTML = `
+            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
+              <div class="p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-1">
+                <div class="flex items-center justify-between text-[9px]">
+                  <span class="text-rose-400 font-bold">WHY STATIC STRIDE FAILS ON AI WORKLOADS</span>
+                  <span class="text-rose-300 font-bold">15.8% MISCLASSIFICATION</span>
+                </div>
+                <div class="text-[10px] text-zinc-200 leading-snug">
+                  • <strong>Interleaved Attention Bursts:</strong> vLLM multi-head attention and RAG vector lookups generate non-sequential address deltas (<code>ΔLBA &lt; 16</code>).<br/>
+                  • <strong>False Positives / Negatives:</strong> v1.0 incorrectly bypasses small KV tables or dumps massive training blocks into the 50% DRAM cache.<br/>
+                  • <strong>Tail Jitter:</strong> Each misclassification triggers a flash sensing stall, introducing <strong>84.6µs tail latency spikes</strong>.
+                </div>
+              </div>
+            </div>
+          `;
+        } else if (stepNum === 4) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping";
+          if (label) label.innerText = "VERDICT • v1.0 INSUFFICIENT FOR ENTERPRISE AI";
+          if (badge) {
+            badge.innerText = "84.6µs JITTER TAIL";
+            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+          }
+          container.innerHTML = `
+            <div class="space-y-1.5 text-[10px] sm:text-xs font-mono">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
+                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">P99 READ TAIL</div>
+                  <div class="text-sm sm:text-base font-black text-amber-400">84.6 µs</div>
+                  <div class="text-[8.5px] text-amber-300 font-semibold">⚠️ Unstable Jitter</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">GPU IDLE BUBBLES</div>
+                  <div class="text-sm sm:text-base font-black text-amber-400">14.3%</div>
+                  <div class="text-[8.5px] text-amber-300 font-semibold">⚠️ Persistent Stalls</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">STREAM ACCURACY</div>
+                  <div class="text-sm sm:text-base font-black text-amber-400">84.2%</div>
+                  <div class="text-[8.5px] text-rose-400 font-semibold">❌ 15.8% Error Rate</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">WRITE AMPLIFICATION</div>
+                  <div class="text-sm sm:text-base font-black text-amber-400">1.62 WAF</div>
+                  <div class="text-[8.5px] text-amber-300 font-semibold">⚠️ Partial Relief</div>
+                </div>
+              </div>
+              <button onclick="switchMode('V2')" class="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
+                <span>See the Final Solution: NeuroFTL™ v2.0 (100% Accuracy) ➔</span>
+              </button>
+            </div>
+          `;
         }
-        container.innerHTML = `
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono">
-            <!-- Early Attempt v1.0 -->
-            <div class="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
-              <div class="flex items-center justify-between text-[9px]">
-                <span class="text-amber-300 font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> 1. EARLY ATTEMPT: FIRMWARE v1.0</span>
-                <span class="text-amber-400 font-bold">84.2% ACCURACY</span>
+      } else {
+        // ==================== TRACK 3: NEUROFTL v2.0 (100% Solution) ====================
+        if (stepNum === 0) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping";
+          if (label) label.innerText = "TOPOLOGY • COMPLETE SILICON DATA PATH";
+          if (badge) {
+            badge.innerText = "GEN5 X4 ARCHITECTURE";
+            badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
+          }
+          container.innerHTML = `
+            <div class="flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5">
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[75px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[9px] uppercase">Host PCIe 5.0</span>
+                <span class="text-white font-bold">14.2 GB/s</span>
+                <span class="text-[9px] text-cyan-400 font-semibold">x4 NVMe Link</span>
+              </button>
+              <span class="text-cyan-400 font-bold text-xs shrink-0 animate-pulse">➔</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-cyan-300 font-bold text-[9px] uppercase">NVMe Controller</span>
+                <span class="text-white font-bold">ARM Cortex-R8</span>
+                <span class="text-[9px] text-emerald-400 font-semibold">10ns Classifier</span>
+              </button>
+              <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-amber-300 font-bold text-[9px] uppercase">3-Region DRAM</span>
+                <span class="text-white font-bold">65% Pinned L2P</span>
+                <span class="text-[9px] text-cyan-400 font-semibold">98.6% RAM Hit</span>
+              </button>
+              <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 shrink-0 min-w-[90px] sm:min-w-[115px] text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
+                <span class="text-emerald-300 font-bold text-[9px] uppercase">BiCS5 3D Flash</span>
+                <span class="text-white font-bold">pSLC Shield</span>
+                <span class="text-[9px] text-emerald-400 font-semibold">WAF 1.08</span>
+              </button>
+            </div>
+          `;
+        } else if (stepNum === 1) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+          if (label) label.innerText = "CONTROLLER • 10ns MULTI-FEATURE CLASSIFIER IN TCM";
+          if (badge) {
+            badge.innerText = "ZERO-OVERHEAD CLASSIFICATION";
+            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+          }
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[10px] sm:text-xs font-mono">
+              <div class="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 space-y-0.5">
+                <div class="text-[9px] text-cyan-300 font-bold">FEATURE 1: STRIDE</div>
+                <div class="text-white font-bold text-[11px]">LBA Stride Vector</div>
+                <div class="text-[9px] text-zinc-300">Continuous spatial tracking across active queue descriptors</div>
               </div>
-              <div class="text-[10px] text-zinc-200 leading-snug">
-                • <strong>Algorithm:</strong> Static Stride Heuristic (<code>ΔLBA &gt; 16</code>), fixed 50/50 DRAM.<br/>
-                • <strong>Flaw:</strong> Interleaved attention &amp; RAG vectors misclassified as sequential.<br/>
-                • <strong>Impact:</strong> 15.8% false bypasses trigger double-read spikes to <strong>84.6µs</strong> &amp; <strong>14.3% GPU stalls</strong>.
+              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
+                <div class="text-[9px] text-emerald-300 font-bold">FEATURE 2: TEMPORAL</div>
+                <div class="text-white font-bold text-[11px]">Inter-Arrival Delta</div>
+                <div class="text-[9px] text-zinc-300">Measures burst frequency to isolate bulk checkpoints from sporadic reads</div>
+              </div>
+              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
+                <div class="text-[9px] text-amber-300 font-bold">FEATURE 3: ENTROPY</div>
+                <div class="text-white font-bold text-[11px]">Spatial Entropy Window</div>
+                <div class="text-[9px] text-zinc-300">Detects RAG & attention scatter • 100.0% accuracy in 10ns</div>
               </div>
             </div>
+          `;
+        } else if (stepNum === 2) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+          if (label) label.innerText = "BYPASS • DIRECT DMA BYPASS RAIL EXECUTION";
+          if (badge) {
+            badge.innerText = "0% DRAM POLLUTION";
+            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+          }
+          container.innerHTML = `
+            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
+              <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/35">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="text-emerald-300 font-bold">DIRECT DMA BYPASS RAIL:</span>
+                  <span class="text-zinc-200">14.2 GB/s Stream Routed Directly to NAND</span>
+                </div>
+                <div class="flex items-center gap-2 text-right">
+                  <span class="text-emerald-400 font-bold">Zero DRAM Touch</span>
+                </div>
+              </div>
+              <div class="text-[9px] sm:text-[10px] text-emerald-300 flex items-center justify-between pt-0.5 font-sans">
+                <span>🔒 <strong>Benefit:</strong> Sequential 64KB writes never touch DRAM cache lines, keeping the L2P metadata table 100% pristine.</span>
+              </div>
+            </div>
+          `;
+        } else if (stepNum === 3) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+          if (label) label.innerText = "MEMORY • DYNAMIC 3-REGION PARTITION & LOCK";
+          if (badge) {
+            badge.innerText = "98.6% L2P RAM HIT RATE";
+            badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
+          }
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
+              <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 space-y-0.5">
+                <div class="flex items-center justify-between text-[9px]">
+                  <span class="text-cyan-300 font-bold">REGION 1 (65% DRAM)</span>
+                  <span class="text-emerald-400 font-bold">0.1µs RAM</span>
+                </div>
+                <div class="text-white font-bold text-[11px]">Pinned L2P Table</div>
+                <div class="text-[9px] text-zinc-300">98.6% hit rate • Metadata write-protected against bulk training flushes</div>
+              </div>
+              <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
+                <div class="flex items-center justify-between text-[9px]">
+                  <span class="text-amber-300 font-bold">REGION 2 (5% DRAM)</span>
+                  <span class="text-amber-400 font-bold">ZERO-COPY</span>
+                </div>
+                <div class="text-white font-bold text-[11px]">Direct DMA Ring</div>
+                <div class="text-[9px] text-zinc-300">Circular descriptor ring pipes sequential streams directly to flash</div>
+              </div>
+              <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
+                <div class="flex items-center justify-between text-[9px]">
+                  <span class="text-emerald-300 font-bold">REGION 3 (30% DRAM)</span>
+                  <span class="text-emerald-400 font-bold">&lt;30µs SLA</span>
+                </div>
+                <div class="text-white font-bold text-[11px]">Hot KV Read Cache</div>
+                <div class="text-[9px] text-zinc-300">Immediate servicing for active transformer attention vectors</div>
+              </div>
+            </div>
+          `;
+        } else if (stepNum === 4) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+          if (label) label.innerText = "FLASH • DYNAMIC pSLC WEAR SHIELD (DIE 2)";
+          if (badge) {
+            badge.innerText = "WAF 1.08 • 2.6× LIFESPAN";
+            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+          }
+          container.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono">
+              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
+                <div class="text-[9px] text-amber-300 font-bold">DIE 2: 1-BIT pSLC MODE</div>
+                <div class="text-white font-bold text-[11px]">Dynamic Wear Shield</div>
+                <div class="text-[9px] text-zinc-300">Random 4KB KV updates absorbed into high-endurance SLC mode with zero GC overhead</div>
+              </div>
+              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
+                <div class="text-[9px] text-emerald-300 font-bold">WEAR AMPLIFICATION FACTOR</div>
+                <div class="text-white font-bold text-[11px]">WAF 1.08 (vs 2.84 Conv)</div>
+                <div class="text-[9px] text-zinc-300">Flash cell lifespan extended by 2.6× under continuous enterprise training workloads</div>
+              </div>
+            </div>
+          `;
+        } else if (stepNum === 5) {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+          if (label) label.innerText = "VALIDATION • 3-GENERATION SILICON BENCHMARK VERDICT";
+          if (badge) {
+            badge.innerText = "100% FIRMWARE SOLUTION";
+            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+          }
+          container.innerHTML = `
+            <div class="space-y-1.5">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
+                <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">P99 READ TAIL</div>
+                  <div class="text-sm sm:text-base font-black text-emerald-400">21.4 µs</div>
+                  <div class="text-[8.5px] text-emerald-300 font-semibold">⚡ vs 168µs (Conv) / 85µs (v1)</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">STREAM ACCURACY</div>
+                  <div class="text-sm sm:text-base font-black text-cyan-400">100.0%</div>
+                  <div class="text-[8.5px] text-cyan-300 font-semibold">🔒 vs 0% (Conv) / 84.2% (v1)</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">WRITE AMPLIFICATION</div>
+                  <div class="text-sm sm:text-base font-black text-amber-400">1.08 WAF</div>
+                  <div class="text-[8.5px] text-amber-300 font-semibold">🛡️ 2.6× Life (vs 2.84 Conv)</div>
+                </div>
+                <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0.5">
+                  <div class="text-[9px] text-zinc-400">GPU COMPUTE IDLE</div>
+                  <div class="text-sm sm:text-base font-black text-emerald-400">0.0% Stalls</div>
+                  <div class="text-[8.5px] text-emerald-300 font-semibold">🚀 100% Fed (vs 38.2% Conv)</div>
+                </div>
+              </div>
 
-            <!-- Breakthrough Solution v2.0 -->
-            <div class="p-1.5 sm:p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
-              <div class="flex items-center justify-between text-[9px]">
-                <span class="text-emerald-300 font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> 2. BREAKTHROUGH: NEUROFTL™ v2.0</span>
-                <span class="text-emerald-400 font-bold">100.0% ACCURACY</span>
-              </div>
-              <div class="text-[10px] text-zinc-200 leading-snug">
-                • <strong>Algorithm:</strong> 10ns Multi-Feature Classifier (Stride + Inter-arrival + Entropy) in TCM.<br/>
-                • <strong>Action:</strong> Direct DMA bypass rail isolates 14.2 GB/s checkpoints.<br/>
-                • <strong>Impact:</strong> <strong>0% DRAM eviction</strong>; P99 read latency locked flat at <strong>21.4µs</strong> (0.0% GPU stalls).
-              </div>
+              <button onclick="openCompareModal()" class="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg hover:opacity-95 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
+                <span>⚖️</span>
+                <span>Open Side-by-Side 3-Generation Comparative Evolution Matrix</span>
+                <span>➔</span>
+              </button>
             </div>
-          </div>
-        `;
-      } else if (stepNum === 4) {
-        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
-        if (label) label.innerText = "MEMORY • 3-REGION PARTITION & pSLC SHIELD";
-        if (badge) {
-          badge.innerText = "98.6% L2P RAM HIT RATE";
-          badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
+          `;
         }
-        container.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
-            <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 space-y-0.5">
-              <div class="flex items-center justify-between text-[9px]">
-                <span class="text-cyan-300 font-bold">REGION 1 (65% DRAM)</span>
-                <span class="text-emerald-400 font-bold">0.1µs RAM</span>
-              </div>
-              <div class="text-white font-bold text-[11px]">Pinned L2P Table</div>
-              <div class="text-[9px] text-zinc-300">98.6% hit rate • Metadata write-protected against bulk training flushes</div>
-            </div>
-            <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
-              <div class="flex items-center justify-between text-[9px]">
-                <span class="text-amber-300 font-bold">REGION 2 (5% DRAM)</span>
-                <span class="text-amber-400 font-bold">ZERO-COPY</span>
-              </div>
-              <div class="text-white font-bold text-[11px]">Direct DMA Ring</div>
-              <div class="text-[9px] text-zinc-300">Circular descriptor ring pipes sequential streams directly to flash</div>
-            </div>
-            <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
-              <div class="flex items-center justify-between text-[9px]">
-                <span class="text-emerald-300 font-bold">NAND POOL (30% pSLC)</span>
-                <span class="text-emerald-400 font-bold">WAF 1.08</span>
-              </div>
-              <div class="text-white font-bold text-[11px]">Dynamic pSLC Shield</div>
-              <div class="text-[9px] text-zinc-300">Hot random KV updates absorbed in 1-bit SLC mode • 2.6× flash lifespan</div>
-            </div>
-          </div>
-        `;
-      } else if (stepNum === 5) {
-        if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
-        if (label) label.innerText = "VALIDATION • 3-GENERATION SILICON BENCHMARK VERDICT";
-        if (badge) {
-          badge.innerText = "100% FIRMWARE SOLUTION";
-          badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
-        }
-        container.innerHTML = `
-          <div class="space-y-1.5">
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0.5">
-                <div class="text-[9px] text-zinc-400">P99 READ TAIL</div>
-                <div class="text-sm sm:text-base font-black text-emerald-400">21.4 µs</div>
-                <div class="text-[8.5px] text-emerald-300 font-semibold">⚡ vs 168µs (Conv) / 85µs (v1)</div>
-              </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-center space-y-0.5">
-                <div class="text-[9px] text-zinc-400">STREAM ACCURACY</div>
-                <div class="text-sm sm:text-base font-black text-cyan-400">100.0%</div>
-                <div class="text-[8.5px] text-cyan-300 font-semibold">🔒 vs 0% (Conv) / 84.2% (v1)</div>
-              </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
-                <div class="text-[9px] text-zinc-400">WRITE AMPLIFICATION</div>
-                <div class="text-sm sm:text-base font-black text-amber-400">1.08 WAF</div>
-                <div class="text-[8.5px] text-amber-300 font-semibold">🛡️ 2.6× Life (vs 2.84 Conv)</div>
-              </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0.5">
-                <div class="text-[9px] text-zinc-400">GPU COMPUTE IDLE</div>
-                <div class="text-sm sm:text-base font-black text-emerald-400">0.0% Stalls</div>
-                <div class="text-[8.5px] text-emerald-300 font-semibold">🚀 100% Fed (vs 38.2% Conv)</div>
-              </div>
-            </div>
-
-            <!-- Prominent Matrix Launch Button -->
-            <button onclick="openCompareModal()" class="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg hover:opacity-95 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
-              <span>⚖️</span>
-              <span>Open Side-by-Side 3-Generation Comparative Evolution Matrix</span>
-              <span>➔</span>
-            </button>
-          </div>
-        `;
       }
-
     }
 
     function goToStep(stepNum) {
-      stepNum = Math.max(0, Math.min(5, parseInt(stepNum, 10)));
+      const steps = getCurrentTrackSteps();
+      STEPS = steps;
+      stepNum = Math.max(0, Math.min(steps.length - 1, parseInt(stepNum, 10)));
       currentStepIdx = stepNum;
-      const step = STEPS[currentStepIdx];
-      playTone(step.mode === 'PROBLEM' ? 'problem' : 'click');
+      const step = steps[currentStepIdx];
+      playTone(step.mode === 'CONVENTIONAL' || step.mode === 'PROBLEM' ? 'problem' : 'click');
 
       // Update Dock text & explanatory paragraph
-      setText('dockStageCount', step.num === 0 ? 'OVERVIEW' : `STAGE ${step.num} / 5`);
+      setText('dockStageCount', step.num === 0 ? 'OVERVIEW' : `STAGE ${step.num} / ${steps.length - 1}`);
       setText('dockStepCategory', step.category);
       setText('dockActiveChip', step.activeChip);
       setText('dockStepTitle', step.title);
       setHtml('dockStepPara', step.para);
-      const mobileNext = step.num === 5 ? 'Restart ↺' : 'Next →';
+
+      const isLast = (stepNum === steps.length - 1);
+      let mobileNext = 'Next →';
+      if (isLast) {
+        if (currentTrackKey === 'CONVENTIONAL') mobileNext = 'Try v1.0 →';
+        else if (currentTrackKey === 'V1') mobileNext = 'Try v2.0 →';
+        else mobileNext = 'Restart ↺';
+      }
       setText('btnNextLabel', window.innerWidth < 640 ? mobileNext : step.nextLabel);
 
       // Update Progress Bar
       const bar = document.getElementById('dockProgressBar');
-      if (bar) bar.style.width = (stepNum === 0 ? 5 : stepNum * 20) + '%';
+      if (bar) {
+        const pct = stepNum === 0 ? 5 : Math.round((stepNum / (steps.length - 1)) * 100);
+        bar.style.width = pct + '%';
+      }
 
       // Update Structured Bullet Points (High-Contrast Highlight Chips)
-      setHtml('point1', step.points[0]);
-      setHtml('point2', step.points[1]);
-      setHtml('point3', step.points[2]);
+      setHtml('point1', step.points[0] || '');
+      setHtml('point2', step.points[1] || '');
+      setHtml('point3', step.points[2] || '');
 
       // Highlight Metric Cards according to mode & update metric labels
       const cardLat = document.getElementById('metricCardLatency');
@@ -1850,13 +2494,20 @@
       const badgeSec = document.getElementById('metricBadgeSecondary');
       const valSec = document.getElementById('metricSecondaryVal');
 
-      if (step.mode === 'PROBLEM') {
+      if (step.mode === 'CONVENTIONAL' || step.mode === 'PROBLEM') {
         if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 min-w-[125px] sm:min-w-[140px] space-y-0.5 glow-problem shadow-md";
         if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-rose-400";
         if (valP99) valP99.className = "text-base sm:text-lg font-black text-rose-400 font-mono";
         if (cardSec) cardSec.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
         if (badgeSec) badgeSec.className = "text-[10px] sm:text-xs font-bold text-rose-400";
         if (valSec) valSec.className = "text-base sm:text-lg font-black text-rose-400 font-mono";
+      } else if (step.mode === 'V1') {
+        if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
+        if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-amber-400";
+        if (valP99) valP99.className = "text-base sm:text-lg font-black text-amber-400 font-mono";
+        if (cardSec) cardSec.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
+        if (badgeSec) badgeSec.className = "text-[10px] sm:text-xs font-bold text-amber-300";
+        if (valSec) valSec.className = "text-base sm:text-lg font-black text-amber-300 font-mono";
       } else {
         if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
         if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-emerald-400";
@@ -1875,12 +2526,18 @@
       setText('metricSecondaryStd', step.metricSecStd);
       setText('metricBadgeSecondary', step.metricBadgeSec);
 
-      // Update Stage Progress Pills (0 to 5)
-      for (let i = 0; i <= 5; i++) {
+      // Update Stage Progress Tabs for active track
+      for (let i = 0; i < steps.length; i++) {
         const tab = document.getElementById(`stepTab${i}`);
         if (!tab) continue;
         if (i === stepNum) {
-          tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          if (currentTrackKey === 'CONVENTIONAL') {
+            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap glow-problem";
+          } else if (currentTrackKey === 'V1') {
+            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-amber-400 text-black shadow-lg shadow-amber-400/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          } else {
+            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          }
         } else if (i < stepNum && i > 0) {
           tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
         } else {
@@ -1906,13 +2563,10 @@
       // Render Rich Step Process Visualizer
       renderStepProcess(stepNum);
 
-      // Mode Switch
-      setMode(step.mode, false);
-
-      // Update 3D Hardware Visuals for This Step
+      // Update 3D Hardware Visuals for This Step & Track
       updateStep3DVisuals(stepNum);
 
-      // Camera Glide to Specific Zoom-in Angle
+      // Camera Glide to Specific Macro Zoom-in Angle
       targetCamPos.set(step.cam.x, step.cam.y, step.cam.z);
       targetLookAt.set(step.target.x, step.target.y, step.target.z);
       isCamLerping = true;
@@ -1927,8 +2581,16 @@
     }
 
     function nextStep() {
-      if (currentStepIdx >= 5) {
-        goToStep(0); // Loops back to Overview
+      const steps = getCurrentTrackSteps();
+      if (currentStepIdx >= steps.length - 1) {
+        // Transition smoothly to the next generation track!
+        if (currentTrackKey === 'CONVENTIONAL') {
+          switchMode('V1');
+        } else if (currentTrackKey === 'V1') {
+          switchMode('V2');
+        } else {
+          goToStep(0);
+        }
       } else {
         goToStep(currentStepIdx + 1);
       }
@@ -1942,15 +2604,15 @@
 
     function switchMode(mode) {
       if (mode === 'PROBLEM' || mode === 'CONVENTIONAL') {
-        setMode('CONVENTIONAL', true);
-        goToStep(2);
+        currentTrackKey = 'CONVENTIONAL';
       } else if (mode === 'V1') {
-        setMode('V1', true);
-        goToStep(3);
+        currentTrackKey = 'V1';
       } else {
-        setMode('V2', true);
-        goToStep(4);
+        currentTrackKey = 'V2';
       }
+      setMode(currentTrackKey, false);
+      renderTrackTabs();
+      goToStep(0);
     }
 
     function setMode(mode, triggerStep = true) {
@@ -2751,7 +3413,7 @@
     let isCamLerping = false;
 
     let pcbMesh, socMesh, dramMesh, nandMesh1, nandMesh2;
-    let doubleReadBeam, doubleReadBeam2, bypassSpline, socDieOutline, pslcDieOutline, nandDieOutline1, nandDieOutline2;
+    let doubleReadBeam, doubleReadBeam2, bypassSpline, socDieOutline, pslcDieOutline, nandDieOutline1, nandDieOutline2, pslcAuraMesh;
     let particles, particleData;
     const NUM_PARTICLES = 160;
 
@@ -3259,12 +3921,145 @@
       socMesh.castShadow = true;
       scene.add(socMesh);
 
-      // Decoupling Capacitors
-      const capMat = new THREE.MeshStandardMaterial({ color: 0x92400e, metalness: 0.5, roughness: 0.3 });
-      for (let i = 0; i < 9; i++) {
-        const cap = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.25, 0.5), capMat);
-        cap.position.set(-8.6 + (i * 0.7), 0.25, -2.8);
-        scene.add(cap);
+      // --- Silicon BGA Underfill Fillet Shadows (Physical depth below IC packages) ---
+      const underfillMat = new THREE.MeshStandardMaterial({ color: 0x07090e, roughness: 0.9, metalness: 0.1 });
+      const socUnderfill = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.10, 5.0), underfillMat);
+      socUnderfill.position.set(-5.5, 0.20, 0);
+      scene.add(socUnderfill);
+
+      const dramUnderfill = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.10, 3.6), underfillMat);
+      dramUnderfill.position.set(-0.2, 0.20, 0);
+      scene.add(dramUnderfill);
+
+      const nand1Underfill = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.10, 3.6), underfillMat);
+      nand1Underfill.position.set(5.0, 0.20, -1.9);
+      scene.add(nand1Underfill);
+
+      const nand2Underfill = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.10, 3.6), underfillMat);
+      nand2Underfill.position.set(5.0, 0.20, 1.9);
+      scene.add(nand2Underfill);
+
+      // --- M.2 Chamfered Standoff Notch & Stainless Nickel Cross-Slot Screw ---
+      const standoffGroup = new THREE.Group();
+      const padRing = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.15, 1.15, 0.05, 32),
+        new THREE.MeshStandardMaterial({ color: 0xca8a04, metalness: 0.85, roughness: 0.25 })
+      );
+      padRing.position.set(11.85, 0.20, 0);
+      standoffGroup.add(padRing);
+
+      const washer = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.85, 0.85, 0.08, 32),
+        new THREE.MeshStandardMaterial({ color: 0xd4d4d8, metalness: 0.92, roughness: 0.18 })
+      );
+      washer.position.set(11.85, 0.24, 0);
+      standoffGroup.add(washer);
+
+      const screwHead = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.68, 0.68, 0.16, 32),
+        new THREE.MeshStandardMaterial({ color: 0xe4e4e7, metalness: 0.95, roughness: 0.12 })
+      );
+      screwHead.position.set(11.85, 0.32, 0);
+      standoffGroup.add(screwHead);
+
+      const slotMat = new THREE.MeshBasicMaterial({ color: 0x18181b });
+      const slotBar1 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.05, 0.14), slotMat);
+      slotBar1.position.set(11.85, 0.41, 0);
+      standoffGroup.add(slotBar1);
+      const slotBar2 = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.05, 0.8), slotMat);
+      slotBar2.position.set(11.85, 0.41, 0);
+      standoffGroup.add(slotBar2);
+      scene.add(standoffGroup);
+
+      // --- Power Management IC (PMIC) & Ferrite Inductor Coils ---
+      const pmicMat = new THREE.MeshStandardMaterial({ color: 0x141822, metalness: 0.7, roughness: 0.3 });
+      const pmicMesh = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.32, 1.6), pmicMat);
+      pmicMesh.position.set(-3.2, 0.32, 2.6);
+      pmicMesh.castShadow = true;
+      scene.add(pmicMesh);
+
+      const inductorMat = new THREE.MeshStandardMaterial({ color: 0x222630, metalness: 0.8, roughness: 0.25 });
+      const coilMat = new THREE.MeshStandardMaterial({ color: 0xb45309, metalness: 0.9, roughness: 0.2 });
+      for (let k = 0; k < 2; k++) {
+        const ind = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.42, 1.1), inductorMat);
+        ind.position.set(-1.8, 0.36, 2.1 + k * 1.3);
+        ind.castShadow = true;
+        scene.add(ind);
+
+        const coilCore = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.44, 16), coilMat);
+        coilCore.position.set(-1.8, 0.37, 2.1 + k * 1.3);
+        scene.add(coilCore);
+      }
+
+      // --- 25.000 MHz Metal Can Crystal Oscillator ---
+      const crystalMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.96, roughness: 0.12 });
+      const crystal = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.38, 0.95), crystalMat);
+      crystal.position.set(-7.6, 0.35, 2.5);
+      crystal.castShadow = true;
+      scene.add(crystal);
+
+      // --- Dual-Tone SMT 0402 & 0603 MLCC Decoupling Capacitors ---
+      const capCeramicMat = new THREE.MeshStandardMaterial({ color: 0xa16207, metalness: 0.25, roughness: 0.45 });
+      const capSilverMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d8, metalness: 0.9, roughness: 0.18 });
+
+      function addDualToneCap(x, y, z, rotY = 0, isLarge = false) {
+        const grp = new THREE.Group();
+        const w = isLarge ? 0.34 : 0.24;
+        const h = isLarge ? 0.26 : 0.18;
+        const d = isLarge ? 0.60 : 0.42;
+
+        const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d * 0.54), capCeramicMat);
+        body.castShadow = true;
+        grp.add(body);
+
+        const cap1 = new THREE.Mesh(new THREE.BoxGeometry(w + 0.02, h + 0.02, d * 0.23), capSilverMat);
+        cap1.position.z = d * 0.385;
+        grp.add(cap1);
+
+        const cap2 = new THREE.Mesh(new THREE.BoxGeometry(w + 0.02, h + 0.02, d * 0.23), capSilverMat);
+        cap2.position.z = -d * 0.385;
+        grp.add(cap2);
+
+        grp.position.set(x, y, z);
+        grp.rotation.y = rotY;
+        scene.add(grp);
+      }
+
+      // Bank 1: SoC Power Rail Decoupling (8 caps)
+      for (let i = 0; i < 8; i++) {
+        addDualToneCap(-8.5 + (i * 0.75), 0.24, -2.85, 0, true);
+        addDualToneCap(-8.5 + (i * 0.75), 0.24, 2.85, 0, false);
+      }
+
+      // Bank 2: DRAM VDD/VDDQ Rail Decoupling (6 caps)
+      for (let i = 0; i < 6; i++) {
+        addDualToneCap(-1.8 + (i * 0.65), 0.24, -2.2, Math.PI / 2, false);
+      }
+
+      // Bank 3: Flash Die Power Bypass (8 caps)
+      for (let i = 0; i < 4; i++) {
+        addDualToneCap(3.5 + (i * 0.9), 0.24, -3.8, 0, true);
+        addDualToneCap(3.5 + (i * 0.9), 0.24, 3.8, 0, true);
+      }
+
+      // --- SMT Resistor Termination Packs along PCIe traces ---
+      const resBlackMat = new THREE.MeshStandardMaterial({ color: 0x09090b, metalness: 0.4, roughness: 0.5 });
+      function addSmtResistor(x, y, z, rotY = 0) {
+        const grp = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.15, 0.38), resBlackMat);
+        grp.add(body);
+        const term1 = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.17, 0.11), capSilverMat);
+        term1.position.z = 0.18;
+        grp.add(term1);
+        const term2 = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.17, 0.11), capSilverMat);
+        term2.position.z = -0.18;
+        grp.add(term2);
+        grp.position.set(x, y, z);
+        grp.rotation.y = rotY;
+        scene.add(grp);
+      }
+      for (let i = 0; i < 6; i++) {
+        addSmtResistor(-9.6 + (i * 0.45), 0.22, -1.2 + (i % 2) * 2.4, Math.PI / 2);
       }
 
       // DRAM
@@ -3313,6 +4108,20 @@
       nandMesh2.position.set(5.0, 0.42, 1.9);
       nandMesh2.castShadow = true;
       scene.add(nandMesh2);
+
+      // --- Pulsing Golden pSLC Containment Aura (Die 2) ---
+      const auraGeo = new THREE.BoxGeometry(4.35, 0.72, 3.75);
+      const auraMat = new THREE.MeshBasicMaterial({
+        color: 0xf59e0b,
+        transparent: true,
+        opacity: 0.26,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      pslcAuraMesh = new THREE.Mesh(auraGeo, auraMat);
+      pslcAuraMesh.position.set(5.0, 0.45, 1.9);
+      pslcAuraMesh.visible = true;
+      scene.add(pslcAuraMesh);
 
       // Laser Beam (Double-Read Penalty)
       const beamGeo = new THREE.CylinderGeometry(0.12, 0.12, 5.5, 8);
@@ -3561,17 +4370,16 @@
         }
       }
 
-      // Dynamic Speed & Stutter Physics based on Active Step
+      // Dynamic Speed & Stutter Physics based on Active Track & Step
       let stepSpeedMultiplier = 1.0;
-      if (currentStepIdx === 1) {
-        stepSpeedMultiplier = 1.5; // High throughput 14.2 GB/s line-rate arrival
-      } else if (currentStepIdx === 2 || currentArchMode === 'PROBLEM') {
-        // Stuttered queue stall / GPU compute starving
-        stepSpeedMultiplier = (Math.sin(Date.now() * 0.008) > 0.2 ? 0.35 : 0.08);
-      } else if (currentStepIdx === 3) {
-        stepSpeedMultiplier = 1.25;
-      } else if (currentStepIdx === 5) {
-        stepSpeedMultiplier = 1.35; // Silky smooth verdict flow
+      if (currentTrackKey === 'CONVENTIONAL' || currentArchMode === 'CONVENTIONAL') {
+        // Stuttered queue stall / GPU compute starving (jerky stutter)
+        stepSpeedMultiplier = (Math.sin(Date.now() * 0.008) > 0.1 ? 0.35 : 0.06);
+      } else if (currentTrackKey === 'V1' || currentArchMode === 'V1') {
+        stepSpeedMultiplier = (currentStepIdx === 3 ? 0.65 : 1.1);
+      } else {
+        // v2.0: High-speed, silky smooth line-rate flow
+        stepSpeedMultiplier = (currentStepIdx === 1 ? 1.6 : (currentStepIdx === 2 ? 1.5 : 1.35));
       }
 
       // Fluid Particle Flow Animation along physical copper bus traces
@@ -3592,14 +4400,28 @@
 
       // 1. SoC Controller Edge Illumination (Cyan Logic Pulse)
       if (socDieOutline) {
-        const baseSocOp = currentStepIdx === 3 ? 0.85 : 0.35;
+        const baseSocOp = (currentTrackKey === 'V2' && currentStepIdx === 1) ? 0.95 : (currentStepIdx === 3 ? 0.85 : 0.35);
         socDieOutline.material.opacity = (baseSocOp + Math.sin(tNow * 4) * 0.15) * flowOpacity;
       }
 
       // 2. pSLC Die Edge Illumination (Golden Shield Glow)
       if (pslcDieOutline) {
-        const basePslcOp = currentStepIdx === 4 ? 0.9 : 0.4;
+        const basePslcOp = (currentTrackKey === 'V2' && currentStepIdx === 4) ? 0.95 : 0.35;
         pslcDieOutline.material.opacity = (basePslcOp + Math.sin(tNow * 5) * 0.15) * flowOpacity;
+      }
+
+      // 2.5 pSLC Golden Shield Containment Aura Pulse
+      if (pslcAuraMesh) {
+        if (currentTrackKey === 'CONVENTIONAL' || currentArchMode === 'CONVENTIONAL') {
+          pslcAuraMesh.visible = false;
+        } else if (currentTrackKey === 'V1' || currentArchMode === 'V1') {
+          pslcAuraMesh.visible = true;
+          pslcAuraMesh.material.opacity = 0.12 * flowOpacity;
+        } else {
+          pslcAuraMesh.visible = true;
+          const auraPulse = (currentStepIdx === 4 ? 0.38 : 0.22) + Math.sin(tNow * 5) * 0.12;
+          pslcAuraMesh.material.opacity = auraPulse * flowOpacity;
+        }
       }
 
       // 3. Double-Read Precision Coherent Laser Probes & Die Alert Edges (Step 2)
@@ -4250,8 +5072,17 @@
         toggleZoomCollapse();
       }
 
-      // Support direct step jumping via URL query parameter (e.g. ?step=1 or ?autostart)
+      // Support direct track and step jumping via URL query parameter (e.g. ?track=v1&step=2 or ?autostart)
       const params = new URLSearchParams(window.location.search);
+      if (params.has('track')) {
+        const tr = params.get('track').toUpperCase();
+        if (tr === 'CONVENTIONAL' || tr === 'V1' || tr === 'V2') {
+          currentTrackKey = tr;
+          setMode(currentTrackKey, false);
+        }
+      }
+      renderTrackTabs();
+
       if (params.has('hud') && params.get('hud') === 'collapsed' && !isTelemetryCollapsed) {
         toggleTelemetryCollapse();
       } else if (params.has('hud') && params.get('hud') === 'open' && isTelemetryCollapsed) {
@@ -4260,7 +5091,7 @@
       if (params.has('modal') && params.get('modal') === 'compare') {
         setTimeout(openCompareModal, 100);
       }
-      if (params.has('autostart') || params.has('step')) {
+      if (params.has('autostart') || params.has('step') || params.has('track')) {
         const overlay = document.getElementById('startOverlay');
         if (overlay) overlay.style.display = 'none';
         isPitchRunning = true;
@@ -4269,7 +5100,8 @@
         updateFlowButtonUI(true);
         const stepParam = params.get('step');
         const targetStep = stepParam !== null ? parseInt(stepParam, 10) : 0;
-        goToStep(targetStep >= 0 && targetStep <= 5 ? targetStep : 0);
+        const maxStep = getCurrentTrackSteps().length - 1;
+        goToStep(targetStep >= 0 && targetStep <= maxStep ? targetStep : 0);
         if (params.has('minimized')) {
           toggleDockCollapse();
         }
