@@ -116,11 +116,12 @@ class FTLMetricsSnapshot:
     dram_hot_data_pct: float = 45.0
     bypass_active: bool = False
     current_seq_score: float = 0.0
+    classification_accuracy_pct: float = 100.0
 
 
 @dataclass
 class TelemetryTick:
-    """Synchronized dual telemetry tick emitted to dashboard."""
+    """Synchronized dual/tri telemetry tick emitted to dashboard."""
     tick_id: int
     timestamp: float
     workload_phase: str
@@ -129,3 +130,4 @@ class TelemetryTick:
     gpu_stall_reduction_pct: float
     accumulated_gpu_stall_saved_ms: float
     io_blender_active: bool
+    heuristic_v1_ftl: Optional[FTLMetricsSnapshot] = None

@@ -54,6 +54,7 @@ class FTLSimulationServer:
                                     "timestamp": tick.timestamp,
                                     "workload_phase": tick.workload_phase,
                                     "standard_ftl": tick.standard_ftl.__dict__,
+                                    "heuristic_v1_ftl": tick.heuristic_v1_ftl.__dict__ if tick.heuristic_v1_ftl else None,
                                     "adaptive_ftl": tick.adaptive_ftl.__dict__,
                                     "gpu_stall_reduction_pct": tick.gpu_stall_reduction_pct,
                                     "accumulated_gpu_stall_saved_ms": tick.accumulated_gpu_stall_saved_ms,
@@ -76,12 +77,14 @@ class FTLSimulationServer:
                             "timestamp": tick.timestamp,
                             "workload_phase": tick.workload_phase,
                             "standard_ftl": tick.standard_ftl.__dict__,
+                            "heuristic_v1_ftl": tick.heuristic_v1_ftl.__dict__ if tick.heuristic_v1_ftl else None,
                             "adaptive_ftl": tick.adaptive_ftl.__dict__,
                             "gpu_stall_reduction_pct": tick.gpu_stall_reduction_pct,
                             "accumulated_gpu_stall_saved_ms": tick.accumulated_gpu_stall_saved_ms,
                             "io_blender_active": tick.io_blender_active
                         }
                     self._send_json(data)
+
                 elif parsed.path == "/api/status":
                     with sim_lock:
                         status_data = {

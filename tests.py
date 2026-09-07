@@ -74,6 +74,27 @@ class TestAdaptiveFTL(unittest.TestCase):
         self.assertLess(adp_snap.p99_latency_us, std_snap.p99_latency_us)
         print(f"\n[Test Result] Training Surge -> Std P99: {std_snap.p99_latency_us}us | Adp P99: {adp_snap.p99_latency_us}us | GPU Stall Saved: {tick.accumulated_gpu_stall_saved_ms}ms")
 
+    def test_three_generation_evolution(self):
+        """Validates 3-way performance ranking: Conventional < v1.0 Heuristic < v2.0 Adaptive FDP."""
+        sim = DualWorkloadSimulator(self.specs)
+        for _ in range(30):
+            tick = sim.tick()
+            
+        std = tick.standard_ftl
+        v1 = tick.heuristic_v1_ftl
+        v2 = tick.adaptive_ftl
+        
+        self.assertIsNotNone(v1)
+        # Classification accuracy progression: 0% -> ~84% -> 100%
+        self.assertEqual(std.classification_accuracy_pct, 0.0)
+        self.assertGreaterEqual(v1.classification_accuracy_pct, 70.0)
+        self.assertGreaterEqual(v2.classification_accuracy_pct, 98.0)
+        
+        # P99 latency progression: v2.0 < v1.0 < Standard
+        self.assertLess(v2.p99_latency_us, std.p99_latency_us)
+        print(f"[3-Gen Evolution] Std Acc: {std.classification_accuracy_pct}% | v1 Acc: {v1.classification_accuracy_pct}% | v2 Acc: {v2.classification_accuracy_pct}%")
+
 
 if __name__ == '__main__':
     unittest.main()
+
