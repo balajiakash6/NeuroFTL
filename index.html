@@ -448,9 +448,9 @@
           <span class="hidden md:inline">v1.0 (84%)</span>
           <span class="md:hidden">v1.0</span>
         </button>
-        <button onclick="switchMode('V2')" id="btnTopV2" class="no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/20 transition cursor-pointer flex items-center gap-1" title="NeuroFTL v2.0 (Adaptive FDP Production)">
+        <button onclick="switchMode('V2')" id="btnTopV2" class="no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 transition cursor-pointer flex items-center gap-1" title="NeuroFTL v2.0 (Adaptive FDP Production - 93.6% Accuracy)">
           <span class="w-1.5 h-1.5 rounded-full bg-black hidden xs:inline shrink-0"></span>
-          <span class="hidden md:inline">NeuroFTL v2.0 (100%)</span>
+          <span class="hidden md:inline">NeuroFTL v2.0 (93.6%)</span>
           <span class="md:hidden">v2.0</span>
         </button>
       </div>
@@ -595,7 +595,7 @@
             <span class="text-[10px] text-zinc-300 font-medium">Stream Accuracy:</span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="text-xs font-bold text-emerald-400" id="statAccVal">100.0%</span>
+            <span class="text-xs font-bold text-emerald-400" id="statAccVal">93.6%</span>
             <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold" id="statAccBadge">10ns TCM</span>
           </div>
         </div>
@@ -753,40 +753,39 @@
             <!-- Scrollable Tabs Track with Wheel & Touch Drag Support -->
             <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
               <!-- Step Tab 0: Overview -->
-              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-emerald-400 text-black shadow-lg shadow-emerald-400/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>🔍</span>
                 <span>Overview</span>
               </button>
 
-              <!-- Step Tab 1: Workload -->
+              <!-- Step Tab 1: Classifier -->
               <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>1</span>
-                <span class="hidden xs:inline">Workload</span>
+                <span>Classifier ⚡</span>
               </button>
 
-              <!-- Step Tab 2: Double-Read -->
+              <!-- Step Tab 2: Direct DMA -->
               <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>2</span>
-                <span class="hidden sm:inline">Double-Read ⚠️</span>
-                <span class="sm:hidden hidden xs:inline">Read ⚠️</span>
+                <span>Direct DMA</span>
               </button>
 
-              <!-- Step Tab 3: Classifier -->
+              <!-- Step Tab 3: 3-Region -->
               <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>3</span>
-                <span class="hidden xs:inline">Classifier ⚡</span>
+                <span>3-Region 🛡️</span>
               </button>
 
-              <!-- Step Tab 4: 3-Region -->
+              <!-- Step Tab 4: pSLC Shield -->
               <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>4</span>
-                <span class="hidden xs:inline">3-Region 🛡️</span>
+                <span>pSLC Shield</span>
               </button>
 
               <!-- Step Tab 5: Verdict -->
               <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>5</span>
-                <span class="hidden xs:inline">Verdict 🏆</span>
+                <span>Verdict 🏆</span>
               </button>
             </div>
 
@@ -798,9 +797,9 @@
 
           <!-- Right: Pinned Window Controls -->
           <div class="flex items-center gap-1 sm:gap-2 text-xs font-mono text-zinc-200 shrink-0 ml-auto pl-1">
-            <span id="dockStageCount" class="font-bold text-rose-400 text-xs whitespace-nowrap">OVERVIEW</span>
+            <span id="dockStageCount" class="font-bold text-emerald-400 text-xs whitespace-nowrap">OVERVIEW</span>
             
-            <button onclick="openSpecModal()" class="no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
+            <button onclick="openSpecModal()" id="dockSpecLink" class="no-drag text-emerald-400 hover:text-emerald-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
               Spec ↗
             </button>
           </div>
@@ -818,7 +817,7 @@
             <div class="flex items-center gap-1.5 flex-wrap">
               <span id="dockGenBadge" class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">GEN 3: NEUROFTL™ v2.0</span>
               <span class="text-zinc-500 text-xs hidden lg:inline">•</span>
-              <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 truncate" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
+              <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 truncate" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
               <span class="text-[9px] font-mono text-cyan-300 font-semibold truncate hidden xl:inline" id="dockActiveChip">Focus: Gen5 Silicon</span>
             </div>
             
@@ -830,13 +829,13 @@
             <div id="dockTakeawayBox" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0">
               <span id="dockTakeawayIcon" class="text-xs shrink-0">⚡</span>
               <span class="text-[8.5px] sm:text-[9px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">TAKEAWAY:</span>
-              <span id="dockTakeawayText" class="font-semibold text-white leading-tight">NeuroFTL v2.0 delivers 100% stream separation with zero hardware respin</span>
+              <span id="dockTakeawayText" class="font-semibold text-white leading-tight">NeuroFTL v2.0 delivers 93.6% stream accuracy with zero hardware respin</span>
             </div>
           </div>
           
           <!-- Full explanation text - NO line clamp, completely visible without vertical scrolling -->
           <p class="text-[10.5px] sm:text-[11px] text-zinc-300 leading-snug font-normal select-text" id="dockStepPara">
-            A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 100% firmware scheduling without modifying host software or SSD hardware.
+            A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 93.6% accurate firmware scheduling without modifying host software or SSD hardware.
           </p>
         </div>
 
@@ -849,7 +848,7 @@
                 <span id="processFlowLabel" class="truncate">HARDWARE PIPELINE</span>
               </span>
               <span id="processFlowBadge" class="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[8.5px] border border-cyan-500/30 truncate">
-                100% FIRMWARE TRACE
+                93.6% ACCURACY
               </span>
             </div>
             <div id="stepProcessContent" class="w-full flex-1 flex items-center overflow-x-auto no-scrollbar py-0.5">
@@ -873,12 +872,12 @@
 
             <!-- Secondary Metric Card -->
             <div class="p-1.5 rounded-xl bg-white/5 border border-white/15 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardSecondary">
-              <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">L2P Hit Rate</div>
+              <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">Stream Accuracy</div>
               <div class="flex items-baseline justify-end gap-1">
-                <span class="text-xs sm:text-sm font-black text-cyan-400" id="metricSecondaryVal">98.6%</span>
-                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
+                <span class="text-xs sm:text-sm font-black text-cyan-400" id="metricSecondaryVal">93.6%</span>
+                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">0.0%</span>
               </div>
-              <div class="text-[8px] font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 LOCKED</div>
+              <div class="text-[8px] font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 93.6% ACC</div>
             </div>
           </div>
 
@@ -895,7 +894,7 @@
             </div>
 
             <!-- Primary Call-to-Action Next Button -->
-            <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-rose-500 via-rose-600 to-amber-400 hover:from-rose-400 hover:to-amber-300 text-black font-bold text-xs font-mono shadow-md shadow-rose-500/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0">
+            <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-black font-bold text-xs font-mono shadow-md shadow-emerald-400/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0">
               <span id="btnNextLabel" class="truncate">Next →</span>
             </button>
           </div>
@@ -1154,7 +1153,7 @@
         <span class="text-zinc-400 text-[10px] sm:text-[11px] font-semibold">Direct 3D Mode Switch:</span>
         <button onclick="switchMode('CONVENTIONAL'); closeCompareModal();" class="px-2.5 sm:px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 hover:bg-rose-500/30 transition cursor-pointer font-bold text-[10px] sm:text-xs">1. Conventional FTL</button>
         <button onclick="switchMode('V1'); closeCompareModal();" class="px-2.5 sm:px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30 transition cursor-pointer font-bold text-[10px] sm:text-xs">2. Firmware v1.0 (84%)</button>
-        <button onclick="switchMode('V2'); closeCompareModal();" class="px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer font-bold text-[10px] sm:text-xs">3. NeuroFTL v2.0 (100%)</button>
+        <button onclick="switchMode('V2'); closeCompareModal();" class="px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer font-bold text-[10px] sm:text-xs">3. NeuroFTL v2.0 (93.6%)</button>
       </div>
 
       <!-- Side-by-Side Comparison Table -->
@@ -1199,7 +1198,7 @@
               <td class="p-2.5 font-bold text-zinc-300">Stream Accuracy</td>
               <td class="p-2.5 bg-rose-500/5 text-rose-400 font-bold border-x border-white/5">0.0% (Unclassified / Blind)</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-400 font-bold border-r border-white/5">84.2% (15.8% False Positives)</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">100.0% (Zero Misclassifications)</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">93.6% (10ns Online TCM Classifier)</td>
             </tr>
             <!-- Row 3: P99 Tail Latency -->
             <tr class="hover:bg-white/5 transition">
@@ -1246,7 +1245,7 @@
                 <button onclick="switchMode('V1'); closeCompareModal();" class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] cursor-pointer shadow transition w-full">Inspect v1.0 (84%)</button>
               </td>
               <td class="p-2.5 bg-emerald-500/10 text-center">
-                <button onclick="switchMode('V2'); closeCompareModal();" class="px-2.5 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-[10px] cursor-pointer shadow transition w-full">Inspect v2.0 (100%)</button>
+                <button onclick="switchMode('V2'); closeCompareModal();" class="px-2.5 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-[10px] cursor-pointer shadow transition w-full">Inspect v2.0 (93.6%)</button>
               </td>
             </tr>
           </tbody>
@@ -1265,7 +1264,7 @@
         </div>
         <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 space-y-1">
           <div class="font-bold text-emerald-400 font-mono flex items-center gap-1">⚡ Why v2.0 Is The Final Solution</div>
-          <p class="text-zinc-300 leading-relaxed text-[10px]">10ns multi-feature online classifier in TCM registers detects stride, arrival delta, and queue entropy for 100% accuracy. Dynamic 3-Region DRAM locks metadata and pSLC shield absorbs write bursts.</p>
+          <p class="text-zinc-300 leading-relaxed text-[10px]">10ns multi-feature online classifier in TCM registers detects stride, arrival delta, and queue entropy for 93.6% accuracy. Dynamic 3-Region DRAM locks metadata and pSLC shield absorbs write bursts.</p>
         </div>
       </div>
 
@@ -1527,7 +1526,7 @@
         metricBadgeLatency: "⚠️ 84.6µs TAIL JITTER",
         metricSecLabel: "Stream Accuracy",
         metricSecVal: "84.2%",
-        metricSecStd: "100.0%",
+        metricSecStd: "93.6%",
         metricBadgeSec: "⚠️ 15.8% MISCLASSIFIED"
       },
       {
@@ -1640,7 +1639,7 @@
       }
     ];
 
-    // TRACK 3: NEUROFTL™ v2.0 (100% Production Solution) - 6 Dedicated Steps
+    // TRACK 3: NEUROFTL™ v2.0 (93.6% Production Solution) - 6 Dedicated Steps
     const TRACK_V2 = [
       {
         num: 0,
@@ -1648,11 +1647,11 @@
         tabShort: "Overview",
         category: "TRACK 3: NEUROFTL™ v2.0 • OVERVIEW",
         activeChip: "Focus: Complete Gen5 x4 NVMe SSD Silicon",
-        title: "NeuroFTL™ v2.0: 100% Firmware Breakthrough",
-        takeaway: "NeuroFTL v2.0 solves the collision in firmware: 100% classification accuracy with $0 ASIC respin.",
+        title: "NeuroFTL™ v2.0: 93.6% Firmware Classification",
+        takeaway: "NeuroFTL v2.0 solves the collision in firmware: 93.6% classification accuracy with $0 ASIC respin.",
         para: "NeuroFTL™ v2.0 is an adaptive, zero-overhead firmware architecture deployed on standard NVMe Gen5 hardware. It eliminates the Double-Read Trap, locks P99 latency flat at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 ASIC respin</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Online Classifier:</strong> 100% accurate stream separation in ARM TCM`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Online Classifier:</strong> 93.6% accurate stream separation in ARM TCM`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Direct DMA Bypass:</strong> 14.2 GB/s checkpoints routed straight to flash`,
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">3-Region DRAM:</strong> 98.6% L2P RAM hit rate • 0.0% GPU compute stalls`
         ],
@@ -1665,9 +1664,9 @@
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 7.8× FASTER (vs Conv)",
         metricSecLabel: "Stream Accuracy",
-        metricSecVal: "100.0%",
+        metricSecVal: "93.6%",
         metricSecStd: "0.0%",
-        metricBadgeSec: "🔒 ZERO MISCLASSIFICATION"
+        metricBadgeSec: "🔒 93.6% ACCURACY"
       },
       {
         num: 1,
@@ -1676,12 +1675,12 @@
         category: "STAGE 1: 10ns MULTI-FEATURE CLASSIFIER",
         activeChip: "Focus: SanDisk ARM Cortex-R8 SoC & TCM",
         title: "1. Zero-Overhead 10ns Online Classifier in TCM",
-        takeaway: "10ns TCM classifier fuses LBA stride, inter-arrival time, and spatial entropy with zero host overhead.",
-        para: "Executing inside the controller's Tightly Coupled Memory (TCM), NeuroFTL's online classifier computes three hardware features per request: <strong>LBA Stride</strong>, <strong>Inter-Arrival Delta</strong>, and <strong>Spatial Entropy</strong>. Classification takes just <strong>10 nanoseconds</strong> with <strong>100% accuracy</strong>.",
+        takeaway: "10ns TCM classifier fuses LBA stride, inter-arrival time, and spatial entropy to achieve 93.6% accuracy with zero host overhead.",
+        para: "Executing inside the controller's Tightly Coupled Memory (TCM), NeuroFTL's online classifier computes three hardware features per request: <strong>LBA Stride</strong>, <strong>Inter-Arrival Delta</strong>, and <strong>Spatial Entropy</strong>. Classification takes just <strong>10 nanoseconds</strong> with <strong>93.6% accuracy</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Inference:</strong> Runs in ARM TCM registers with 0 CPU cache pollution`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">3-Feature Fusion:</strong> Stride + Inter-Arrival + Spatial Entropy window`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">100.0% Accuracy:</strong> Distinguishes RAG vectors from bulk training writes`
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">93.6% Accuracy:</strong> Distinguishes RAG vectors from bulk training writes`
         ],
         nextLabel: "Next: Step 2 - Direct DMA Bypass Rail →",
         mode: "V2",
@@ -1691,10 +1690,10 @@
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 10ns DECISION",
-        metricSecLabel: "Classifier Cycles",
-        metricSecVal: "10 ns (TCM)",
-        metricSecStd: "250ns",
-        metricBadgeSec: "🔒 ZERO HOST OVERHEAD"
+        metricSecLabel: "Stream Accuracy",
+        metricSecVal: "93.6%",
+        metricSecStd: "0.0%",
+        metricBadgeSec: "⚡ 93.6% SEPARATION"
       },
       {
         num: 2,
@@ -1784,8 +1783,8 @@
         category: "STAGE 5: 3-GENERATION SILICON VERDICT",
         activeChip: "Focus: Full M.2 NVMe SSD Assembly",
         title: "5. Verified Scorecard: Flat 21.4µs Latency & $0 ASIC Respin",
-        takeaway: "Verified: Flat 21.4µs P99 latency (7.8× faster), 0.0% GPU stalls, and 100% CUDA core utilization.",
-        para: "NeuroFTL™ v2.0 delivers <strong>100% firmware innovation</strong> on commodity NVMe hardware. It eliminates the Double-Read Trap, locks P99 read latency at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 hardware redesign cost</strong>.",
+        takeaway: "Verified: Flat 21.4µs P99 latency (7.8× faster), 93.6% stream accuracy, 0.0% GPU stalls, and 100% CUDA core utilization.",
+        para: "NeuroFTL™ v2.0 delivers <strong>93.6% stream classification accuracy</strong> via pure firmware on commodity NVMe hardware. It eliminates the Double-Read Trap, locks P99 read latency at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 hardware redesign cost</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">P99 Read Tail:</strong> 21.4µs flat (7.8× faster than Conventional, 4× faster than v1)`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">GPU Compute:</strong> 0.0% Stalls (100% CUDA core utilization)`,
@@ -1961,7 +1960,7 @@
           if (pslcDieOutline) pslcDieOutline.material.opacity = 0.3;
         }
       } else {
-        // Track 3: V2 (NeuroFTL 100%)
+        // Track 3: V2 (NeuroFTL 93.6%)
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
         if (bypassSpline) {
@@ -2354,13 +2353,13 @@
                 </div>
               </div>
               <button onclick="switchMode('V2')" class="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
-                <span>See the Final Solution: NeuroFTL™ v2.0 (100% Accuracy) ➔</span>
+                <span>See the Final Solution: NeuroFTL™ v2.0 (93.6% Accuracy) ➔</span>
               </button>
             </div>
           `;
         }
       } else {
-        // ==================== TRACK 3: NEUROFTL v2.0 (100% Solution) ====================
+        // ==================== TRACK 3: NEUROFTL v2.0 (93.6% Solution) ====================
         if (stepNum === 0) {
           if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping";
           if (label) label.innerText = "TOPOLOGY • COMPLETE SILICON DATA PATH";
@@ -2417,7 +2416,7 @@
               <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
                 <div class="text-[9px] text-amber-300 font-bold">FEATURE 3: ENTROPY</div>
                 <div class="text-white font-bold text-[11px]">Spatial Entropy Window</div>
-                <div class="text-[9px] text-zinc-300">Detects RAG & attention scatter • 100.0% accuracy in 10ns</div>
+                <div class="text-[9px] text-zinc-300">Detects RAG & attention scatter • 93.6% accuracy in 10ns</div>
               </div>
             </div>
           `;
@@ -2518,7 +2517,7 @@
                 </div>
                 <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-center space-y-0.5">
                   <div class="text-[9px] text-zinc-400">STREAM ACCURACY</div>
-                  <div class="text-sm sm:text-base font-black text-cyan-400">100.0%</div>
+                  <div class="text-sm sm:text-base font-black text-cyan-400">93.6%</div>
                   <div class="text-[8.5px] text-cyan-300 font-semibold">🔒 vs 0% (Conv) / 84.2% (v1)</div>
                 </div>
                 <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
@@ -2554,7 +2553,29 @@
 
       // Update Dock text & explanatory paragraph
       setText('dockStageCount', step.num === 0 ? 'OVERVIEW' : `STAGE ${step.num} / ${steps.length - 1}`);
+      const stageCountEl = document.getElementById('dockStageCount');
+      const dockSpecLink = document.getElementById('dockSpecLink');
+      if (stageCountEl) {
+        if (currentTrackKey === 'CONVENTIONAL') stageCountEl.className = "font-bold text-rose-400 text-xs whitespace-nowrap";
+        else if (currentTrackKey === 'V1') stageCountEl.className = "font-bold text-amber-400 text-xs whitespace-nowrap";
+        else stageCountEl.className = "font-bold text-emerald-400 text-xs whitespace-nowrap";
+      }
+      if (dockSpecLink) {
+        if (currentTrackKey === 'CONVENTIONAL') dockSpecLink.className = "no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline";
+        else if (currentTrackKey === 'V1') dockSpecLink.className = "no-drag text-amber-400 hover:text-amber-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline";
+        else dockSpecLink.className = "no-drag text-emerald-400 hover:text-emerald-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline";
+      }
       setText('dockStepCategory', step.category);
+      const stepCategoryEl = document.getElementById('dockStepCategory');
+      if (stepCategoryEl) {
+        if (currentTrackKey === 'CONVENTIONAL') {
+          stepCategoryEl.className = 'text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 truncate';
+        } else if (currentTrackKey === 'V1') {
+          stepCategoryEl.className = 'text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 truncate';
+        } else {
+          stepCategoryEl.className = 'text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 truncate';
+        }
+      }
       setText('dockActiveChip', step.activeChip);
       setText('dockStepTitle', step.title);
       setHtml('dockStepPara', step.para);
@@ -2600,6 +2621,16 @@
         else mobileNext = 'Restart ↺';
       }
       setText('btnNextLabel', window.innerWidth < 1400 ? mobileNext : step.nextLabel);
+      const btnNext = document.getElementById('btnNextStep');
+      if (btnNext) {
+        if (currentTrackKey === 'CONVENTIONAL') {
+          btnNext.className = "no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono shadow-md shadow-rose-600/30 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0";
+        } else if (currentTrackKey === 'V1') {
+          btnNext.className = "no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs font-mono shadow-md shadow-amber-400/30 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0";
+        } else {
+          btnNext.className = "no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-black font-bold text-xs font-mono shadow-md shadow-emerald-400/30 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0";
+        }
+      }
 
       // Update Progress Bar
       const bar = document.getElementById('dockProgressBar');
@@ -2663,10 +2694,16 @@
           } else if (currentTrackKey === 'V1') {
             tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-amber-400 text-black shadow-lg shadow-amber-400/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
           } else {
-            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-emerald-400 text-black shadow-lg shadow-emerald-400/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
           }
-        } else if (i < stepNum && i > 0) {
-          tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+        } else if (i < stepNum) {
+          if (currentTrackKey === 'CONVENTIONAL') {
+            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-rose-500/15 border border-rose-500/30 text-rose-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          } else if (currentTrackKey === 'V1') {
+            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          } else {
+            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          }
         } else {
           tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
         }
@@ -2781,7 +2818,7 @@
 
       if (btnV2) {
         if (mode === 'V2') {
-          btnV2.className = "no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition cursor-pointer flex items-center gap-1";
+          btnV2.className = "no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 transition cursor-pointer flex items-center gap-1";
         } else {
           btnV2.className = "no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1";
         }
@@ -2796,7 +2833,7 @@
           pillMode.innerText = "FIRMWARE v1.0 (84%)";
           pillMode.className = "text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold " + (isTelemetryCollapsed ? "hidden" : "hidden sm:inline");
         } else {
-          pillMode.innerText = "NEUROFTL v2.0 (100%)";
+          pillMode.innerText = "NEUROFTL v2.0 (93.6%)";
           pillMode.className = "text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold " + (isTelemetryCollapsed ? "hidden" : "hidden sm:inline");
         }
       }
@@ -3709,7 +3746,7 @@
         socCtx.fillText('⚡ ONLINE CLASSIFIER ACTIVE', 60, 365);
         socCtx.font = '14px monospace';
         socCtx.fillStyle = '#ffffff';
-        socCtx.fillText('• Multi-Feature: 100% Stream Acc', 60, 395);
+        socCtx.fillText('• Multi-Feature: 93.6% Stream Acc', 60, 395);
         socCtx.fillText('• Pinned L2P Hits: 98.6% (Flat 21µs)', 60, 420);
         socCtx.fillText('• Host GPU Stalls: 0.0% (Zero Bubbles)', 60, 445);
       }
@@ -4668,7 +4705,7 @@
           particles.geometry.attributes.color.needsUpdate = true;
         }
       } else {
-        // v2.0 (NeuroFTL 100%)
+        // v2.0 (NeuroFTL 93.6%)
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
         if (bypassSpline) {
@@ -4924,9 +4961,9 @@
 
     let lastStdAcc = 0.0;
     let lastV1Acc = 84.8;
-    let lastAdpAcc = 100.0;
+    let lastAdpAcc = 93.6;
 
-    function applyTelemetryData(stdP99, v1P99, adpP99, stdHit, v1Hit, adpHit, stdWaf, v1Waf, adpWaf, stdStall, v1Stall, adpStall, stdAcc = 0.0, v1Acc = 84.8, adpAcc = 100.0) {
+    function applyTelemetryData(stdP99, v1P99, adpP99, stdHit, v1Hit, adpHit, stdWaf, v1Waf, adpWaf, stdStall, v1Stall, adpStall, stdAcc = 0.0, v1Acc = 84.8, adpAcc = 93.6) {
       if (targetFlowSpeedFactor === 0) return;
 
       lastStdP99 = stdP99;
@@ -4947,7 +4984,7 @@
 
       lastStdAcc = (typeof stdAcc === 'number') ? stdAcc : 0.0;
       lastV1Acc = (typeof v1Acc === 'number') ? v1Acc : 84.8;
-      lastAdpAcc = (typeof adpAcc === 'number') ? adpAcc : 100.0;
+      lastAdpAcc = (typeof adpAcc === 'number') ? adpAcc : 93.6;
 
       // 1. Always push 3-generation real-time points to rolling canvas graph
       addGraphPoint(stdP99, lastV1P99, adpP99);
@@ -5053,7 +5090,7 @@
         if (miniP99El && miniP99El.parentElement) miniP99El.parentElement.className = "px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 whitespace-nowrap";
 
       } else {
-        // Mode 3: NeuroFTL v2.0 (100% Stream Separation)
+        // Mode 3: NeuroFTL v2.0 (93.6% Stream Accuracy)
         setText('statP99Adp', adpP99.toFixed(1) + ' µs');
         setText('statP99Std', stdP99.toFixed(1) + ' µs');
         const speedup = (stdP99 / Math.max(1, adpP99)).toFixed(1);
@@ -5124,7 +5161,7 @@
         setText('metricP99Std', stdP99.toFixed(1));
         setText('metricBadgeLatency', '⚠️ v1.0 HEURISTIC (84.2%)');
         setText('metricSecondaryLabel', 'Stream Accuracy');
-        setText('metricSecondaryVal', lastV1Acc.toFixed(1) + '% (v2: 100%)');
+        setText('metricSecondaryVal', lastV1Acc.toFixed(1) + '% (v2: 93.6%)');
         setText('metricSecondaryStd', '0.0%');
         setText('metricBadgeSecondary', '⚡ 15.8% RAG MISS RATE');
       } else if (currentStepIdx === 4) {
@@ -5166,7 +5203,7 @@
       const t = localTelemetryTickCount;
 
       let stdP99, v1P99, adpP99, stdHit, v1Hit, adpHit, stdWaf, v1Waf, adpWaf, stdStall, v1Stall, adpStall;
-      let stdAcc = 0.0, v1Acc = 84.8, adpAcc = 100.0;
+      let stdAcc = 0.0, v1Acc = 84.8, adpAcc = 93.6;
 
       // Base simulated values across the 3 generations
       const spikeWave = Math.sin(t * 0.18) * 8.5 + Math.cos(t * 0.35) * 4.2;
@@ -5233,7 +5270,7 @@
 
             const stdAcc = (typeof std.classification_accuracy_pct === 'number') ? std.classification_accuracy_pct : 0.0;
             const v1Acc = (typeof v1.classification_accuracy_pct === 'number') ? v1.classification_accuracy_pct : 84.8;
-            const adpAcc = (typeof adp.classification_accuracy_pct === 'number') ? adp.classification_accuracy_pct : 100.0;
+            const adpAcc = (typeof adp.classification_accuracy_pct === 'number') ? adp.classification_accuracy_pct : 93.6;
 
             applyTelemetryData(stdP99, v1P99, adpP99, stdHit, v1Hit, adpHit, stdWaf, v1Waf, adpWaf, stdStall, v1Stall, adpStall, stdAcc, v1Acc, adpAcc);
           } catch (err) {
@@ -5542,7 +5579,7 @@
         toggleTelemetryCollapse();
       }
       if (params.has('modal') && params.get('modal') === 'compare') {
-        setTimeout(openCompareModal, 100);
+        openCompareModal();
       }
       if (params.has('autostart') || params.has('step') || params.has('track')) {
         const overlay = document.getElementById('startOverlay');

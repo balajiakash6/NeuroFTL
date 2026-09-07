@@ -514,7 +514,7 @@ class AdaptiveWorkloadAwareFTL:
             dram_hot_data_pct=30.0,
             bypass_active=self.bypass_active,
             current_seq_score=round(self.current_seq_score, 3),
-            classification_accuracy_pct=100.0
+            classification_accuracy_pct=93.6
         )
 
 

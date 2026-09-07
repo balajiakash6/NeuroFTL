@@ -116,7 +116,7 @@ class FTLMetricsSnapshot:
     dram_hot_data_pct: float = 45.0
     bypass_active: bool = False
     current_seq_score: float = 0.0
-    classification_accuracy_pct: float = 100.0
+    classification_accuracy_pct: float = 93.6
 
 
 @dataclass
