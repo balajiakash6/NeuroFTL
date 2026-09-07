@@ -358,7 +358,7 @@
         <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
           <div class="text-cyan-400 font-bold text-[10px]">Region 1 (65%)</div>
           <div class="text-[11px] font-bold text-white">Pinned L2P Table</div>
-          <div class="text-[9px] text-zinc-300">98.6% RAM hit (0.1µs)</div>
+          <div class="text-[9px] text-zinc-300">93.6% RAM hit (0.1µs)</div>
         </div>
         <div class="p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
           <div class="text-amber-400 font-bold text-[10px]">Region 2 (5%)</div>
@@ -438,8 +438,8 @@
 
       <!-- Center 3-Way Architecture Switcher (Conventional vs v1.0 vs v2.0) -->
       <div class="apple-pill rounded-full p-0.5 sm:p-1 flex items-center gap-0.5 sm:gap-1 shadow-lg shrink-0 border border-white/10" style="background: rgba(14, 18, 28, 0.9);">
-        <button onclick="switchMode('CONVENTIONAL')" id="btnTopConv" class="no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1" title="Conventional FTL (Status Quo Baseline)">
-          <span class="w-1.5 h-1.5 rounded-full bg-rose-500 hidden xs:inline shrink-0"></span>
+        <button onclick="switchMode('CONVENTIONAL')" id="btnTopConv" class="no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition cursor-pointer flex items-center gap-1 glow-problem" title="Conventional FTL (Status Quo Baseline)">
+          <span class="w-1.5 h-1.5 rounded-full bg-white hidden xs:inline shrink-0"></span>
           <span class="hidden md:inline">Conventional</span>
           <span class="md:hidden">Conv</span>
         </button>
@@ -448,8 +448,8 @@
           <span class="hidden md:inline">v1.0 (84%)</span>
           <span class="md:hidden">v1.0</span>
         </button>
-        <button onclick="switchMode('V2')" id="btnTopV2" class="no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-emerald-500 text-black shadow-lg shadow-emerald-500/25 transition cursor-pointer flex items-center gap-1" title="NeuroFTL v2.0 (Adaptive FDP Production - 93.6% Accuracy)">
-          <span class="w-1.5 h-1.5 rounded-full bg-black hidden xs:inline shrink-0"></span>
+        <button onclick="switchMode('V2')" id="btnTopV2" class="no-drag px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1" title="NeuroFTL v2.0 (Adaptive FDP Production - 93.6% Accuracy)">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 hidden xs:inline shrink-0"></span>
           <span class="hidden md:inline">NeuroFTL v2.0 (93.6%)</span>
           <span class="md:hidden">v2.0</span>
         </button>
@@ -615,7 +615,7 @@
           <div class="p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 space-y-0.5">
             <div class="text-[10px] text-zinc-300 font-medium">L2P Hit Rate</div>
             <div class="flex items-baseline justify-between gap-1">
-              <span class="text-xs sm:text-sm font-bold text-cyan-400" id="statHitAdp">98.6%</span>
+              <span class="text-xs sm:text-sm font-bold text-cyan-400" id="statHitAdp">93.6%</span>
               <span class="text-[9px] sm:text-[10px] text-rose-400 line-through font-semibold truncate" id="statHitStd">18.4%</span>
             </div>
             <div class="text-[9px] sm:text-[10px] text-cyan-400 font-bold truncate" id="deltaHit">🔒 METADATA LOCKED</div>
@@ -722,7 +722,7 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 w-[96vw] max-w-[1360px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; max-height: 205px; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 w-[96vw] max-w-[1360px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; max-height: 240px; overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
       <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 border-b border-white/10 pb-1 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
@@ -753,39 +753,33 @@
             <!-- Scrollable Tabs Track with Wheel & Touch Drag Support -->
             <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
               <!-- Step Tab 0: Overview -->
-              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-emerald-400 text-black shadow-lg shadow-emerald-400/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap glow-problem">
                 <span>🔍</span>
                 <span>Overview</span>
               </button>
 
-              <!-- Step Tab 1: Classifier -->
+              <!-- Step Tab 1: Ingress -->
               <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>1</span>
-                <span>Classifier ⚡</span>
+                <span>Ingress ⚠️</span>
               </button>
 
-              <!-- Step Tab 2: Direct DMA -->
+              <!-- Step Tab 2: Eviction -->
               <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>2</span>
-                <span>Direct DMA</span>
+                <span>Eviction ⚠️</span>
               </button>
 
-              <!-- Step Tab 3: 3-Region -->
+              <!-- Step Tab 3: Double-Read -->
               <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>3</span>
-                <span>3-Region 🛡️</span>
+                <span>Double-Read ⚠️</span>
               </button>
 
-              <!-- Step Tab 4: pSLC Shield -->
+              <!-- Step Tab 4: GPU Stalls -->
               <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>4</span>
-                <span>pSLC Shield</span>
-              </button>
-
-              <!-- Step Tab 5: Verdict -->
-              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
-                <span>5</span>
-                <span>Verdict 🏆</span>
+                <span>GPU Stalls 💥</span>
               </button>
             </div>
 
@@ -797,9 +791,9 @@
 
           <!-- Right: Pinned Window Controls -->
           <div class="flex items-center gap-1 sm:gap-2 text-xs font-mono text-zinc-200 shrink-0 ml-auto pl-1">
-            <span id="dockStageCount" class="font-bold text-emerald-400 text-xs whitespace-nowrap">OVERVIEW</span>
+            <span id="dockStageCount" class="font-bold text-rose-400 text-xs whitespace-nowrap">OVERVIEW</span>
             
-            <button onclick="openSpecModal()" id="dockSpecLink" class="no-drag text-emerald-400 hover:text-emerald-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
+            <button onclick="openSpecModal()" id="dockSpecLink" class="no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
               Spec ↗
             </button>
           </div>
@@ -812,30 +806,30 @@
       <div id="dockBody" class="w-full grid grid-cols-1 md:grid-cols-12 gap-2 pt-1.5 items-stretch min-h-0 overflow-hidden select-none flex-1">
         
         <!-- Column 1: Narrative & Context (md:col-span-5) -->
-        <div class="md:col-span-5 flex flex-col justify-between min-w-0 pr-1 space-y-1 overflow-hidden">
+        <div class="md:col-span-5 flex flex-col justify-between min-w-0 pr-1 space-y-1">
           <div class="space-y-0.5 min-w-0">
             <div class="flex items-center gap-1.5 flex-wrap">
-              <span id="dockGenBadge" class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">GEN 3: NEUROFTL™ v2.0</span>
+              <span id="dockGenBadge" class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0">GEN 1: CONVENTIONAL FTL</span>
               <span class="text-zinc-500 text-xs hidden lg:inline">•</span>
-              <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 truncate" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
-              <span class="text-[9px] font-mono text-cyan-300 font-semibold truncate hidden xl:inline" id="dockActiveChip">Focus: Gen5 Silicon</span>
+              <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 truncate" id="dockStepCategory">TRACK 1: CONVENTIONAL FTL • TOPOLOGY</span>
+              <span class="text-[9px] font-mono text-cyan-300 font-semibold truncate hidden xl:inline" id="dockActiveChip">Focus: Legacy Gen5 x4 NVMe SSD Silicon</span>
             </div>
             
             <h2 class="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-tight mt-0.5 font-display truncate" id="dockStepTitle">
-              SanDisk NeuroFTL™ Silicon Architecture Overview
+              Conventional FTL: Architecture &amp; Unsegregated Controller
             </h2>
 
             <!-- Executive 1-Line Key Takeaway Card -->
-            <div id="dockTakeawayBox" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0">
-              <span id="dockTakeawayIcon" class="text-xs shrink-0">⚡</span>
+            <div id="dockTakeawayBox" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-rose-500/15 border-l-2 border-rose-500 text-rose-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0">
+              <span id="dockTakeawayIcon" class="text-xs shrink-0">❌</span>
               <span class="text-[8.5px] sm:text-[9px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">TAKEAWAY:</span>
-              <span id="dockTakeawayText" class="font-semibold text-white leading-tight">NeuroFTL v2.0 delivers 93.6% stream accuracy with zero hardware respin</span>
+              <span id="dockTakeawayText" class="font-semibold text-white leading-tight">Conventional FTL routes all AI traffic through a single FIFO queue without workload awareness.</span>
             </div>
           </div>
           
           <!-- Full explanation text - NO line clamp, completely visible without vertical scrolling -->
-          <p class="text-[10.5px] sm:text-[11px] text-zinc-300 leading-snug font-normal select-text" id="dockStepPara">
-            A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 93.6% accurate firmware scheduling without modifying host software or SSD hardware.
+          <p class="text-[10px] sm:text-[10.5px] text-zinc-300 leading-relaxed font-normal select-text" id="dockStepPara">
+            Modern enterprise NVMe SSDs use legacy FTL firmware that processes all host traffic through a single generic FIFO queue. PyTorch checkpoint writes and vLLM KV-cache lookups fight for the same internal resources with <strong>zero workload awareness</strong>.
           </p>
         </div>
 
@@ -844,11 +838,11 @@
           <div id="stepProcessContainer" class="w-full h-full max-h-[96px] bg-[#050811]/70 backdrop-blur-md rounded-xl p-1.5 border border-white/10 flex flex-col justify-between overflow-hidden shadow-inner">
             <div class="flex items-center justify-between pb-1 mb-0.5 border-b border-white/10 text-[9px] font-mono shrink-0">
               <span class="flex items-center gap-1 text-zinc-300 font-bold tracking-wider">
-                <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
-                <span id="processFlowLabel" class="truncate">HARDWARE PIPELINE</span>
+                <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                <span id="processFlowLabel" class="truncate">TOPOLOGY • CONVENTIONAL UNSEGREGATED PIPELINE</span>
               </span>
-              <span id="processFlowBadge" class="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[8.5px] border border-cyan-500/30 truncate">
-                93.6% ACCURACY
+              <span id="processFlowBadge" class="px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono text-[8.5px] border border-rose-500/30 truncate">
+                STATUS QUO BASELINE
               </span>
             </div>
             <div id="stepProcessContent" class="w-full flex-1 flex items-center overflow-x-auto no-scrollbar py-0.5">
@@ -861,23 +855,23 @@
           <!-- Sleek Dual Silicon Metric Badges -->
           <div class="grid grid-cols-2 gap-1.5 font-mono w-full min-w-0" id="dockMetricsGroup">
             <!-- Latency Card -->
-            <div class="p-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardLatency">
+            <div class="p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-right space-y-0.2 glow-problem shadow-sm min-w-0" id="metricCardLatency">
               <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricLatencyLabel">P99 Latency</div>
               <div class="flex items-baseline justify-end gap-1">
-                <span class="text-xs sm:text-sm font-black text-emerald-400" id="metricP99">21.4 µs</span>
-                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
+                <span class="text-xs sm:text-sm font-black text-rose-400 font-mono" id="metricP99">168.2 µs</span>
+                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricP99Std">21.4</span>
               </div>
-              <div class="text-[8px] font-bold text-emerald-400 truncate" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
+              <div class="text-[8px] font-bold text-rose-400 truncate" id="metricBadgeLatency">❌ 7.8× SLOWER</div>
             </div>
 
             <!-- Secondary Metric Card -->
-            <div class="p-1.5 rounded-xl bg-white/5 border border-white/15 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardSecondary">
-              <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">Stream Accuracy</div>
+            <div class="p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardSecondary">
+              <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
               <div class="flex items-baseline justify-end gap-1">
-                <span class="text-xs sm:text-sm font-black text-cyan-400" id="metricSecondaryVal">93.6%</span>
-                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">0.0%</span>
+                <span class="text-xs sm:text-sm font-black text-rose-400 font-mono" id="metricSecondaryVal">18.4%</span>
+                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">93.6%</span>
               </div>
-              <div class="text-[8px] font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 93.6% ACC</div>
+              <div class="text-[8px] font-bold text-rose-400 truncate" id="metricBadgeSecondary">❌ 81.6% MISSES</div>
             </div>
           </div>
 
@@ -894,8 +888,8 @@
             </div>
 
             <!-- Primary Call-to-Action Next Button -->
-            <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-black font-bold text-xs font-mono shadow-md shadow-emerald-400/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0">
-              <span id="btnNextLabel" class="truncate">Next →</span>
+            <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono shadow-md shadow-rose-600/30 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0">
+              <span id="btnNextLabel" class="truncate">Next: Step 1 ➔</span>
             </button>
           </div>
         </div>
@@ -960,7 +954,7 @@
             Operates entirely within SSD controller firmware on standard commodity hardware with zero host driver changes:
           </p>
           <ul class="text-zinc-200 space-y-1.5 list-disc pl-4 text-xs">
-            <li><strong>Dynamic 3-Region DRAM Partitioning:</strong> Region 1 (65% DRAM) <strong>permanently locks L2P metadata in RAM with a 98.6% hit rate (0.1µs RAM access)</strong>, completely eliminating the Double-Read Trap.</li>
+            <li><strong>Dynamic 3-Region DRAM Partitioning:</strong> Region 1 (65% DRAM) <strong>permanently locks L2P metadata in RAM with a 93.6% hit rate (0.1µs RAM access)</strong>, completely eliminating the Double-Read Trap.</li>
             <li><strong>Online Spatial Classifier &amp; Direct DMA Bypass:</strong> 10ns classifier detects sequential training streams (<code class="text-amber-300 font-mono font-bold">Seq_Score &gt; 0.85</code>) and <strong>routes them directly to NAND channel buffers with 0% DRAM eviction</strong>.</li>
             <li><strong>pSLC Mode Shield:</strong> Tracks block read counts; hot KV blocks exceeding 50,000 reads <strong>auto-migrate to high-endurance pSLC mode, bounding tail latency to &le;15µs</strong>.</li>
             <li><strong>RUH Checkpoint Segregation:</strong> Segregates checkpoint writes into dedicated Reclaim Unit Handles, <strong>dropping WAF from 2.84 to 1.08 and extending flash lifespan by 2.6×</strong>.</li>
@@ -980,8 +974,8 @@
           </div>
           <div class="p-2 rounded-xl bg-black/40 border border-white/5">
             <div class="text-[9px] text-zinc-400">L2P RAM Hit</div>
-            <div class="text-sm font-bold text-cyan-400">98.6%</div>
-            <div class="text-[8px] text-zinc-400 line-through">18.4% (+80.2% lock)</div>
+            <div class="text-sm font-bold text-cyan-400">93.6%</div>
+            <div class="text-[8px] text-zinc-400 line-through">18.4% (+75.2% lock)</div>
           </div>
           <div class="p-2 rounded-xl bg-black/40 border border-white/5">
             <div class="text-[9px] text-zinc-400">Flash WAF</div>
@@ -1212,7 +1206,7 @@
               <td class="p-2.5 font-bold text-zinc-300">L2P RAM Hit Rate</td>
               <td class="p-2.5 bg-rose-500/5 text-rose-300 border-x border-white/5">18.4% (Evicted by 14.2GB/s Checkpoints)</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-300 border-r border-white/5">64.7% (Static Boundary Spillover)</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">98.6% (Region 1 Pinned Lock)</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">93.6% (Region 1 Pinned Lock)</td>
             </tr>
             <!-- Row 5: GPU Compute Stalls -->
             <tr class="hover:bg-white/5 transition">
@@ -1359,7 +1353,7 @@
     const OVERVIEW_TARGET = { x: -0.5, y: -4.5, z: 0.0 };
 
     // --- 3 DEDICATED WALKTHROUGH TOURS & SILICON TWIN STEP DEFINITIONS ---
-    let currentTrackKey = "V2"; // "CONVENTIONAL", "V1", or "V2"
+    let currentTrackKey = "CONVENTIONAL"; // "CONVENTIONAL", "V1", or "V2"
 
     // TRACK 1: CONVENTIONAL FTL (Problem Statement & Failure Cascade) - 5 Dedicated Steps
     const TRACK_CONVENTIONAL = [
@@ -1377,7 +1371,7 @@
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Shared DRAM:</strong> L2P mapping table unprotected in RAM`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Unsegregated Flash:</strong> High GC write amplification (2.84 WAF)`
         ],
-        nextLabel: "Next: Step 1 - Traffic Ingress Collision →",
+        nextLabel: "Next: Step 1 ➔",
         mode: "CONVENTIONAL",
         workload: "BASELINE",
         cam: { x: -0.5, y: 22.0, z: 27.0 },
@@ -1387,7 +1381,7 @@
         metricBadgeLatency: "❌ 7.8× SLOWER",
         metricSecLabel: "L2P RAM Hit Rate",
         metricSecVal: "18.4%",
-        metricSecStd: "98.6%",
+        metricSecStd: "93.6%",
         metricBadgeSec: "❌ 81.6% MISSES"
       },
       {
@@ -1404,7 +1398,7 @@
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">SQ1 Ingress:</strong> 4KB KV-cache random reads (&lt;30µs SLA)`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Blind Admission:</strong> Controller cannot distinguish stream priorities`
         ],
-        nextLabel: "Next: Step 2 - DRAM Cache Pollution ⚠️ →",
+        nextLabel: "Next: Step 2 ➔",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
         cam: { x: -9.0, y: 5.6, z: 7.2 },
@@ -1425,13 +1419,13 @@
         activeChip: "Focus: Shared DRAM Memory Cache",
         title: "2. The Eviction Cascade: L2P Table Flushed from RAM",
         takeaway: "64KB writes sweep through DRAM, purging the L2P mapping table and crashing RAM hit rate to 18.4%.",
-        para: "Because the controller routes all incoming writes through DRAM, the massive 64KB checkpoint stream aggressively evicts the <strong>Logical-to-Physical (L2P) address mapping table</strong>. RAM hit rate collapses from 98.6% down to <strong>18.4%</strong>.",
+        para: "Because the controller routes all incoming writes through DRAM, the massive 64KB checkpoint stream aggressively evicts the <strong>Logical-to-Physical (L2P) address mapping table</strong>. RAM hit rate collapses from 93.6% down to <strong>18.4%</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">DRAM Flooding:</strong> 64KB training blocks overwhelm SRAM/DRAM buffer`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">L2P Purged:</strong> Active KV-cache address pointers evicted to flash`,
-          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Hit Rate Crash:</strong> 98.6% → 18.4% L2P RAM hit rate`
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Hit Rate Crash:</strong> 93.6% → 18.4% L2P RAM hit rate`
         ],
-        nextLabel: "Next: Step 3 - The Double-Read Trap ⚠️ →",
+        nextLabel: "Next: Step 3 ➔",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
         cam: { x: -0.2, y: 5.4, z: 7.0 },
@@ -1458,7 +1452,7 @@
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Double-Read Trap:</strong> +130µs cumulative flash read penalty`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Read 2 (Data):</strong> Second sensing cycle delayed by active GC locks`
         ],
-        nextLabel: "Next: Step 4 - Host GPU Starvation 💥 →",
+        nextLabel: "Next: Step 4 ➔",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
         cam: { x: 4.2, y: 5.8, z: 7.6 },
@@ -1485,7 +1479,7 @@
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Write Amplification:</strong> 2.84 WAF rapidly wears 3D NAND cells`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">P99 Read Tail:</strong> 168.2µs tail latency destroys interactive LLM SLAs`
         ],
-        nextLabel: "Explore Firmware v1.0 Attempt →",
+        nextLabel: "Explore Firmware v1.0 ➔",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
         cam: { x: -0.5, y: 20.0, z: 24.0 },
@@ -1516,7 +1510,7 @@
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Rigid 50/50 DRAM:</strong> Hard-partitioned buffer unable to adapt dynamically`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">84.2% Accuracy:</strong> 15.8% false bypass rate triggers 84.6µs tail jitter`
         ],
-        nextLabel: "Next: Step 1 - The Static Stride Rule →",
+        nextLabel: "Next: Step 1 ➔",
         mode: "V1",
         workload: "BASELINE",
         cam: { x: -0.5, y: 22.0, z: 27.0 },
@@ -1543,7 +1537,7 @@
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Fixed 50/50 DRAM:</strong> 50% L2P Cache (2GB) / 50% Host Data Buffer (2GB)`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">No Temporal Memory:</strong> Ignores arrival frequency and spatial distribution`
         ],
-        nextLabel: "Next: Step 2 - Sequential Hit Success →",
+        nextLabel: "Next: Step 2 ➔",
         mode: "V1",
         workload: "BASELINE",
         cam: { x: -5.5, y: 5.6, z: 7.2 },
@@ -1570,7 +1564,7 @@
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">WAF Reduction:</strong> WAF drops from 2.84 down to 1.62`,
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Latency Drop:</strong> P99 latency improves from 168.2µs to 84.6µs`
         ],
-        nextLabel: "Next: Step 3 - The RAG & Attention Blind Spot ⚠️ →",
+        nextLabel: "Next: Step 3 ➔",
         mode: "V1",
         workload: "BASELINE",
         cam: { x: 0.5, y: 5.8, z: 7.8 },
@@ -1597,7 +1591,7 @@
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">False Bypasses:</strong> 15.8% of KV reads misrouted or training writes dumped into RAM`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">DRAM Thrash:</strong> Fixed 50% metadata space overflows under high KV load`
         ],
-        nextLabel: "Next: Step 4 - Jitter & GPU Stalls ⚠️ →",
+        nextLabel: "Next: Step 4 ➔",
         mode: "V1",
         workload: "TRAINING_SURGE",
         cam: { x: -2.6, y: 5.6, z: 7.2 },
@@ -1624,7 +1618,7 @@
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">GPU Starvation:</strong> 14.3% compute cycles lost to storage wait states`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Architectural Limit:</strong> Static rules cannot handle dynamic AI traffic`
         ],
-        nextLabel: "Explore NeuroFTL™ v2.0 Production Solution 🏆 →",
+        nextLabel: "Try NeuroFTL v2.0 ➔",
         mode: "V1",
         workload: "TRAINING_SURGE",
         cam: { x: -0.5, y: 20.0, z: 24.0 },
@@ -1653,9 +1647,9 @@
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Online Classifier:</strong> 93.6% accurate stream separation in ARM TCM`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Direct DMA Bypass:</strong> 14.2 GB/s checkpoints routed straight to flash`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">3-Region DRAM:</strong> 98.6% L2P RAM hit rate • 0.0% GPU compute stalls`
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">3-Region DRAM:</strong> 93.6% L2P RAM hit rate • 0.0% GPU compute stalls`
         ],
-        nextLabel: "Next: Step 1 - 10ns Multi-Feature Classifier ⚡ →",
+        nextLabel: "Next: Step 1 ➔",
         mode: "V2",
         workload: "BASELINE",
         cam: { x: -0.5, y: 22.0, z: 27.0 },
@@ -1663,10 +1657,10 @@
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 7.8× FASTER (vs Conv)",
-        metricSecLabel: "Stream Accuracy",
+        metricSecLabel: "L2P RAM Hit Rate",
         metricSecVal: "93.6%",
-        metricSecStd: "0.0%",
-        metricBadgeSec: "🔒 93.6% ACCURACY"
+        metricSecStd: "18.4%",
+        metricBadgeSec: "🔒 93.6% HIT RATE"
       },
       {
         num: 1,
@@ -1682,7 +1676,7 @@
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">3-Feature Fusion:</strong> Stride + Inter-Arrival + Spatial Entropy window`,
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">93.6% Accuracy:</strong> Distinguishes RAG vectors from bulk training writes`
         ],
-        nextLabel: "Next: Step 2 - Direct DMA Bypass Rail →",
+        nextLabel: "Next: Step 2 ➔",
         mode: "V2",
         workload: "BASELINE",
         cam: { x: -5.5, y: 5.6, z: 7.2 },
@@ -1709,7 +1703,7 @@
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Zero DRAM Pollution:</strong> 0.0% L2P table eviction • Cache stays 100% clean`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Line-Rate Throughput:</strong> Saturates PCIe Gen5 x4 physical bus bandwidth`
         ],
-        nextLabel: "Next: Step 3 - Dynamic 3-Region DRAM 🛡️ →",
+        nextLabel: "Next: Step 3 ➔",
         mode: "V2",
         workload: "TRAINING_SURGE",
         cam: { x: 0.5, y: 5.8, z: 7.8 },
@@ -1728,15 +1722,15 @@
         tabShort: "3-Region 🛡️",
         category: "STAGE 3: DYNAMIC 3-REGION DRAM",
         activeChip: "Focus: 3-Region DRAM Partitioning",
-        title: "3. Dynamic 3-Region DRAM: 98.6% L2P Hit Rate",
-        takeaway: "Dynamic 3-Region DRAM pins 65% for L2P table, locking in 98.6% hit rate and 0.1µs RAM access.",
-        para: "NeuroFTL divides DRAM into three adaptive regions: <strong>Region 1 (65%)</strong> locks the hot L2P address table with a <strong>98.6% hit rate (0.1µs RAM access)</strong>; <strong>Region 2 (5%)</strong> serves the DMA ring; and <strong>Region 3 (30%)</strong> buffers hot KV reads.",
+        title: "3. Dynamic 3-Region DRAM: 93.6% L2P Hit Rate",
+        takeaway: "Dynamic 3-Region DRAM pins 65% for L2P table, locking in 93.6% hit rate and 0.1µs RAM access.",
+        para: "NeuroFTL divides DRAM into three adaptive regions: <strong>Region 1 (65%)</strong> locks the hot L2P address table with a <strong>93.6% hit rate (0.1µs RAM access)</strong>; <strong>Region 2 (5%)</strong> serves the DMA ring; and <strong>Region 3 (30%)</strong> buffers hot KV reads.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Region 1 (65% DRAM):</strong> Pinned L2P Table • 98.6% RAM hit (0.1µs access)`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Region 1 (65% DRAM):</strong> Pinned L2P Table • 93.6% RAM hit (0.1µs access)`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Region 2 (5% DRAM):</strong> DMA ring descriptors for zero-copy bulk transfers`,
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Region 3 (30% DRAM):</strong> Dynamic hot KV cache for instant inference serving`
         ],
-        nextLabel: "Next: Step 4 - Dynamic pSLC Wear Shield 🛡️ →",
+        nextLabel: "Next: Step 4 ➔",
         mode: "V2",
         workload: "BASELINE",
         cam: { x: -0.2, y: 5.4, z: 7.0 },
@@ -1745,9 +1739,9 @@
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 0.1µs RAM ACCESS",
         metricSecLabel: "L2P Hit Rate",
-        metricSecVal: "98.6%",
+        metricSecVal: "93.6%",
         metricSecStd: "18.4%",
-        metricBadgeSec: "🔒 METADATA PINNED"
+        metricBadgeSec: "🔒 93.6% PINNED"
       },
       {
         num: 4,
@@ -1763,7 +1757,7 @@
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">WAF 1.08:</strong> Eliminates garbage collection thrashing (vs 2.84 Conv)`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">2.6× Lifespan:</strong> Extends SSD drive life under 24/7 AI cluster training`
         ],
-        nextLabel: "Next: Step 5 - Silicon Scorecard Verdict 🏆 →",
+        nextLabel: "Next: Step 5 ➔",
         mode: "V2",
         workload: "KV_STORM",
         cam: { x: 5.0, y: 5.4, z: 7.0 },
@@ -1790,7 +1784,7 @@
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">GPU Compute:</strong> 0.0% Stalls (100% CUDA core utilization)`,
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Cost:</strong> $0 ASIC respin • Deploys as a drop-in firmware binary update`
         ],
-        nextLabel: "Restart Walkthrough (Overview) ↺",
+        nextLabel: "Restart Walkthrough ↺",
         mode: "V2",
         workload: "BASELINE",
         cam: { x: -0.5, y: 20.0, z: 24.0 },
@@ -1838,6 +1832,11 @@
       targetFlowOpacity = 1.0;
       updateFlowButtonUI(true);
 
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.has('track') || urlParams.get('track').toUpperCase() === 'CONVENTIONAL') {
+        currentTrackKey = 'CONVENTIONAL';
+        setMode('CONVENTIONAL', false);
+      }
       renderTrackTabs();
       goToStep(0);
       playCasingLiftOffAnimation();
@@ -2114,7 +2113,7 @@
                   <span class="text-rose-400 font-black">+130µs tR</span>
                 </div>
                 <div class="text-rose-300 font-bold text-[11px]">Subsequent KV Miss</div>
-                <div class="text-[9px] text-rose-200">Hit rate drops from 98.6% down to 18.4% • Double-Read triggered</div>
+                <div class="text-[9px] text-rose-200">Hit rate drops from 93.6% down to 18.4% • Double-Read triggered</div>
               </div>
             </div>
           `;
@@ -2368,29 +2367,29 @@
             badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
           }
           container.innerHTML = `
-            <div class="flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5">
-              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[75px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-                <span class="text-zinc-400 font-bold text-[9px] uppercase">Host PCIe 5.0</span>
-                <span class="text-white font-bold">14.2 GB/s</span>
-                <span class="text-[9px] text-cyan-400 font-semibold">x4 NVMe Link</span>
+            <div class="flex items-center justify-between gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5 w-full">
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[68px] sm:min-w-[85px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[8.5px] sm:text-[9px] uppercase">Host PCIe 5.0</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px]">14.2 GB/s</span>
+                <span class="text-[8.5px] sm:text-[9px] text-cyan-400 font-semibold">x4 NVMe Link</span>
               </button>
               <span class="text-cyan-400 font-bold text-xs shrink-0 animate-pulse">➔</span>
-              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-                <span class="text-cyan-300 font-bold text-[9px] uppercase">NVMe Controller</span>
-                <span class="text-white font-bold">ARM Cortex-R8</span>
-                <span class="text-[9px] text-emerald-400 font-semibold">10ns Classifier</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 shrink-0 min-w-[78px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-cyan-300 font-bold text-[8.5px] sm:text-[9px] uppercase">NVMe Controller</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px]">ARM Cortex-R8</span>
+                <span class="text-[8.5px] sm:text-[9px] text-emerald-400 font-semibold">10ns Classifier</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-                <span class="text-amber-300 font-bold text-[9px] uppercase">3-Region DRAM</span>
-                <span class="text-white font-bold">65% Pinned L2P</span>
-                <span class="text-[9px] text-cyan-400 font-semibold">98.6% RAM Hit</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[78px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-amber-300 font-bold text-[8.5px] sm:text-[9px] uppercase">3-Region DRAM</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px]">65% Pinned L2P</span>
+                <span class="text-[8.5px] sm:text-[9px] text-cyan-400 font-semibold">93.6% RAM Hit</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 shrink-0 min-w-[90px] sm:min-w-[115px] text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
-                <span class="text-emerald-300 font-bold text-[9px] uppercase">BiCS5 3D Flash</span>
-                <span class="text-white font-bold">pSLC Shield</span>
-                <span class="text-[9px] text-emerald-400 font-semibold">WAF 1.08</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 shrink-0 min-w-[72px] sm:min-w-[90px] text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
+                <span class="text-emerald-300 font-bold text-[8.5px] sm:text-[9px] uppercase">BiCS5 3D Flash</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px]">pSLC Shield</span>
+                <span class="text-[8.5px] sm:text-[9px] text-emerald-400 font-semibold">WAF 1.08</span>
               </button>
             </div>
           `;
@@ -2448,7 +2447,7 @@
           if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
           if (label) label.innerText = "MEMORY • DYNAMIC 3-REGION PARTITION & LOCK";
           if (badge) {
-            badge.innerText = "98.6% L2P RAM HIT RATE";
+            badge.innerText = "93.6% L2P RAM HIT RATE";
             badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
           }
           container.innerHTML = `
@@ -2459,7 +2458,7 @@
                   <span class="text-emerald-400 font-bold">0.1µs RAM</span>
                 </div>
                 <div class="text-white font-bold text-[11px]">Pinned L2P Table</div>
-                <div class="text-[9px] text-zinc-300">98.6% hit rate • Metadata write-protected against bulk training flushes</div>
+                <div class="text-[9px] text-zinc-300">93.6% hit rate • Metadata write-protected against bulk training flushes</div>
               </div>
               <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
                 <div class="flex items-center justify-between text-[9px]">
@@ -2620,7 +2619,7 @@
         else if (currentTrackKey === 'V1') mobileNext = 'Try v2.0 →';
         else mobileNext = 'Restart ↺';
       }
-      setText('btnNextLabel', window.innerWidth < 1400 ? mobileNext : step.nextLabel);
+      setText('btnNextLabel', window.innerWidth < 640 ? mobileNext : step.nextLabel);
       const btnNext = document.getElementById('btnNextStep');
       if (btnNext) {
         if (currentTrackKey === 'CONVENTIONAL') {
@@ -3747,7 +3746,7 @@
         socCtx.font = '14px monospace';
         socCtx.fillStyle = '#ffffff';
         socCtx.fillText('• Multi-Feature: 93.6% Stream Acc', 60, 395);
-        socCtx.fillText('• Pinned L2P Hits: 98.6% (Flat 21µs)', 60, 420);
+        socCtx.fillText('• Pinned L2P Hits: 93.6% (Flat 21µs)', 60, 420);
         socCtx.fillText('• Host GPU Stalls: 0.0% (Zero Bubbles)', 60, 445);
       }
 
@@ -3892,7 +3891,7 @@
         dramCtx.fillText('REGION 1: PINNED L2P (65%)', 30, 80);
         dramCtx.font = '13px monospace';
         dramCtx.fillStyle = '#e2e8f0';
-        dramCtx.fillText('• Metadata Lock: 98.6% Hit', 30, 105);
+        dramCtx.fillText('• Metadata Lock: 93.6% Hit', 30, 105);
         dramCtx.fillText('• Access Time: 0.1 µs RAM', 30, 128);
         dramCtx.fillText('• Zero Eviction Thrash', 30, 151);
 
@@ -4949,7 +4948,7 @@
 
     let lastStdHit = 18.4;
     let lastV1Hit = 84.2;
-    let lastAdpHit = 98.6;
+    let lastAdpHit = 93.6;
 
     let lastStdWaf = 2.84;
     let lastV1Waf = 1.62;
@@ -5013,7 +5012,7 @@
         setText('deltaLatency', `⚠️ +${penalty}µs PENALTY`);
 
         setText('statHitAdp', stdHit.toFixed(1) + '%');
-        setText('statHitStd', '98.6%');
+        setText('statHitStd', '93.6%');
         setText('deltaHit', '⚠️ LRU EVICTED');
 
         setText('statWafAdp', stdWaf.toFixed(2));
@@ -5214,7 +5213,7 @@
 
       stdHit = Math.max(11.0, 18.4 + Math.sin(t * 0.15) * 2.2 + (Math.random() - 0.5) * 0.8);
       v1Hit = Math.max(79.0, 84.2 + Math.sin(t * 0.18) * 1.5 + (Math.random() - 0.5) * 0.6);
-      adpHit = 98.6 + Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.1;
+      adpHit = 93.6 + Math.sin(t * 0.1) * 0.25 + (Math.random() - 0.5) * 0.1;
 
       stdWaf = 2.84 + Math.sin(t * 0.08) * 0.06 + (Math.random() - 0.5) * 0.02;
       v1Waf = 1.62 + Math.sin(t * 0.07) * 0.03 + (Math.random() - 0.5) * 0.01;
@@ -5258,7 +5257,7 @@
 
             const stdHit = (typeof std.l2p_hit_rate_pct === 'number') ? std.l2p_hit_rate_pct : 18.4;
             const v1Hit = (typeof v1.l2p_hit_rate_pct === 'number') ? v1.l2p_hit_rate_pct : 84.2;
-            const adpHit = (typeof adp.l2p_hit_rate_pct === 'number') ? adp.l2p_hit_rate_pct : 98.6;
+            const adpHit = (typeof adp.l2p_hit_rate_pct === 'number') ? adp.l2p_hit_rate_pct : 93.6;
 
             const stdWaf = (typeof std.waf === 'number' && std.waf > 0) ? std.waf : 2.84;
             const v1Waf = (typeof v1.waf === 'number' && v1.waf > 0) ? v1.waf : 1.62;
@@ -5570,6 +5569,9 @@
           currentTrackKey = tr;
           setMode(currentTrackKey, false);
         }
+      } else {
+        currentTrackKey = 'CONVENTIONAL';
+        setMode('CONVENTIONAL', false);
       }
       renderTrackTabs();
 

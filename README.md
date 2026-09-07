@@ -67,7 +67,7 @@ SanDisk NeuroFTL introduces an adaptive, workload-aware scheduling engine integr
                  │                               │
                  ▼                               ▼
      Region 2: DMA Bypass Rail         Region 1: Pinned L2P (65%)
-   (Direct Flash-to-Host DMA)         (98.6% Locked RAM Hit Rate)
+   (Direct Flash-to-Host DMA)         (93.6% Locked RAM Hit Rate)
                  │                               │
                  └───────────────┬───────────────┘
                                  ▼
@@ -80,7 +80,7 @@ SanDisk NeuroFTL introduces an adaptive, workload-aware scheduling engine integr
 - Dynamically classifies arriving block requests into **Sequential Bulk**, **Random Inference**, and **Checkpoint Burst**.
 
 ### 2. 3-Region DRAM Partitioning
-- **Region 1: Pinned Hot L2P Table (65% DRAM)**: Guarantees a **98.6% L2P RAM hit rate** (0.1µs lookup) for active inference indices, completely eliminating the Double-Read Trap.
+- **Region 1: Pinned Hot L2P Table (65% DRAM)**: Guarantees a **93.6% L2P RAM hit rate** (0.1µs lookup) for active inference indices, completely eliminating the Double-Read Trap.
 - **Region 2: Direct DMA Bypass Rail (5% DRAM)**: Routes sequential training streams directly to host memory over PCIe DMA, preventing DRAM cache pollution.
 - **Region 3: KV-Cache & Dynamic pSLC Shield (30% DRAM)**: Buffers burst writes and isolates high-frequency rewrites into pseudo-SLC flash blocks, lowering WAF to **1.08** and extending drive lifespan by **2.6×**.
 
@@ -91,7 +91,7 @@ SanDisk NeuroFTL introduces an adaptive, workload-aware scheduling engine integr
 | Metric | Conventional Generic FTL | SanDisk NeuroFTL™ | Improvement |
 |---|---|---|---|
 | **P99 Read Tail Latency** | `168.2 µs` | **`21.4 µs`** | **7.8× Lower Latency** |
-| **L2P DRAM Hit Rate** | `18.4%` (Double-Read trap) | **`98.6%`** | **Locked Zero Eviction** |
+| **L2P DRAM Hit Rate** | `18.4%` (Double-Read trap) | **`93.6%`** | **Locked Zero Eviction** |
 | **Flash Write Amplification (WAF)** | `2.84` | **`1.08`** | **2.6× Longer Flash Life** |
 | **GPU Compute Stall Overhead** | `38.2%` | **`0.0%`** | **100% Compute Utilization** |
 | **Hardware / OS Requirement** | Commodity NVMe | Commodity NVMe | **100% Firmware (0 Host Mod)** |

@@ -89,6 +89,7 @@ class TestAdaptiveFTL(unittest.TestCase):
         self.assertEqual(std.classification_accuracy_pct, 0.0)
         self.assertGreaterEqual(v1.classification_accuracy_pct, 70.0)
         self.assertEqual(v2.classification_accuracy_pct, 93.6)
+        self.assertEqual(v2.l2p_hit_rate_pct, 93.6)
         
         # P99 latency progression: v2.0 < v1.0 < Standard
         self.assertLess(v2.p99_latency_us, std.p99_latency_us)

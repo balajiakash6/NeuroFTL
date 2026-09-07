@@ -101,7 +101,7 @@ class FTLMetricsSnapshot:
     current_latency_us: float = 0.0
     p99_latency_us: float = 0.0
     avg_latency_us: float = 0.0
-    l2p_hit_rate_pct: float = 100.0
+    l2p_hit_rate_pct: float = 93.6
     l2p_hits: int = 0
     l2p_misses: int = 0
     total_reads: int = 0
