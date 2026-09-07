@@ -157,17 +157,17 @@
         transform: none !important;
         width: auto !important;
         max-width: calc(100vw - 16px) !important;
-        max-height: 58vh !important;
-        padding: 6px 10px !important;
+        max-height: 38vh !important;
+        padding: 6px 8px !important;
         touch-action: pan-y !important;
       }
       #stepProcessContainer {
-        padding: 4px 6px !important;
+        padding: 3px 5px !important;
       }
       #telemetryHud {
         left: auto !important;
         right: 8px !important;
-        width: min(330px, calc(100vw - 16px)) !important;
+        width: min(320px, calc(100vw - 16px)) !important;
         max-width: calc(100vw - 16px) !important;
         touch-action: pan-y !important;
       }
@@ -179,40 +179,39 @@
     /* Compact text scaling on short laptop viewports (600px - 850px height) */
     @media (max-height: 850px) {
       #presentationDock {
-        max-height: 50vh !important;
-        padding-top: 8px !important;
-        padding-bottom: 8px !important;
+        max-height: min(240px, 32vh) !important;
+        padding: 6px 10px !important;
       }
       #dockBody {
         gap: 2px !important;
       }
       #dockStepPara {
-        -webkit-line-clamp: 2 !important;
+        -webkit-line-clamp: 1 !important;
       }
       #telemetryHud {
-        max-height: calc(100vh - 65px) !important;
+        max-height: min(340px, calc(100vh - 280px)) !important;
       }
       #graphCanvasBox {
-        height: 105px !important;
+        height: 85px !important;
       }
     }
 
     @media (max-height: 720px) {
       #presentationDock {
-        max-height: 48vh !important;
-        padding: 6px 10px !important;
+        max-height: min(210px, 30vh) !important;
+        padding: 5px 8px !important;
       }
       #dockStepPara {
-        -webkit-line-clamp: 1 !important;
+        display: none !important;
       }
       #graphCanvasBox {
-        height: 95px !important;
+        height: 75px !important;
       }
     }
 
     @media (max-height: 500px) {
       #presentationDock {
-        max-height: 44vh !important;
+        max-height: 30vh !important;
         padding: 4px 8px !important;
       }
       #dockStepPara, #dockPointsContainer, #dockMetricsGroup, #stepProcessContainer {
@@ -453,12 +452,12 @@
     </header>
 
     <!-- Floating Draggable & Resizable Live Telemetry HUD (Desktop, Laptop & Mobile Responsive) -->
-    <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 space-y-1.5 sm:space-y-2 shadow-2xl border border-white/20 w-[94vw] sm:w-[310px] md:w-[320px] lg:w-[325px] xl:w-[330px] 2xl:w-[340px] select-none flex flex-col no-scrollbar panel-transition" style="min-width: 260px; min-height: 44px; max-width: 95vw; max-height: calc(100vh - 75px); overflow-y: auto; overflow-x: hidden;">
+    <div id="telemetryHud" class="fixed top-12 sm:top-14 md:top-16 right-1.5 sm:right-3 md:right-4 z-30 pointer-events-auto apple-glass rounded-2xl p-1.5 sm:p-2 shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar panel-transition" style="min-width: 0px; min-height: 0px; width: auto; height: auto; max-width: 95vw; max-height: min(420px, calc(100vh - 320px)); overflow-y: auto; overflow-x: hidden;">
       
       <!-- Draggable Header with Minimize Toggle -->
-      <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex flex-col border-b border-white/10 pb-1.5 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
+      <div id="telemetryHudHeader" ondblclick="toggleTelemetryCollapse()" class="flex flex-col cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click or tap arrow to minimize/expand">
         <!-- Visual Drag Handle -->
-        <div class="w-12 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-1.5 cursor-grab active:cursor-grabbing transition" title="Drag to reposition panel"></div>
+        <div class="w-12 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-1 cursor-grab active:cursor-grabbing transition" title="Drag to reposition panel"></div>
 
         <div class="flex items-center justify-between w-full gap-1.5">
           <!-- Left: Title with Dot -->
@@ -472,7 +471,7 @@
           </div>
 
           <!-- Center: Minimized Live Summary (Shows live latency & WAF even when minimized!) -->
-          <div id="telemetryMiniSummary" class="hidden items-center gap-1.5 font-mono text-xs min-w-0">
+          <div id="telemetryMiniSummary" class="flex items-center gap-1.5 font-mono text-xs min-w-0">
             <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 whitespace-nowrap">
               <span id="miniP99">21.4 µs</span>
             </span>
@@ -483,21 +482,21 @@
           
           <!-- Right Controls -->
           <div class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto">
-            <span id="telemetrySimBadge" class="text-[8.5px] sm:text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 pointer-events-none hidden md:inline" title="10Hz Discrete-Event Simulation Engine Trace Playback">SIM (10Hz)</span>
-            <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden sm:inline" id="graphModePill">NEUROFTL</span>
-            <button onclick="resetTelemetryPosition(event)" id="btnResetTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-300 hover:text-white transition cursor-pointer flex items-center justify-center border border-white/15" title="Reset panel position (Snap back to top-right)">
+            <span id="telemetrySimBadge" class="text-[8.5px] sm:text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 pointer-events-none hidden" title="10Hz Discrete-Event Simulation Engine Trace Playback">SIM (10Hz)</span>
+            <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold pointer-events-none hidden" id="graphModePill">NEUROFTL</span>
+            <button onclick="resetTelemetryPosition(event)" id="btnResetTelemetry" class="no-drag w-6 h-6 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-300 hover:text-white transition cursor-pointer hidden items-center justify-center border border-white/15" title="Reset panel position (Snap back to top-right)">
               <span>⟲</span>
             </button>
             <button onclick="toggleTelemetryCollapse()" id="btnToggleTelemetry" class="no-drag px-2 py-1 rounded-lg apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="Minimize / Expand Telemetry HUD">
-              <span id="telemetryToggleLabel" class="text-[10px] hidden xs:inline font-semibold">Min</span>
-              <span id="telemetryToggleIcon">▾</span>
+              <span id="telemetryToggleLabel" class="text-[10px] hidden xs:inline font-semibold">Expand</span>
+              <span id="telemetryToggleIcon">▸</span>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Collapsible Body Container (Graph + 4-Metric Comparison Grid) -->
-      <div id="telemetryBody" class="space-y-1.5 sm:space-y-2 flex flex-col flex-1 min-h-0">
+      <div id="telemetryBody" class="hidden space-y-1.5 sm:space-y-2 flex flex-col flex-1 min-h-0">
         <!-- Real-Time Dual Latency Curve with Proper Markings & Dynamic Height -->
         <div class="space-y-1 sm:space-y-1.5 flex flex-col shrink-0">
           <div class="flex justify-between items-center text-xs font-mono shrink-0">
@@ -590,10 +589,10 @@
     <!-- ========================================================================= -->
     <!-- 2.5 3D VIEWPORT MANUAL ZOOM & CAMERA HUD (Desktop, Laptop, and Mobile)    -->
     <!-- ========================================================================= -->
-    <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-14 md:top-16 sm:left-3 md:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2.5 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono panel-transition" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
+    <div id="viewportZoomControls" class="fixed top-12 left-1.5 sm:top-14 md:top-16 sm:left-3 md:left-4 z-20 pointer-events-auto apple-glass rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-2xl border border-white/20 select-none flex flex-col gap-1 font-mono panel-transition" style="background: rgba(10, 14, 24, 0.88); box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 16px rgba(56, 189, 248, 0.15);">
       
       <!-- Top Title & Live Scale Indicator -->
-      <div id="viewportZoomHeader" onclick="toggleZoomCollapse()" class="flex items-center justify-between gap-1.5 border-b border-white/10 pb-1 px-0.5 cursor-grab active:cursor-grabbing select-none" title="Click to minimize/expand • Drag to move">
+      <div id="viewportZoomHeader" onclick="toggleZoomCollapse()" class="flex items-center justify-between gap-1.5 px-0.5 cursor-pointer select-none" title="Click to minimize/expand • Drag to move">
         <div class="flex items-center gap-1 text-zinc-300 text-[10px] sm:text-xs font-bold pointer-events-none">
           <span class="text-zinc-400 font-mono text-[10px] opacity-70">⠿</span>
           <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-cyan-400 animate-pulse"></span>
@@ -603,14 +602,14 @@
           <div class="flex items-center gap-1 bg-cyan-500/10 border border-cyan-500/30 rounded-lg px-1.5 py-0.2 pointer-events-none">
             <span id="zoomReadout" class="text-[10px] sm:text-xs font-bold text-cyan-300">100%</span>
           </div>
-          <button onclick="event.stopPropagation(); toggleZoomCollapse()" id="btnToggleZoom" class="no-drag w-4 h-4 rounded text-[10px] font-mono text-zinc-400 hover:text-white sm:hidden flex items-center justify-center cursor-pointer" title="Minimize / Expand Zoom HUD">
-            <span id="zoomToggleIcon">▾</span>
+          <button onclick="event.stopPropagation(); toggleZoomCollapse()" id="btnToggleZoom" class="no-drag w-5 h-5 rounded text-[10px] font-mono text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer hover:bg-white/10" title="Minimize / Expand Zoom HUD">
+            <span id="zoomToggleIcon">▸</span>
           </button>
         </div>
       </div>
 
-      <!-- Zoom Controls Body (collapsible on mobile) -->
-      <div id="zoomControlsBody" class="flex flex-col gap-1 transition-all duration-300">
+      <!-- Zoom Controls Body (collapsible on all screens) -->
+      <div id="zoomControlsBody" class="hidden flex-col gap-1 transition-all duration-300 pt-1 border-t border-white/10">
         <!-- Zoom In / Out Buttons + Interactive Slider -->
         <div class="flex items-center gap-1 sm:gap-1.5">
           <!-- Zoom Out Button -->
@@ -659,7 +658,7 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 md:p-3 w-[95vw] sm:w-[90vw] md:max-w-[680px] lg:max-w-[760px] xl:max-w-[840px] 2xl:max-w-[920px] 3xl:max-w-[1040px] 4xl:max-w-[1200px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; min-height: 80px; max-height: 52vh; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-1.5 sm:p-2 md:p-2.5 w-[95vw] sm:w-[90vw] md:max-w-[680px] lg:max-w-[760px] xl:max-w-[840px] 2xl:max-w-[920px] 3xl:max-w-[1040px] 4xl:max-w-[1200px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; min-height: 60px; max-height: min(290px, 35vh); overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
       <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
@@ -820,7 +819,7 @@
         </div>
 
         <!-- REAL-TIME HARDWARE & FIRMWARE PROCESS PIPELINE (The High-Tech Star) -->
-        <div id="stepProcessContainer" class="w-full bg-black/40 backdrop-blur-md rounded-xl p-1.5 sm:p-2 border border-white/10 overflow-hidden shrink-0 shadow-inner">
+        <div id="stepProcessContainer" class="w-full bg-black/40 backdrop-blur-md rounded-xl p-1 sm:p-1.5 border border-white/10 overflow-hidden shrink-0 shadow-inner">
           <div class="flex items-center justify-between pb-1 mb-1 border-b border-white/10 text-[9px] sm:text-[10px] font-mono">
             <span class="flex items-center gap-1.5 text-zinc-300 font-bold tracking-wider">
               <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
@@ -1354,8 +1353,8 @@
         nextLabel: "Next: Step 2 - DRAM Cache Pollution ⚠️ →",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
-        cam: { x: -9.5, y: 4.8, z: 6.2 },
-        target: { x: -9.0, y: 0.3, z: 0.0 },
+        cam: { x: -9.0, y: 5.6, z: 7.2 },
+        target: { x: -9.0, y: -0.9, z: 0.3 },
         metricP99: "168.2 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ QUEUE CLASH",
@@ -1381,8 +1380,8 @@
         nextLabel: "Next: Step 3 - The Double-Read Trap ⚠️ →",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
-        cam: { x: -0.2, y: 4.6, z: 5.4 },
-        target: { x: -0.2, y: 0.3, z: 0.0 },
+        cam: { x: -0.2, y: 5.4, z: 7.0 },
+        target: { x: -0.2, y: -0.9, z: 0.3 },
         metricP99: "168.2 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ DRAM THRASHING",
@@ -1408,8 +1407,8 @@
         nextLabel: "Next: Step 4 - Host GPU Starvation 💥 →",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
-        cam: { x: 4.2, y: 5.0, z: 6.0 },
-        target: { x: 4.2, y: 0.3, z: 0.0 },
+        cam: { x: 4.2, y: 5.8, z: 7.6 },
+        target: { x: 4.2, y: -0.9, z: 0.3 },
         metricP99: "168.2 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "💥 +130µs FLASH PENALTY",
@@ -1493,8 +1492,8 @@
         nextLabel: "Next: Step 2 - Sequential Hit Success →",
         mode: "V1",
         workload: "BASELINE",
-        cam: { x: -5.5, y: 4.8, z: 5.6 },
-        target: { x: -5.5, y: 0.3, z: 0.0 },
+        cam: { x: -5.5, y: 5.6, z: 7.2 },
+        target: { x: -5.5, y: -0.9, z: 0.3 },
         metricP99: "84.6 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ STATIC HEURISTIC",
@@ -1520,8 +1519,8 @@
         nextLabel: "Next: Step 3 - The RAG & Attention Blind Spot ⚠️ →",
         mode: "V1",
         workload: "BASELINE",
-        cam: { x: 0.5, y: 5.2, z: 6.4 },
-        target: { x: 0.5, y: 0.5, z: -1.0 },
+        cam: { x: 0.5, y: 5.8, z: 7.8 },
+        target: { x: 0.5, y: -0.8, z: -0.6 },
         metricP99: "84.6 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "PARTIAL RELIEF",
@@ -1547,8 +1546,8 @@
         nextLabel: "Next: Step 4 - Jitter & GPU Stalls ⚠️ →",
         mode: "V1",
         workload: "TRAINING_SURGE",
-        cam: { x: -2.6, y: 4.8, z: 5.8 },
-        target: { x: -2.6, y: 0.3, z: 0.0 },
+        cam: { x: -2.6, y: 5.6, z: 7.2 },
+        target: { x: -2.6, y: -0.9, z: 0.3 },
         metricP99: "84.6 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ 84.6µs SPIKES",
@@ -1632,8 +1631,8 @@
         nextLabel: "Next: Step 2 - Direct DMA Bypass Rail →",
         mode: "V2",
         workload: "BASELINE",
-        cam: { x: -5.5, y: 4.8, z: 5.6 },
-        target: { x: -5.5, y: 0.3, z: 0.0 },
+        cam: { x: -5.5, y: 5.6, z: 7.2 },
+        target: { x: -5.5, y: -0.9, z: 0.3 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 10ns DECISION",
@@ -1659,8 +1658,8 @@
         nextLabel: "Next: Step 3 - Dynamic 3-Region DRAM 🛡️ →",
         mode: "V2",
         workload: "TRAINING_SURGE",
-        cam: { x: 0.5, y: 5.2, z: 6.4 },
-        target: { x: 0.5, y: 0.5, z: -1.0 },
+        cam: { x: 0.5, y: 5.8, z: 7.8 },
+        target: { x: 0.5, y: -0.8, z: -0.6 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ ZERO DRAM FLUSH",
@@ -1686,8 +1685,8 @@
         nextLabel: "Next: Step 4 - Dynamic pSLC Wear Shield 🛡️ →",
         mode: "V2",
         workload: "BASELINE",
-        cam: { x: -0.2, y: 4.6, z: 5.4 },
-        target: { x: -0.2, y: 0.3, z: 0.0 },
+        cam: { x: -0.2, y: 5.4, z: 7.0 },
+        target: { x: -0.2, y: -0.9, z: 0.3 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 0.1µs RAM ACCESS",
@@ -1713,8 +1712,8 @@
         nextLabel: "Next: Step 5 - Silicon Scorecard Verdict 🏆 →",
         mode: "V2",
         workload: "KV_STORM",
-        cam: { x: 5.0, y: 4.5, z: 5.2 },
-        target: { x: 5.0, y: 0.3, z: 1.9 },
+        cam: { x: 5.0, y: 5.4, z: 7.0 },
+        target: { x: 5.0, y: -0.9, z: 2.1 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 1.08 WAF",
@@ -1846,17 +1845,17 @@
     function focusChipIn3D(chipName) {
       playTone('click');
       if (chipName === 'soc') {
-        targetCamPos.set(-5.5, 4.8, 5.6);
-        targetLookAt.set(-5.5, 0.3, 0.0);
+        targetCamPos.set(-5.5, 5.6, 7.2);
+        targetLookAt.set(-5.5, -0.9, 0.3);
       } else if (chipName === 'dram') {
-        targetCamPos.set(-0.2, 4.6, 5.4);
-        targetLookAt.set(-0.2, 0.3, 0.0);
+        targetCamPos.set(-0.2, 5.4, 7.0);
+        targetLookAt.set(-0.2, -0.9, 0.3);
       } else if (chipName === 'nand' || chipName === 'pslc') {
-        targetCamPos.set(5.0, 4.5, 5.2);
-        targetLookAt.set(5.0, 0.3, 1.9);
+        targetCamPos.set(5.0, 5.4, 7.0);
+        targetLookAt.set(5.0, -0.9, 2.1);
       } else if (chipName === 'pcie') {
-        targetCamPos.set(-9.5, 4.8, 6.2);
-        targetLookAt.set(-9.0, 0.3, 0.0);
+        targetCamPos.set(-9.0, 5.6, 7.2);
+        targetLookAt.set(-9.0, -0.9, 0.3);
       } else {
         targetCamPos.set(OVERVIEW_CAM.x, OVERVIEW_CAM.y, OVERVIEW_CAM.z);
         targetLookAt.set(OVERVIEW_TARGET.x, OVERVIEW_TARGET.y, OVERVIEW_TARGET.z);
@@ -2893,16 +2892,16 @@
       if (preset === 'OVERVIEW') {
         goToStep(0);
       } else if (preset === 'CONTROLLER') {
-        targetCamPos.set(-4.2, 13.5, 15.5);
-        targetLookAt.set(-3.8, 0.3, 0.0);
+        targetCamPos.set(-5.5, 5.6, 7.2);
+        targetLookAt.set(-5.5, -0.9, 0.3);
         isCamLerping = true;
       } else if (preset === 'DRAM') {
-        targetCamPos.set(-0.2, 13.0, 15.0);
-        targetLookAt.set(0.0, 0.3, 0.0);
+        targetCamPos.set(-0.2, 5.4, 7.0);
+        targetLookAt.set(-0.2, -0.9, 0.3);
         isCamLerping = true;
       } else if (preset === 'FLASH') {
-        targetCamPos.set(5.5, 13.5, 15.5);
-        targetLookAt.set(4.5, 0.3, 0.0);
+        targetCamPos.set(4.2, 5.8, 7.6);
+        targetLookAt.set(4.2, -0.9, 0.3);
         isCamLerping = true;
       }
       setTimeout(updateZoomUI, 400);
@@ -3069,8 +3068,8 @@
         if (resizeHandle) resizeHandle.style.display = 'none';
       } else {
         body.classList.remove('hidden');
-        dock.style.minHeight = '130px';
-        dock.style.maxHeight = '82vh';
+        dock.style.minHeight = '60px';
+        dock.style.maxHeight = 'min(290px, 35vh)';
         dock.style.height = savedDockHeight || 'auto';
         dock.style.padding = '';
         dock.style.resize = 'none';
@@ -3088,7 +3087,7 @@
       }
     }
 
-    let isTelemetryCollapsed = false;
+    let isTelemetryCollapsed = true;
     let savedTelemetryHeight = '';
     let savedTelemetryWidth = '';
 
@@ -3152,7 +3151,8 @@
       } else {
         body.classList.remove('hidden');
         panel.style.minHeight = '44px';
-        panel.style.maxHeight = '85vh';
+        panel.style.maxHeight = 'min(420px, calc(100vh - 320px))';
+        panel.style.overflowY = 'auto';
         panel.style.height = savedTelemetryHeight || 'auto';
         panel.style.width = savedTelemetryWidth || '';
         panel.style.minWidth = '260px';
@@ -3205,7 +3205,7 @@
       }, 50);
     }
 
-    let isZoomCollapsed = false;
+    let isZoomCollapsed = true;
     function toggleZoomCollapse() {
       playTone('click');
       isZoomCollapsed = !isZoomCollapsed;
