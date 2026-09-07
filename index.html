@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>SanDisk NeuroFTL™ | Adaptive Workload-Aware AI-SSD Firmware</title>
-  
+  <!-- High-Performance Silicon Engineering Typography (Anti-Conventional AI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -23,17 +27,19 @@
         },
         extend: {
           fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"Inter"', 'system-ui', 'sans-serif'],
-            mono: ['"SF Mono"', 'Menlo', 'Consolas', 'monospace']
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'Menlo', 'Consolas', 'monospace']
           },
           colors: {
             sandisk: {
               red: '#e11d48',
               ruby: '#be123c',
-              dark: '#08080c',
-              cyan: '#38bdf8',
-              emerald: '#34d399',
-              amber: '#fbbf24'
+              dark: '#06080d',
+              panel: '#0a0e17',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b'
             }
           }
         }
@@ -60,8 +66,8 @@
       -webkit-text-size-adjust: 100%;
     }
     body {
-      background: radial-gradient(circle at 50% 8%, #1c0812 0%, #06070a 45%, #000000 100%);
-      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      background: radial-gradient(circle at 50% 12%, #14050d 0%, #06080d 40%, #020306 100%);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
       user-select: none;
     }
@@ -69,22 +75,29 @@
       touch-action: none; /* Essential: prevents mobile browser pull-to-refresh & gestures */
     }
     .apple-glass {
-      background: rgba(10, 14, 24, 0.72);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      background: rgba(7, 11, 19, 0.90);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.92), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
     .apple-pill {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(25px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .apple-pill:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.22);
     }
     .panel-transition {
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background-color 0.2s ease;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
     }
-        #stepProcessContainer {
-      min-height: 48px;
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    #stepProcessContainer {
+      min-height: 44px;
     }
     @media (max-height: 850px) {
       #stepProcessContainer {
@@ -148,27 +161,65 @@
       padding-bottom: max(8px, env(safe-area-inset-bottom));
     }
 
-    /* Mobile Touchscreen Responsiveness & Vertical Component Stacking (< 768px) */
+    /* Mobile Touchscreen Responsiveness & Zero-Scroll Bento Stacking (< 768px) */
     @media (max-width: 767px) {
       #presentationDock {
-        left: 8px !important;
-        right: 8px !important;
-        bottom: 8px !important;
+        left: 6px !important;
+        right: 6px !important;
+        bottom: 6px !important;
         transform: none !important;
-        width: auto !important;
-        max-width: calc(100vw - 16px) !important;
-        max-height: 38vh !important;
-        padding: 6px 8px !important;
+        width: calc(100vw - 12px) !important;
+        max-width: calc(100vw - 12px) !important;
+        box-sizing: border-box !important;
+        max-height: 335px !important;
+        padding: 5px 8px !important;
         touch-action: pan-y !important;
+        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+      }
+      #dockBody {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
       }
       #stepProcessContainer {
         padding: 3px 5px !important;
       }
+      #dockStepTitle {
+        font-size: 11px !important;
+        line-height: 1.25 !important;
+      }
+      #dockStepPara {
+        font-size: 9.5px !important;
+        line-height: 1.3 !important;
+        display: block !important;
+      }
+      #dockTakeawayBox {
+        padding: 2px 6px !important;
+        font-size: 9px !important;
+        margin: 2px 0 !important;
+      }
+      #dockMetricsGroup {
+        display: flex !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 4px !important;
+      }
+      #metricCardLatency, #metricCardSecondary {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+        padding: 2px 5px !important;
+        box-sizing: border-box !important;
+      }
+      #btnNextStep {
+        padding: 4px 12px !important;
+        font-size: 11px !important;
+      }
       #telemetryHud {
         left: auto !important;
-        right: 8px !important;
-        width: min(320px, calc(100vw - 16px)) !important;
-        max-width: calc(100vw - 16px) !important;
+        right: 6px !important;
+        width: min(320px, calc(100vw - 12px)) !important;
+        max-width: calc(100vw - 12px) !important;
         touch-action: pan-y !important;
       }
       .cursor-grab {
@@ -176,46 +227,60 @@
       }
     }
 
-    /* Compact text scaling on short laptop viewports (600px - 850px height) */
-    @media (max-height: 850px) {
+    /* Zero-scroll bento cockpit scaling across all displays */
+    #presentationDock {
+      overflow-y: hidden !important;
+    }
+    #dockBody {
+      overflow: hidden !important;
+    }
+    #dockStepPara {
+      overflow-y: hidden !important;
+      display: block !important;
+      -webkit-line-clamp: unset !important;
+      line-clamp: unset !important;
+    }
+
+    /* Scaling on compact laptop viewports (600px - 850px height) */
+    @media (min-width: 768px) and (max-height: 850px) {
       #presentationDock {
-        max-height: min(240px, 32vh) !important;
+        max-height: 200px !important;
         padding: 6px 10px !important;
       }
-      #dockBody {
-        gap: 2px !important;
-      }
       #dockStepPara {
-        -webkit-line-clamp: 1 !important;
+        font-size: 10.5px !important;
+        line-height: 1.35 !important;
       }
       #telemetryHud {
-        max-height: min(340px, calc(100vh - 280px)) !important;
+        max-height: min(320px, calc(100vh - 230px)) !important;
       }
       #graphCanvasBox {
         height: 85px !important;
       }
     }
 
-    @media (max-height: 720px) {
+    @media (min-width: 768px) and (max-height: 720px) {
       #presentationDock {
-        max-height: min(210px, 30vh) !important;
+        max-height: 185px !important;
         padding: 5px 8px !important;
       }
       #dockStepPara {
-        display: none !important;
+        font-size: 10px !important;
+        line-height: 1.3 !important;
       }
       #graphCanvasBox {
         height: 75px !important;
       }
     }
 
-    @media (max-height: 500px) {
+    @media (min-width: 768px) and (max-height: 540px) {
       #presentationDock {
-        max-height: 30vh !important;
+        max-height: 170px !important;
         padding: 4px 8px !important;
       }
-      #dockStepPara, #dockPointsContainer, #dockMetricsGroup, #stepProcessContainer {
-        display: none !important;
+      #dockStepPara {
+        font-size: 9px !important;
+        line-height: 1.25 !important;
       }
     }
 
@@ -278,7 +343,7 @@
       </div>
 
       <div class="space-y-1">
-        <h1 class="text-xl sm:text-3xl font-bold tracking-tight text-white">
+        <h1 class="text-xl sm:text-3xl font-extrabold tracking-tight text-white font-display">
           SanDisk NeuroFTL™
         </h1>
         <p class="text-[11px] sm:text-xs font-bold text-rose-400">
@@ -364,7 +429,7 @@
         </div>
         <div class="flex flex-col text-left">
           <div class="flex items-center gap-1 sm:gap-1.5">
-            <h1 class="text-[11px] sm:text-sm font-black tracking-tight text-white hidden xs:block">NeuroFTL™</h1>
+            <h1 class="text-[11px] sm:text-sm font-black tracking-tight text-white hidden xs:block font-display">NeuroFTL™</h1>
             <span class="text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 rounded-full bg-rose-500/25 border border-rose-500/40 text-rose-300 font-mono font-bold hidden md:inline">FW Twin</span>
           </div>
           <p class="text-[9px] sm:text-[10px] text-zinc-300 font-medium hidden md:block">Adaptive AI Storage FTL</p>
@@ -400,20 +465,20 @@
           </button>
 
           <!-- Live Telemetry Toggle Tab Button -->
-          <button onclick="toggleTelemetryCollapse()" id="btnTopHudToggle" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-mono text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:bg-emerald-500/30" title="Toggle Live Telemetry Panel (Key H)">
+          <button onclick="toggleTelemetryCollapse()" id="btnTopHudToggle" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-mono text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:bg-emerald-500/30" title="Toggle Live Telemetry Panel (Key H)">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" id="topHudLiveDot"></span>
             <span>📊</span>
-            <span class="whitespace-nowrap"><span class="hidden sm:inline">Live </span>Telemetry</span>
+            <span class="hidden sm:inline whitespace-nowrap">Live Telemetry</span>
           </button>
 
           <!-- Fluid Flow Start / Stop Button -->
-          <button onclick="toggleSimulationFlow()" id="btnFlowToggle" class="p-1.5 sm:px-3 sm:py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer flex items-center gap-1 font-bold shadow-md" title="Toggle Traffic Flow">
+          <button onclick="toggleSimulationFlow()" id="btnFlowToggle" class="p-1.5 sm:px-3 sm:py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer hidden xs:flex items-center gap-1 font-bold shadow-md" title="Toggle Traffic Flow">
             <span id="flowToggleIcon">⏸</span>
             <span id="flowToggleText" class="hidden sm:inline text-[11px]">Stop Flow</span>
           </button>
 
           <!-- 3D Casing Lift-off & Disassembly Button -->
-          <button onclick="replayCasingAnimation()" id="btnTopCasing" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-cyan-300 hover:text-white transition cursor-pointer flex items-center gap-1 border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 shadow-sm" title="Replay 3D Casing Lift-off Reveal (Key C)">
+          <button onclick="replayCasingAnimation()" id="btnTopCasing" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-cyan-300 hover:text-white transition cursor-pointer hidden sm:flex items-center gap-1 border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 shadow-sm" title="Replay 3D Casing Lift-off Reveal (Key C)">
             <span>📦</span>
             <span class="hidden md:inline text-[11px] font-bold">Casing Reveal ⟲</span>
           </button>
@@ -425,14 +490,13 @@
           </button>
 
           <!-- Problem Statement & Architecture Spec Modal Button -->
-          <button onclick="openSpecModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="View Specification">
-
+          <button onclick="openSpecModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer hidden sm:flex items-center gap-1 border border-white/15" title="View Specification">
             <span>📖</span>
             <span class="hidden md:inline text-[11px]">Spec</span>
           </button>
 
           <!-- Proof of Work & Simulation Methodology Button -->
-          <button onclick="openPowModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15" title="View Simulation Methodology & Proof of Work">
+          <button onclick="openPowModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer hidden sm:flex items-center gap-1 border border-white/15" title="View Simulation Methodology & Proof of Work">
             <span>🔬</span>
             <span class="hidden md:inline text-[11px]">Proof</span>
           </button>
@@ -658,10 +722,10 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-1.5 sm:p-2 md:p-2.5 w-[95vw] sm:w-[90vw] md:max-w-[680px] lg:max-w-[760px] xl:max-w-[840px] 2xl:max-w-[920px] 3xl:max-w-[1040px] 4xl:max-w-[1200px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; min-height: 60px; max-height: min(290px, 35vh); overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 w-[96vw] max-w-[1360px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; max-height: 205px; overflow: hidden;">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
-      <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 sm:gap-1.5 border-b border-white/10 pb-1.5 sm:pb-2 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
+      <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 border-b border-white/10 pb-1 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
         
         <!-- Centered Visual Drag Grip Handle -->
         <div class="w-12 sm:w-16 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-0.5 cursor-grab active:cursor-grabbing transition" title="Drag to move panel"></div>
@@ -674,80 +738,70 @@
         <!-- Header Controls Row: Left Tabs & Right Pinned Controls -->
         <div class="flex items-center justify-between gap-1 sm:gap-2 w-full min-w-0 overflow-hidden">
           
-          <!-- Left: Grip & Impressive Sideways Scrollable Stage Tabs Carousel -->
+          <!-- Left: Grip & Sideways Scrollable Stage Tabs Carousel -->
           <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-1 relative py-0.5 overflow-hidden">
-            <span class="text-zinc-400 font-mono text-xs sm:text-sm opacity-80 px-0.5 pointer-events-none shrink-0 flex items-center gap-1" title="Drag to move panel">
+            <span class="text-zinc-400 font-mono text-xs opacity-80 px-0.5 pointer-events-none shrink-0 flex items-center gap-1" title="Drag to move panel">
               <span>⠿</span>
-              <span class="text-[9px] hidden lg:inline font-bold tracking-wider opacity-70">DRAG</span>
+              <span class="text-[9px] hidden xl:inline font-bold tracking-wider opacity-70">DRAG</span>
             </span>
 
             <!-- Left Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps left">
+            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps left">
               ‹
             </button>
 
             <!-- Scrollable Tabs Track with Wheel & Touch Drag Support -->
             <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
               <!-- Step Tab 0: Overview -->
-              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-gradient-to-r from-rose-500 to-amber-400 text-black shadow-lg shadow-rose-500/25 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>🔍</span>
                 <span>Overview</span>
               </button>
 
               <!-- Step Tab 1: Workload -->
-              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>1</span>
                 <span class="hidden xs:inline">Workload</span>
               </button>
 
               <!-- Step Tab 2: Double-Read -->
-              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>2</span>
                 <span class="hidden sm:inline">Double-Read ⚠️</span>
                 <span class="sm:hidden hidden xs:inline">Read ⚠️</span>
               </button>
 
               <!-- Step Tab 3: Classifier -->
-              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>3</span>
                 <span class="hidden xs:inline">Classifier ⚡</span>
               </button>
 
               <!-- Step Tab 4: 3-Region -->
-              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>4</span>
                 <span class="hidden xs:inline">3-Region 🛡️</span>
               </button>
 
               <!-- Step Tab 5: Verdict -->
-              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(5)" id="stepTab5" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>5</span>
                 <span class="hidden xs:inline">Verdict 🏆</span>
               </button>
             </div>
 
             <!-- Right Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps right">
+            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps right">
               ›
             </button>
           </div>
 
           <!-- Right: Pinned Window Controls -->
           <div class="flex items-center gap-1 sm:gap-2 text-xs font-mono text-zinc-200 shrink-0 ml-auto pl-1">
-            <span id="dockStageCount" class="font-bold text-rose-400 text-xs sm:text-sm whitespace-nowrap">OVERVIEW</span>
+            <span id="dockStageCount" class="font-bold text-rose-400 text-xs whitespace-nowrap">OVERVIEW</span>
             
             <button onclick="openSpecModal()" class="no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
               Spec ↗
-            </button>
-
-            <button onclick="nextStep()" id="dockMiniNext" class="hidden no-drag px-2.5 py-1 rounded-xl bg-gradient-to-r from-rose-500 to-amber-400 text-black font-bold text-xs font-mono shadow-md transition cursor-pointer flex items-center gap-1 shrink-0 hover:scale-105">
-              <span>Next →</span>
-            </button>
-
-            <!-- Minimize / Expand Toggle Button -->
-            <button onclick="toggleDockCollapse()" id="btnToggleDock" class="no-drag px-2 sm:px-2.5 py-1 rounded-xl apple-pill hover:bg-white/20 text-xs font-mono font-bold text-zinc-100 hover:text-white transition cursor-pointer flex items-center gap-1 shrink-0 border border-white/20 shadow-md" title="Minimize / Expand Dock (Press D)">
-              <span id="dockToggleIcon">▾</span>
-              <span id="dockToggleLabel" class="hidden xs:inline">Minimize</span>
             </button>
           </div>
 
@@ -755,62 +809,96 @@
 
       </div>
 
-      <!-- Collapsible Body Area -->
-      <div id="dockBody" class="space-y-1 sm:space-y-1.5 flex flex-col flex-1 min-h-0 transition-all duration-300 overflow-y-auto no-scrollbar w-full">
+      <!-- Collapsible Body Area: High-Precision 3-Column Bento Deck (ZERO SCROLL, ALL TEXT VISIBLE) -->
+      <div id="dockBody" class="w-full grid grid-cols-1 md:grid-cols-12 gap-2 pt-1.5 items-stretch min-h-0 overflow-hidden select-none flex-1">
         
-        <!-- Top Executive Row: Narrative & Live Silicon Metrics -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 sm:gap-3 shrink-0 w-full pt-0.5">
-          
-          <!-- Left: Stage Banner, Big Title, Clear Paragraph -->
-          <div class="space-y-0.5 flex-1 min-w-0">
+        <!-- Column 1: Narrative & Context (md:col-span-5) -->
+        <div class="md:col-span-5 flex flex-col justify-between min-w-0 pr-1 space-y-1 overflow-hidden">
+          <div class="space-y-0.5 min-w-0">
             <div class="flex items-center gap-1.5 flex-wrap">
-              <span id="dockGenBadge" class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">GEN 3: NEUROFTL™ v2.0</span>
-              <span class="text-zinc-500 text-xs hidden xs:inline">•</span>
-              <span class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
-              <span class="text-zinc-500 text-xs hidden xs:inline">•</span>
-              <span class="text-[9px] sm:text-[10px] font-mono text-cyan-300 font-semibold truncate" id="dockActiveChip">Focus: Complete Gen5 x4 NVMe SSD Silicon</span>
+              <span id="dockGenBadge" class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">GEN 3: NEUROFTL™ v2.0</span>
+              <span class="text-zinc-500 text-xs hidden lg:inline">•</span>
+              <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 truncate" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
+              <span class="text-[9px] font-mono text-cyan-300 font-semibold truncate hidden xl:inline" id="dockActiveChip">Focus: Gen5 Silicon</span>
             </div>
             
-            <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-white tracking-tight leading-snug truncate" id="dockStepTitle">
+            <h2 class="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-tight mt-0.5 font-display truncate" id="dockStepTitle">
               SanDisk NeuroFTL™ Silicon Architecture Overview
             </h2>
 
-            <!-- Executive 1-Line Key Takeaway Card (Clean Apple Keynote Clarity) -->
-            <div id="dockTakeawayBox" class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-emerald-500/15 border-l-4 border-emerald-400 text-emerald-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0">
-              <span id="dockTakeawayIcon" class="text-xs sm:text-sm shrink-0">⚡</span>
-              <span class="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">KEY TAKEAWAY:</span>
-              <span id="dockTakeawayText" class="truncate font-semibold text-white">NeuroFTL v2.0 delivers 100% stream separation with zero hardware respin</span>
+            <!-- Executive 1-Line Key Takeaway Card -->
+            <div id="dockTakeawayBox" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0">
+              <span id="dockTakeawayIcon" class="text-xs shrink-0">⚡</span>
+              <span class="text-[8.5px] sm:text-[9px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">TAKEAWAY:</span>
+              <span id="dockTakeawayText" class="font-semibold text-white leading-tight">NeuroFTL v2.0 delivers 100% stream separation with zero hardware respin</span>
             </div>
-            
-            <!-- Clear, comfortably readable explanation -->
-            <p class="text-[10.5px] sm:text-xs text-zinc-300 leading-relaxed font-normal line-clamp-2" id="dockStepPara">
-              A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 100% firmware scheduling without modifying host software or SSD hardware.
-            </p>
           </div>
+          
+          <!-- Full explanation text - NO line clamp, completely visible without vertical scrolling -->
+          <p class="text-[10.5px] sm:text-[11px] text-zinc-300 leading-snug font-normal select-text" id="dockStepPara">
+            A panoramic view of commodity NVMe SSD silicon architecture. High-bandwidth sequential PyTorch training streams and latency-sensitive KV-cache inference requests arrive simultaneously over PCIe Gen5. SanDisk NeuroFTL introduces 100% firmware scheduling without modifying host software or SSD hardware.
+          </p>
+        </div>
 
-          <!-- Right: Sleek Silicon Metric Badges (Zero Overlap, High Contrast) -->
-          <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 font-mono self-start sm:self-center" id="dockMetricsGroup">
+        <!-- Column 2: Real-Time Hardware Execution Pipeline (md:col-span-4) -->
+        <div class="hidden md:flex md:col-span-4 flex-col justify-between min-w-0 px-1 border-t md:border-t-0 md:border-l md:border-r border-white/10 pt-1 md:pt-0 overflow-hidden">
+          <div id="stepProcessContainer" class="w-full h-full max-h-[96px] bg-[#050811]/70 backdrop-blur-md rounded-xl p-1.5 border border-white/10 flex flex-col justify-between overflow-hidden shadow-inner">
+            <div class="flex items-center justify-between pb-1 mb-0.5 border-b border-white/10 text-[9px] font-mono shrink-0">
+              <span class="flex items-center gap-1 text-zinc-300 font-bold tracking-wider">
+                <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                <span id="processFlowLabel" class="truncate">HARDWARE PIPELINE</span>
+              </span>
+              <span id="processFlowBadge" class="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[8.5px] border border-cyan-500/30 truncate">
+                100% FIRMWARE TRACE
+              </span>
+            </div>
+            <div id="stepProcessContent" class="w-full flex-1 flex items-center overflow-x-auto no-scrollbar py-0.5">
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3: Silicon Telemetry Metrics & Tactile Actions (md:col-span-3) -->
+        <div class="md:col-span-3 flex flex-col justify-between w-full min-w-0 md:pl-1 space-y-1 overflow-hidden">
+          <!-- Sleek Dual Silicon Metric Badges -->
+          <div class="grid grid-cols-2 gap-1.5 font-mono w-full min-w-0" id="dockMetricsGroup">
             <!-- Latency Card -->
-            <div class="px-2 sm:px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-right space-y-0.2 shadow-sm" id="metricCardLatency">
-              <div class="text-[8px] sm:text-[9px] text-zinc-400 font-semibold uppercase tracking-wider" id="metricLatencyLabel">P99 Read Latency</div>
+            <div class="p-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardLatency">
+              <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricLatencyLabel">P99 Latency</div>
               <div class="flex items-baseline justify-end gap-1">
                 <span class="text-xs sm:text-sm font-black text-emerald-400" id="metricP99">21.4 µs</span>
-                <span class="text-[8px] sm:text-[9px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
+                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricP99Std">168.2</span>
               </div>
-              <div class="text-[8px] sm:text-[8.5px] font-bold text-emerald-400 truncate" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
+              <div class="text-[8px] font-bold text-emerald-400 truncate" id="metricBadgeLatency">⚡ 7.8× FASTER</div>
             </div>
 
             <!-- Secondary Metric Card -->
-            <div class="px-2 sm:px-2.5 py-1 rounded-xl bg-white/5 border border-white/15 text-right space-y-0.2 shadow-sm" id="metricCardSecondary">
-              <div class="text-[8px] sm:text-[9px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
+            <div class="p-1.5 rounded-xl bg-white/5 border border-white/15 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardSecondary">
+              <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">L2P Hit Rate</div>
               <div class="flex items-baseline justify-end gap-1">
                 <span class="text-xs sm:text-sm font-black text-cyan-400" id="metricSecondaryVal">98.6%</span>
-                <span class="text-[8px] sm:text-[9px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
+                <span class="text-[8px] text-zinc-500 line-through font-semibold" id="metricSecondaryStd">18.4%</span>
               </div>
-              <div class="text-[8px] sm:text-[8.5px] font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 LOCKED</div>
+              <div class="text-[8px] font-bold text-cyan-400 truncate" id="metricBadgeSecondary">🔒 LOCKED</div>
             </div>
           </div>
 
+          <!-- Bottom Actions: Back, Auto-Play, Next CTA Button -->
+          <div class="flex items-center justify-between gap-1 pt-1 border-t border-white/10 shrink-0 w-full min-w-0">
+            <div class="flex items-center gap-1">
+              <button onclick="prevStep()" id="btnPrevStep" disabled class="no-drag px-2.5 py-1 rounded-lg apple-pill hover:bg-white/15 text-[11px] font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+                ← Back
+              </button>
+              <button onclick="toggleAutoPlay()" id="btnAutoPlay" class="no-drag px-2 py-1 rounded-lg apple-pill hover:bg-white/15 text-[11px] font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1">
+                <span id="autoIcon">▶</span>
+                <span class="hidden xl:inline">Auto</span>
+              </button>
+            </div>
+
+            <!-- Primary Call-to-Action Next Button -->
+            <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-gradient-to-r from-rose-500 via-rose-600 to-amber-400 hover:from-rose-400 hover:to-amber-300 text-black font-bold text-xs font-mono shadow-md shadow-rose-500/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0">
+              <span id="btnNextLabel" class="truncate">Next →</span>
+            </button>
+          </div>
         </div>
 
         <!-- Hidden bullet tags container to keep backward-compatible IDs -->
@@ -818,42 +906,9 @@
           <div id="point1"></div><div id="point2"></div><div id="point3"></div>
         </div>
 
-        <!-- REAL-TIME HARDWARE & FIRMWARE PROCESS PIPELINE (The High-Tech Star) -->
-        <div id="stepProcessContainer" class="w-full bg-black/40 backdrop-blur-md rounded-xl p-1 sm:p-1.5 border border-white/10 overflow-hidden shrink-0 shadow-inner">
-          <div class="flex items-center justify-between pb-1 mb-1 border-b border-white/10 text-[9px] sm:text-[10px] font-mono">
-            <span class="flex items-center gap-1.5 text-zinc-300 font-bold tracking-wider">
-              <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
-              <span id="processFlowLabel">HARDWARE EXECUTION PIPELINE</span>
-            </span>
-            <span id="processFlowBadge" class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30">
-              100% FIRMWARE TRACE
-            </span>
-          </div>
-          <div id="stepProcessContent" class="w-full overflow-x-auto no-scrollbar">
-          </div>
-        </div>
-
-        <!-- Bottom Actions: Back, Auto-Play, Large Next CTA Button -->
-        <div class="flex items-center justify-between pt-1 border-t border-white/10 shrink-0 gap-1.5">
-          <div class="flex items-center gap-1 sm:gap-2">
-            <button onclick="prevStep()" id="btnPrevStep" disabled class="no-drag px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
-              ← Back
-            </button>
-            <button onclick="toggleAutoPlay()" id="btnAutoPlay" class="no-drag px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl apple-pill hover:bg-white/15 text-xs sm:text-sm font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1 sm:gap-1.5">
-              <span id="autoIcon">▶</span>
-              <span class="hidden xs:inline">Auto</span>
-            </button>
-          </div>
-
-          <!-- Primary Call-to-Action Next Button -->
-          <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-6 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-rose-500 via-rose-600 to-amber-400 hover:from-rose-400 hover:to-amber-300 text-black font-bold text-xs sm:text-sm font-mono shadow-xl shadow-rose-500/25 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1.5 sm:gap-2 pulse-primary shrink-0">
-            <span id="btnNextLabel" class="truncate">Next →</span>
-          </button>
-        </div>
-
       </div>
 
-      <!-- Custom Visible Resize Grip Corner (Smooth 60fps) -->
+      <!-- Custom Visible Resize Grip Corner -->
       <div id="presentationResizeHandle" class="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize flex items-end justify-end p-1 text-zinc-400 hover:text-emerald-400 select-none z-20 touch-none hidden sm:flex" title="Drag corner to resize dock">
         <svg class="w-3.5 h-3.5 opacity-60 hover:opacity-100" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22 22H20V20H22V22ZM22 16H20V18H22V16ZM16 22H18V20H16V22ZM22 12H20V14H22V12ZM12 22H14V20H12V22ZM16 18H18V16H16V18Z"/>
@@ -873,7 +928,7 @@
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <div class="flex items-center gap-2.5">
           <span class="px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-mono font-bold">EXECUTIVE SPECIFICATION</span>
-          <h2 class="text-base sm:text-lg font-bold text-white">How NeuroFTL™ Solves the Problem Statement</h2>
+          <h2 class="text-base sm:text-lg font-bold text-white font-display">How NeuroFTL™ Solves the Problem Statement</h2>
         </div>
         <button onclick="closeSpecModal()" class="text-zinc-300 hover:text-white p-1 rounded-full text-base cursor-pointer font-bold">✕</button>
       </div>
@@ -986,7 +1041,7 @@
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <div class="flex items-center gap-2.5">
           <span class="px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold">PROOF OF WORK &amp; METHODOLOGY</span>
-          <h2 class="text-base sm:text-lg font-bold text-white">Simulation Engine &amp; Benchmark Rig</h2>
+          <h2 class="text-base sm:text-lg font-bold text-white font-display">Simulation Engine &amp; Benchmark Rig</h2>
         </div>
         <button onclick="closePowModal()" class="text-zinc-300 hover:text-white p-1 rounded-full text-base cursor-pointer font-bold">✕</button>
       </div>
@@ -1087,7 +1142,7 @@
         <div class="flex items-center gap-2 sm:gap-3">
           <span class="px-2.5 sm:px-3 py-1 rounded-full bg-gradient-to-r from-rose-500/20 via-amber-500/20 to-emerald-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold">3-GENERATION COMPARISON</span>
           <div>
-            <h2 class="text-sm sm:text-lg md:text-xl font-bold text-white tracking-tight">Silicon &amp; Firmware Evolutionary Benchmark Matrix</h2>
+            <h2 class="text-sm sm:text-lg md:text-xl font-bold text-white tracking-tight font-display">Silicon &amp; Firmware Evolutionary Benchmark Matrix</h2>
             <p class="text-[10px] sm:text-xs text-zinc-400">Comparing Conventional FTL vs. Early Heuristic Prototype (v1.0) vs. SanDisk NeuroFTL™ (v2.0)</p>
           </div>
         </div>
@@ -2526,13 +2581,13 @@
       if (takeawayText && step.takeaway) {
         takeawayText.innerText = step.takeaway;
         if (currentTrackKey === 'CONVENTIONAL') {
-          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-rose-500/15 border-l-4 border-rose-500 text-rose-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0";
+          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-rose-500/15 border-l-2 border-rose-500 text-rose-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0";
           if (takeawayIcon) takeawayIcon.innerText = "❌";
         } else if (currentTrackKey === 'V1') {
-          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-amber-500/15 border-l-4 border-amber-400 text-amber-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0";
+          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-amber-500/15 border-l-2 border-amber-400 text-amber-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0";
           if (takeawayIcon) takeawayIcon.innerText = "⚠️";
         } else {
-          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-emerald-500/15 border-l-4 border-emerald-400 text-emerald-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0";
+          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0";
           if (takeawayIcon) takeawayIcon.innerText = "⚡";
         }
       }
@@ -2544,7 +2599,7 @@
         else if (currentTrackKey === 'V1') mobileNext = 'Try v2.0 →';
         else mobileNext = 'Restart ↺';
       }
-      setText('btnNextLabel', window.innerWidth < 640 ? mobileNext : step.nextLabel);
+      setText('btnNextLabel', window.innerWidth < 1400 ? mobileNext : step.nextLabel);
 
       // Update Progress Bar
       const bar = document.getElementById('dockProgressBar');
@@ -2567,26 +2622,26 @@
       const valSec = document.getElementById('metricSecondaryVal');
 
       if (step.mode === 'CONVENTIONAL' || step.mode === 'PROBLEM') {
-        if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 min-w-[125px] sm:min-w-[140px] space-y-0.5 glow-problem shadow-md";
-        if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-rose-400";
-        if (valP99) valP99.className = "text-base sm:text-lg font-black text-rose-400 font-mono";
-        if (cardSec) cardSec.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
-        if (badgeSec) badgeSec.className = "text-[10px] sm:text-xs font-bold text-rose-400";
-        if (valSec) valSec.className = "text-base sm:text-lg font-black text-rose-400 font-mono";
+        if (cardLat) cardLat.className = "p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 min-w-0 space-y-0.2 glow-problem shadow-sm text-right";
+        if (badgeLat) badgeLat.className = "text-[8px] font-bold text-rose-400 truncate";
+        if (valP99) valP99.className = "text-xs sm:text-sm font-black text-rose-400 font-mono";
+        if (cardSec) cardSec.className = "p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 min-w-0 space-y-0.2 shadow-sm text-right";
+        if (badgeSec) badgeSec.className = "text-[8px] font-bold text-rose-400 truncate";
+        if (valSec) valSec.className = "text-xs sm:text-sm font-black text-rose-400 font-mono";
       } else if (step.mode === 'V1') {
-        if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
-        if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-amber-400";
-        if (valP99) valP99.className = "text-base sm:text-lg font-black text-amber-400 font-mono";
-        if (cardSec) cardSec.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
-        if (badgeSec) badgeSec.className = "text-[10px] sm:text-xs font-bold text-amber-300";
-        if (valSec) valSec.className = "text-base sm:text-lg font-black text-amber-300 font-mono";
+        if (cardLat) cardLat.className = "p-1.5 rounded-xl bg-amber-500/15 border border-amber-500/40 min-w-0 space-y-0.2 shadow-sm text-right";
+        if (badgeLat) badgeLat.className = "text-[8px] font-bold text-amber-400 truncate";
+        if (valP99) valP99.className = "text-xs sm:text-sm font-black text-amber-400 font-mono";
+        if (cardSec) cardSec.className = "p-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 min-w-0 space-y-0.2 shadow-sm text-right";
+        if (badgeSec) badgeSec.className = "text-[8px] font-bold text-amber-300 truncate";
+        if (valSec) valSec.className = "text-xs sm:text-sm font-black text-amber-300 font-mono";
       } else {
-        if (cardLat) cardLat.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
-        if (badgeLat) badgeLat.className = "text-[10px] sm:text-xs font-bold text-emerald-400";
-        if (valP99) valP99.className = "text-base sm:text-lg font-black text-emerald-400 font-mono";
-        if (cardSec) cardSec.className = "flex-1 md:flex-none p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/15 min-w-[125px] sm:min-w-[140px] space-y-0.5 shadow-md";
-        if (badgeSec) badgeSec.className = "text-[10px] sm:text-xs font-bold text-cyan-400";
-        if (valSec) valSec.className = "text-base sm:text-lg font-black text-cyan-400 font-mono";
+        if (cardLat) cardLat.className = "p-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 min-w-0 space-y-0.2 shadow-sm text-right";
+        if (badgeLat) badgeLat.className = "text-[8px] font-bold text-emerald-400 truncate";
+        if (valP99) valP99.className = "text-xs sm:text-sm font-black text-emerald-400 font-mono";
+        if (cardSec) cardSec.className = "p-1.5 rounded-xl bg-white/5 border border-white/15 min-w-0 space-y-0.2 shadow-sm text-right";
+        if (badgeSec) badgeSec.className = "text-[8px] font-bold text-cyan-400 truncate";
+        if (valSec) valSec.className = "text-xs sm:text-sm font-black text-cyan-400 font-mono";
       }
 
       // Initialize metric text from step definition
@@ -3069,7 +3124,7 @@
       } else {
         body.classList.remove('hidden');
         dock.style.minHeight = '60px';
-        dock.style.maxHeight = 'min(290px, 35vh)';
+        dock.style.maxHeight = '205px';
         dock.style.height = savedDockHeight || 'auto';
         dock.style.padding = '';
         dock.style.resize = 'none';
