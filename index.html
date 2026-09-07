@@ -413,6 +413,12 @@
             <span id="flowToggleText" class="hidden sm:inline text-[11px]">Stop Flow</span>
           </button>
 
+          <!-- 3D Casing Lift-off & Disassembly Button -->
+          <button onclick="replayCasingAnimation()" id="btnTopCasing" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-cyan-300 hover:text-white transition cursor-pointer flex items-center gap-1 border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 shadow-sm" title="Replay 3D Casing Lift-off Reveal (Key C)">
+            <span>📦</span>
+            <span class="hidden md:inline text-[11px] font-bold">Casing Reveal ⟲</span>
+          </button>
+
           <!-- Zoom Out Overview Button -->
           <button onclick="zoomOutOverview()" id="btnZoomOverview" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15 hidden xs:flex" title="Zoom to Panoramic Overview (Key O)">
             <span>🔍</span>
@@ -759,6 +765,8 @@
           <!-- Left: Stage Banner, Big Title, Clear Paragraph -->
           <div class="space-y-0.5 flex-1 min-w-0">
             <div class="flex items-center gap-1.5 flex-wrap">
+              <span id="dockGenBadge" class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">GEN 3: NEUROFTL™ v2.0</span>
+              <span class="text-zinc-500 text-xs hidden xs:inline">•</span>
               <span class="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30" id="dockStepCategory">OVERVIEW: ARCHITECTURE &amp; TOPOLOGY</span>
               <span class="text-zinc-500 text-xs hidden xs:inline">•</span>
               <span class="text-[9px] sm:text-[10px] font-mono text-cyan-300 font-semibold truncate" id="dockActiveChip">Focus: Complete Gen5 x4 NVMe SSD Silicon</span>
@@ -767,6 +775,13 @@
             <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-white tracking-tight leading-snug truncate" id="dockStepTitle">
               SanDisk NeuroFTL™ Silicon Architecture Overview
             </h2>
+
+            <!-- Executive 1-Line Key Takeaway Card (Clean Apple Keynote Clarity) -->
+            <div id="dockTakeawayBox" class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-emerald-500/15 border-l-4 border-emerald-400 text-emerald-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0">
+              <span id="dockTakeawayIcon" class="text-xs sm:text-sm shrink-0">⚡</span>
+              <span class="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">KEY TAKEAWAY:</span>
+              <span id="dockTakeawayText" class="truncate font-semibold text-white">NeuroFTL v2.0 delivers 100% stream separation with zero hardware respin</span>
+            </div>
             
             <!-- Clear, comfortably readable explanation -->
             <p class="text-[10.5px] sm:text-xs text-zinc-300 leading-relaxed font-normal line-clamp-2" id="dockStepPara">
@@ -1267,6 +1282,14 @@
             o.connect(g); g.connect(ctx.destination);
             o.start(now + idx * 0.04); o.stop(now + idx * 0.04 + 0.19);
           });
+        } else if (type === 'reveal') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.35);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.36);
         }
       } catch (e) {}
     }
@@ -1294,6 +1317,7 @@
         category: "TRACK 1: CONVENTIONAL FTL • TOPOLOGY",
         activeChip: "Focus: Legacy Gen5 x4 NVMe SSD Silicon",
         title: "Conventional FTL: Architecture & Unsegregated Controller",
+        takeaway: "Conventional FTL routes all AI traffic through a single FIFO queue without workload awareness.",
         para: "Modern enterprise NVMe SSDs use legacy FTL firmware that processes all host traffic through a single generic FIFO queue. PyTorch checkpoint writes and vLLM KV-cache lookups fight for the same internal resources with <strong>zero workload awareness</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Generic FIFO Queue:</strong> Bulk 64KB writes & 4KB reads intermixed`,
@@ -1320,6 +1344,7 @@
         category: "STAGE 1: TRAFFIC INGRESS COLLISION",
         activeChip: "Focus: PCIe Gen5 Interface Gold Pins",
         title: "1. AI Storage Ingress: 14.2 GB/s NVMe Queue Clash",
+        takeaway: "14.2 GB/s checkpoint bursts flood PCIe queues, blinding the controller to latency-sensitive 4KB KV reads.",
         para: "High-throughput 64KB PyTorch training checkpoints flood the PCIe Gen5 interface at <strong>14.2 GB/s</strong> alongside latency-sensitive 4KB KV-cache inference reads (120K IOPS). The host cannot signal I/O priority to commodity SSDs.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">SQ0 Ingress:</strong> 64KB PyTorch checkpoints at 14.2 GB/s`,
@@ -1329,8 +1354,8 @@
         nextLabel: "Next: Step 2 - DRAM Cache Pollution ⚠️ →",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
-        cam: { x: -9.2, y: 6.8, z: 8.2 },
-        target: { x: -8.5, y: 0.2, z: 0.0 },
+        cam: { x: -9.5, y: 4.8, z: 6.2 },
+        target: { x: -9.0, y: 0.3, z: 0.0 },
         metricP99: "168.2 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ QUEUE CLASH",
@@ -1346,6 +1371,7 @@
         category: "STAGE 2: DRAM CACHE POLLUTION",
         activeChip: "Focus: Shared DRAM Memory Cache",
         title: "2. The Eviction Cascade: L2P Table Flushed from RAM",
+        takeaway: "64KB writes sweep through DRAM, purging the L2P mapping table and crashing RAM hit rate to 18.4%.",
         para: "Because the controller routes all incoming writes through DRAM, the massive 64KB checkpoint stream aggressively evicts the <strong>Logical-to-Physical (L2P) address mapping table</strong>. RAM hit rate collapses from 98.6% down to <strong>18.4%</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">DRAM Flooding:</strong> 64KB training blocks overwhelm SRAM/DRAM buffer`,
@@ -1355,8 +1381,8 @@
         nextLabel: "Next: Step 3 - The Double-Read Trap ⚠️ →",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
-        cam: { x: -0.2, y: 6.8, z: 7.5 },
-        target: { x: -0.2, y: 0.4, z: 0.0 },
+        cam: { x: -0.2, y: 4.6, z: 5.4 },
+        target: { x: -0.2, y: 0.3, z: 0.0 },
         metricP99: "168.2 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ DRAM THRASHING",
@@ -1372,6 +1398,7 @@
         category: "STAGE 3: THE DOUBLE-READ TRAP",
         activeChip: "Focus: BiCS Flash Array & Optical Laser Interconnect",
         title: "3. The Double-Read Trap: +130µs Flash Sensing Penalty",
+        takeaway: "Double-Read Trap: Every DRAM miss forces two sequential NAND reads, adding +130µs latency.",
         para: "When a 4KB KV read misses in DRAM, the SSD must perform <strong>two sequential flash reads</strong>: Flash Read 1 to fetch the L2P page from NAND (+25µs tR), followed by Flash Read 2 to fetch the actual user data. With GC channel contention, latency spikes to <strong>168.2µs</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Read 1 (Metadata):</strong> Controller reads L2P translation page from Die 0`,
@@ -1381,8 +1408,8 @@
         nextLabel: "Next: Step 4 - Host GPU Starvation 💥 →",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
-        cam: { x: 3.2, y: 7.2, z: 8.5 },
-        target: { x: 3.0, y: 0.4, z: 0.0 },
+        cam: { x: 4.2, y: 5.0, z: 6.0 },
+        target: { x: 4.2, y: 0.3, z: 0.0 },
         metricP99: "168.2 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "💥 +130µs FLASH PENALTY",
@@ -1398,6 +1425,7 @@
         category: "STAGE 4: HOST GPU STARVATION & WAF",
         activeChip: "Focus: Full SSD Assembly & Host Impact",
         title: "4. Host Starvation: 38.2% GPU Compute Idle Bubbles",
+        takeaway: "Controller paralysis starves PyTorch DataLoader threads, leaving host GPUs 38.2% idle.",
         para: "Because the storage controller is paralyzed in the Double-Read Trap, PyTorch DataLoader threads stall waiting for KV tensors. GPUs waste <strong>38.2% of compute time idle</strong>, while unsegregated NAND blocks drive write amplification to <strong>2.84 WAF</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">GPU Starvation:</strong> 38.2% CUDA compute idle bubbles`,
@@ -1407,8 +1435,8 @@
         nextLabel: "Explore Firmware v1.0 Attempt →",
         mode: "CONVENTIONAL",
         workload: "TRAINING_SURGE",
-        cam: { x: -0.5, y: 22.0, z: 27.0 },
-        target: { x: -0.5, y: -4.5, z: 0.0 },
+        cam: { x: -0.5, y: 20.0, z: 24.0 },
+        target: { x: -0.5, y: -4.0, z: 0.0 },
         metricP99: "168.2 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "❌ 168.2µs P99 TAIL",
@@ -1428,6 +1456,7 @@
         category: "TRACK 2: FIRMWARE v1.0 • OVERVIEW",
         activeChip: "Focus: Prototype Heuristic Controller",
         title: "Firmware v1.0: The Early Static Heuristic Attempt",
+        takeaway: "Firmware v1.0 used a static ΔLBA > 16 stride rule and rigid 50/50 DRAM split with severe blind spots.",
         para: "Our early prototype firmware attempted to isolate training writes using a simple static stride rule (<code>ΔLBA &gt; 16</code>) and a fixed 50/50 DRAM split. While it improved simple sequential streaming, it suffered severe blind spots on interleaved AI workloads.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Static Heuristic:</strong> Single threshold (ΔLBA &gt; 16) without temporal context`,
@@ -1454,6 +1483,7 @@
         category: "STAGE 1: STATIC STRIDE ALGORITHM",
         activeChip: "Focus: ARM Cortex-R8 SoC Controller",
         title: "1. The Static Stride Rule & Fixed 50/50 DRAM Split",
+        takeaway: "Static stride threshold classifies requests solely on block jumps without temporal awareness.",
         para: "Firmware v1.0 inspects incoming LBA addresses in software: if the difference between consecutive LBAs exceeds 16 blocks (<code>ΔLBA &gt; 16</code>) and request size is ≥ 64KB, it marks the request as sequential. DRAM is statically halved into 50% metadata and 50% data.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Rule Logic:</strong> If (ΔLBA &gt; 16 && Size ≥ 64KB) → Bypass; Else → DRAM`,
@@ -1463,8 +1493,8 @@
         nextLabel: "Next: Step 2 - Sequential Hit Success →",
         mode: "V1",
         workload: "BASELINE",
-        cam: { x: -5.5, y: 7.5, z: 8.0 },
-        target: { x: -5.5, y: 0.4, z: 0.0 },
+        cam: { x: -5.5, y: 4.8, z: 5.6 },
+        target: { x: -5.5, y: 0.3, z: 0.0 },
         metricP99: "84.6 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ STATIC HEURISTIC",
@@ -1480,6 +1510,7 @@
         category: "STAGE 2: SEQUENTIAL STREAM DETECTION",
         activeChip: "Focus: Sequential Bypass Path Spline",
         title: "2. Partial Success: 96.4% Detection on Pure Streams",
+        takeaway: "Pure sequential streams achieve 96.4% detection, bypassing DRAM and cutting WAF to 1.62.",
         para: "On synthetic benchmarks with continuous sequential writes (single-stream checkpoint dumps), Firmware v1.0 successfully identifies <strong>96.4% of sequential blocks</strong>, bypassing them around the DRAM data buffer and providing partial relief.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Sequential Detection:</strong> 96.4% accuracy on isolated linear streams`,
@@ -1489,8 +1520,8 @@
         nextLabel: "Next: Step 3 - The RAG & Attention Blind Spot ⚠️ →",
         mode: "V1",
         workload: "BASELINE",
-        cam: { x: 0.5, y: 7.8, z: 8.5 },
-        target: { x: 0.5, y: 0.5, z: -1.2 },
+        cam: { x: 0.5, y: 5.2, z: 6.4 },
+        target: { x: 0.5, y: 0.5, z: -1.0 },
         metricP99: "84.6 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "PARTIAL RELIEF",
@@ -1506,6 +1537,7 @@
         category: "STAGE 3: THE RAG & ATTENTION BLIND SPOT",
         activeChip: "Focus: Shared DRAM & Controller Interface",
         title: "3. The RAG Blind Spot: 15.8% False Bypasses",
+        takeaway: "Interleaved RAG and attention lookups drop stride below 16, causing 15.8% false bypass errors.",
         para: "In modern production LLM architectures (vLLM, DeepSeek, RAG), multi-head attention and vector similarity lookups interleave requests. Stride jumps frequently drop below 16 blocks, causing v1.0 to <strong>misclassify 15.8% of requests</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Interleaved Vectors:</strong> RAG retrieval bursts have variable stride (ΔLBA &lt; 16)`,
@@ -1515,8 +1547,8 @@
         nextLabel: "Next: Step 4 - Jitter & GPU Stalls ⚠️ →",
         mode: "V1",
         workload: "TRAINING_SURGE",
-        cam: { x: -2.8, y: 7.2, z: 7.8 },
-        target: { x: -2.5, y: 0.4, z: 0.0 },
+        cam: { x: -2.6, y: 4.8, z: 5.8 },
+        target: { x: -2.6, y: 0.3, z: 0.0 },
         metricP99: "84.6 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ 84.6µs SPIKES",
@@ -1532,6 +1564,7 @@
         category: "STAGE 4: JITTER & COMPUTE STALLS",
         activeChip: "Focus: Complete SSD Assembly & Host Interface",
         title: "4. Persistent 84.6µs Tail Jitter & 14.3% GPU Stalls",
+        takeaway: "15.8% misclassifications cause persistent 84.6µs tail jitter, leaving GPUs 14.3% data-starved.",
         para: "Due to the 15.8% misclassification rate, the Double-Read Trap still strikes intermittently. P99 tail latency fluctuates wildly around <strong>84.6µs</strong> (4× slower than production requirement), leaving GPUs <strong>14.3% data-starved</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Persistent Tail Jitter:</strong> P99 latency spikes up to 84.6µs`,
@@ -1541,8 +1574,8 @@
         nextLabel: "Explore NeuroFTL™ v2.0 Production Solution 🏆 →",
         mode: "V1",
         workload: "TRAINING_SURGE",
-        cam: { x: -0.5, y: 22.0, z: 27.0 },
-        target: { x: -0.5, y: -4.5, z: 0.0 },
+        cam: { x: -0.5, y: 20.0, z: 24.0 },
+        target: { x: -0.5, y: -4.0, z: 0.0 },
         metricP99: "84.6 µs",
         metricP99Std: "21.4",
         metricBadgeLatency: "⚠️ 84.6µs P99 TAIL",
@@ -1562,6 +1595,7 @@
         category: "TRACK 3: NEUROFTL™ v2.0 • OVERVIEW",
         activeChip: "Focus: Complete Gen5 x4 NVMe SSD Silicon",
         title: "NeuroFTL™ v2.0: 100% Firmware Breakthrough",
+        takeaway: "NeuroFTL v2.0 solves the collision in firmware: 100% classification accuracy with $0 ASIC respin.",
         para: "NeuroFTL™ v2.0 is an adaptive, zero-overhead firmware architecture deployed on standard NVMe Gen5 hardware. It eliminates the Double-Read Trap, locks P99 latency flat at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 ASIC respin</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Online Classifier:</strong> 100% accurate stream separation in ARM TCM`,
@@ -1588,6 +1622,7 @@
         category: "STAGE 1: 10ns MULTI-FEATURE CLASSIFIER",
         activeChip: "Focus: SanDisk ARM Cortex-R8 SoC & TCM",
         title: "1. Zero-Overhead 10ns Online Classifier in TCM",
+        takeaway: "10ns TCM classifier fuses LBA stride, inter-arrival time, and spatial entropy with zero host overhead.",
         para: "Executing inside the controller's Tightly Coupled Memory (TCM), NeuroFTL's online classifier computes three hardware features per request: <strong>LBA Stride</strong>, <strong>Inter-Arrival Delta</strong>, and <strong>Spatial Entropy</strong>. Classification takes just <strong>10 nanoseconds</strong> with <strong>100% accuracy</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Inference:</strong> Runs in ARM TCM registers with 0 CPU cache pollution`,
@@ -1597,8 +1632,8 @@
         nextLabel: "Next: Step 2 - Direct DMA Bypass Rail →",
         mode: "V2",
         workload: "BASELINE",
-        cam: { x: -5.5, y: 7.5, z: 8.0 },
-        target: { x: -5.5, y: 0.4, z: 0.0 },
+        cam: { x: -5.5, y: 4.8, z: 5.6 },
+        target: { x: -5.5, y: 0.3, z: 0.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 10ns DECISION",
@@ -1614,6 +1649,7 @@
         category: "STAGE 2: DIRECT DMA BYPASS RAIL",
         activeChip: "Focus: Direct DMA Bypass Rail Spline",
         title: "2. Direct DMA Bypass: Zero-Copy DRAM Isolation",
+        takeaway: "Direct DMA bypass routes 14.2 GB/s checkpoints straight from PCIe to NAND, bypassing DRAM completely.",
         para: "Identified 64KB sequential checkpoints are assigned directly to the <strong>Direct DMA Bypass Rail</strong>. Data streams straight from PCIe NVMe queues to NAND flash channels via a circular descriptor ring, achieving <strong>0.0% DRAM cache pollution</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Zero-Copy Ingress:</strong> 14.2 GB/s checkpoint streams bypass DRAM cache`,
@@ -1623,8 +1659,8 @@
         nextLabel: "Next: Step 3 - Dynamic 3-Region DRAM 🛡️ →",
         mode: "V2",
         workload: "TRAINING_SURGE",
-        cam: { x: 0.5, y: 7.8, z: 8.5 },
-        target: { x: 0.5, y: 0.5, z: -1.2 },
+        cam: { x: 0.5, y: 5.2, z: 6.4 },
+        target: { x: 0.5, y: 0.5, z: -1.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ ZERO DRAM FLUSH",
@@ -1640,6 +1676,7 @@
         category: "STAGE 3: DYNAMIC 3-REGION DRAM",
         activeChip: "Focus: 3-Region DRAM Partitioning",
         title: "3. Dynamic 3-Region DRAM: 98.6% L2P Hit Rate",
+        takeaway: "Dynamic 3-Region DRAM pins 65% for L2P table, locking in 98.6% hit rate and 0.1µs RAM access.",
         para: "NeuroFTL divides DRAM into three adaptive regions: <strong>Region 1 (65%)</strong> locks the hot L2P address table with a <strong>98.6% hit rate (0.1µs RAM access)</strong>; <strong>Region 2 (5%)</strong> serves the DMA ring; and <strong>Region 3 (30%)</strong> buffers hot KV reads.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Region 1 (65% DRAM):</strong> Pinned L2P Table • 98.6% RAM hit (0.1µs access)`,
@@ -1649,8 +1686,8 @@
         nextLabel: "Next: Step 4 - Dynamic pSLC Wear Shield 🛡️ →",
         mode: "V2",
         workload: "BASELINE",
-        cam: { x: -0.2, y: 6.8, z: 7.5 },
-        target: { x: -0.2, y: 0.4, z: 0.0 },
+        cam: { x: -0.2, y: 4.6, z: 5.4 },
+        target: { x: -0.2, y: 0.3, z: 0.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 0.1µs RAM ACCESS",
@@ -1666,6 +1703,7 @@
         category: "STAGE 4: DYNAMIC pSLC WEAR SHIELD",
         activeChip: "Focus: BiCS5 Flash Die 2 (pSLC Mode Pool)",
         title: "4. Dynamic pSLC Wear Shield: WAF 1.08 & 2.6× Life",
+        takeaway: "Dynamic pSLC Wear Shield routes random KV updates to 1-bit SLC pool, slashing WAF to 1.08.",
         para: "Hot, high-frequency random KV-cache updates are dynamically routed to <strong>BiCS5 Flash Die 2 configured in 1-bit pSLC mode</strong>. This eliminates write amplification during attention updates, lowering <strong>WAF to 1.08</strong> and extending <strong>flash lifespan by 2.6×</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">pSLC Mode Pool:</strong> Die 2 operates in 1-bit pseudo-SLC mode for 10× endurance`,
@@ -1675,8 +1713,8 @@
         nextLabel: "Next: Step 5 - Silicon Scorecard Verdict 🏆 →",
         mode: "V2",
         workload: "KV_STORM",
-        cam: { x: 5.2, y: 6.5, z: 7.2 },
-        target: { x: 5.0, y: 0.4, z: 1.9 },
+        cam: { x: 5.0, y: 4.5, z: 5.2 },
+        target: { x: 5.0, y: 0.3, z: 1.9 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 1.08 WAF",
@@ -1692,6 +1730,7 @@
         category: "STAGE 5: 3-GENERATION SILICON VERDICT",
         activeChip: "Focus: Full M.2 NVMe SSD Assembly",
         title: "5. Verified Scorecard: Flat 21.4µs Latency & $0 ASIC Respin",
+        takeaway: "Verified: Flat 21.4µs P99 latency (7.8× faster), 0.0% GPU stalls, and 100% CUDA core utilization.",
         para: "NeuroFTL™ v2.0 delivers <strong>100% firmware innovation</strong> on commodity NVMe hardware. It eliminates the Double-Read Trap, locks P99 read latency at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 hardware redesign cost</strong>.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">P99 Read Tail:</strong> 21.4µs flat (7.8× faster than Conventional, 4× faster than v1)`,
@@ -1701,8 +1740,8 @@
         nextLabel: "Restart Walkthrough (Overview) ↺",
         mode: "V2",
         workload: "BASELINE",
-        cam: { x: -0.5, y: 22.0, z: 27.0 },
-        target: { x: -0.5, y: -4.5, z: 0.0 },
+        cam: { x: -0.5, y: 20.0, z: 24.0 },
+        target: { x: -0.5, y: -4.0, z: 0.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 7.8× FASTER",
@@ -1748,6 +1787,7 @@
 
       renderTrackTabs();
       goToStep(0);
+      playCasingLiftOffAnimation();
     }
 
     function toggleSimulationFlow() {
@@ -1806,17 +1846,17 @@
     function focusChipIn3D(chipName) {
       playTone('click');
       if (chipName === 'soc') {
-        targetCamPos.set(-5.5, 7.5, 8.0);
-        targetLookAt.set(-5.5, 0.4, 0.0);
+        targetCamPos.set(-5.5, 4.8, 5.6);
+        targetLookAt.set(-5.5, 0.3, 0.0);
       } else if (chipName === 'dram') {
-        targetCamPos.set(-0.2, 6.8, 7.5);
-        targetLookAt.set(-0.2, 0.4, 0.0);
+        targetCamPos.set(-0.2, 4.6, 5.4);
+        targetLookAt.set(-0.2, 0.3, 0.0);
       } else if (chipName === 'nand' || chipName === 'pslc') {
-        targetCamPos.set(5.2, 6.5, 7.2);
-        targetLookAt.set(5.0, 0.4, 1.9);
+        targetCamPos.set(5.0, 4.5, 5.2);
+        targetLookAt.set(5.0, 0.3, 1.9);
       } else if (chipName === 'pcie') {
-        targetCamPos.set(-9.2, 6.8, 8.2);
-        targetLookAt.set(-8.5, 0.2, 0.0);
+        targetCamPos.set(-9.5, 4.8, 6.2);
+        targetLookAt.set(-9.0, 0.3, 0.0);
       } else {
         targetCamPos.set(OVERVIEW_CAM.x, OVERVIEW_CAM.y, OVERVIEW_CAM.z);
         targetLookAt.set(OVERVIEW_TARGET.x, OVERVIEW_TARGET.y, OVERVIEW_TARGET.z);
@@ -2450,7 +2490,7 @@
       }
     }
 
-    function goToStep(stepNum) {
+    function goToStep(stepNum, instantCam = false) {
       const steps = getCurrentTrackSteps();
       STEPS = steps;
       stepNum = Math.max(0, Math.min(steps.length - 1, parseInt(stepNum, 10)));
@@ -2464,6 +2504,39 @@
       setText('dockActiveChip', step.activeChip);
       setText('dockStepTitle', step.title);
       setHtml('dockStepPara', step.para);
+
+      // Update Generation Badge
+      const genBadge = document.getElementById('dockGenBadge');
+      if (genBadge) {
+        if (currentTrackKey === 'CONVENTIONAL') {
+          genBadge.innerText = 'GEN 1: CONVENTIONAL FTL';
+          genBadge.className = 'text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40';
+        } else if (currentTrackKey === 'V1') {
+          genBadge.innerText = 'GEN 2: FIRMWARE v1.0';
+          genBadge.className = 'text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40';
+        } else {
+          genBadge.innerText = 'GEN 3: NEUROFTL™ v2.0';
+          genBadge.className = 'text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        }
+      }
+
+      // Update Executive Takeaway Box
+      const takeawayBox = document.getElementById('dockTakeawayBox');
+      const takeawayIcon = document.getElementById('dockTakeawayIcon');
+      const takeawayText = document.getElementById('dockTakeawayText');
+      if (takeawayText && step.takeaway) {
+        takeawayText.innerText = step.takeaway;
+        if (currentTrackKey === 'CONVENTIONAL') {
+          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-rose-500/15 border-l-4 border-rose-500 text-rose-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0";
+          if (takeawayIcon) takeawayIcon.innerText = "❌";
+        } else if (currentTrackKey === 'V1') {
+          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-amber-500/15 border-l-4 border-amber-400 text-amber-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0";
+          if (takeawayIcon) takeawayIcon.innerText = "⚠️";
+        } else {
+          if (takeawayBox) takeawayBox.className = "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-emerald-500/15 border-l-4 border-emerald-400 text-emerald-200 text-[11px] sm:text-xs font-medium shadow-sm my-0.5 shrink-0";
+          if (takeawayIcon) takeawayIcon.innerText = "⚡";
+        }
+      }
 
       const isLast = (stepNum === steps.length - 1);
       let mobileNext = 'Next →';
@@ -2567,10 +2640,19 @@
       updateStep3DVisuals(stepNum);
 
       // Camera Glide to Specific Macro Zoom-in Angle
-      targetCamPos.set(step.cam.x, step.cam.y, step.cam.z);
-      targetLookAt.set(step.target.x, step.target.y, step.target.z);
-      isCamLerping = true;
-      setTimeout(updateZoomUI, 400);
+      if (instantCam && camera && controls) {
+        camera.position.set(step.cam.x, step.cam.y, step.cam.z);
+        controls.target.set(step.target.x, step.target.y, step.target.z);
+        targetCamPos.copy(camera.position);
+        targetLookAt.copy(controls.target);
+        isCamLerping = false;
+        updateZoomUI();
+      } else {
+        targetCamPos.set(step.cam.x, step.cam.y, step.cam.z);
+        targetLookAt.set(step.target.x, step.target.y, step.target.z);
+        isCamLerping = true;
+        setTimeout(updateZoomUI, 400);
+      }
 
       // Trigger Backend Workload
       fetch('/api/workload', {
@@ -3174,6 +3256,8 @@
         toggleDockCollapse();
       } else if (e.code === 'KeyH') {
         toggleTelemetryCollapse();
+      } else if (e.code === 'KeyC') {
+        replayCasingAnimation();
       } else if (e.key === '+' || e.key === '=' || e.code === 'NumpadAdd') {
         manualZoom(1);
       } else if (e.key === '-' || e.key === '_' || e.code === 'NumpadSubtract') {
@@ -3416,6 +3500,10 @@
     let doubleReadBeam, doubleReadBeam2, bypassSpline, socDieOutline, pslcDieOutline, nandDieOutline1, nandDieOutline2, pslcAuraMesh;
     let particles, particleData;
     const NUM_PARTICLES = 160;
+
+    let casingGroup, casingTopMesh, casingThermalPad, casingScrews = [], casingFins = [];
+    let isCasingLiftAnimating = false, casingLiftStartTime = 0;
+    const casingAnimationDuration = 1900;
 
     let dramCanvas, dramCtx, dramTexture;
     let socCanvas, socCtx, socTexture;
@@ -3824,6 +3912,224 @@
       return new THREE.CanvasTexture(canvas);
     }
 
+    // --- Enterprise Aluminum Heatsink Casing Enclosure & Lift-off System ---
+    function createCasingLidTexture() {
+      const c = document.createElement('canvas');
+      c.width = 1024;
+      c.height = 360;
+      const ctx = c.getContext('2d');
+
+      // Dark brushed titanium / gunmetal finish
+      const grad = ctx.createLinearGradient(0, 0, 1024, 0);
+      grad.addColorStop(0, '#10141d');
+      grad.addColorStop(0.25, '#1e2433');
+      grad.addColorStop(0.5, '#283246');
+      grad.addColorStop(0.75, '#1e2433');
+      grad.addColorStop(1, '#10141d');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1024, 360);
+
+      // Precision CNC chamfer border
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(12, 12, 1000, 336);
+
+      // Subtle metallic diagonal brush lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+      ctx.lineWidth = 1;
+      for (let x = -360; x < 1024; x += 14) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + 360, 360);
+        ctx.stroke();
+      }
+
+      // Red accent racing stripe (SanDisk Enterprise Signature)
+      ctx.fillStyle = '#e11d48';
+      ctx.fillRect(20, 24, 12, 312);
+      ctx.fillStyle = '#fb7185';
+      ctx.fillRect(36, 24, 4, 312);
+
+      // Silkscreen Branding
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 56px -apple-system, "SF Pro Display", sans-serif';
+      ctx.fillText('SanDisk®', 64, 110);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 30px monospace';
+      ctx.fillText('PRO-BLADE™ ENTERPRISE AI Gen5 NVMe', 64, 165);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '20px monospace';
+      ctx.fillText('SOLID STATE DRIVE • 14.2 GB/s • HIGH-DISSIPATION ENCLOSURE', 64, 215);
+      ctx.fillText('PCIe Gen5 x4 • NVMe 2.0 • FOR HIGH-THROUGHPUT LLM CLUSTERS', 64, 255);
+
+      // Right Gen5 Speed Badge
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+      ctx.fillRect(790, 45, 205, 110);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(790, 45, 205, 110);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 34px monospace';
+      ctx.fillText('Gen5 x4', 815, 95);
+      ctx.font = 'bold 20px monospace';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText('14,200 MB/s', 815, 135);
+
+      return new THREE.CanvasTexture(c);
+    }
+
+    function createCasingGroup() {
+      casingGroup = new THREE.Group();
+
+      // 1. CNC Aluminum Heatsink Lid Plate
+      const plateGeo = new THREE.BoxGeometry(24.2, 0.45, 8.6);
+      const caseTex = createCasingLidTexture();
+      const caseMat = [
+        new THREE.MeshStandardMaterial({ color: 0x141720, metalness: 0.9, roughness: 0.25, transparent: true }),
+        new THREE.MeshStandardMaterial({ color: 0x141720, metalness: 0.9, roughness: 0.25, transparent: true }),
+        new THREE.MeshStandardMaterial({ map: caseTex, metalness: 0.85, roughness: 0.2, transparent: true }),
+        new THREE.MeshStandardMaterial({ color: 0x0c0e14, metalness: 0.9, roughness: 0.3, transparent: true }),
+        new THREE.MeshStandardMaterial({ color: 0x141720, metalness: 0.9, roughness: 0.25, transparent: true }),
+        new THREE.MeshStandardMaterial({ color: 0x141720, metalness: 0.9, roughness: 0.25, transparent: true })
+      ];
+      casingTopMesh = new THREE.Mesh(plateGeo, caseMat);
+      casingTopMesh.position.set(0, 0.45, 0);
+      casingTopMesh.castShadow = true;
+      casingGroup.add(casingTopMesh);
+
+      // 2. Precision Thermal Dissipation Cooling Fins
+      casingFins = [];
+      const finMat = new THREE.MeshStandardMaterial({
+        color: 0x181e2b,
+        metalness: 0.92,
+        roughness: 0.18,
+        transparent: true
+      });
+      for (let i = 0; i < 11; i++) {
+        const finGeo = new THREE.BoxGeometry(1.2, 0.55, 7.8);
+        const fin = new THREE.Mesh(finGeo, finMat);
+        fin.position.set(-8.5 + i * 1.7, 0.9, 0);
+        fin.castShadow = true;
+        casingGroup.add(fin);
+        casingFins.push(fin);
+      }
+
+      // 3. Thermal Interface Material (TIM) Pad
+      const padGeo = new THREE.BoxGeometry(23.2, 0.12, 7.8);
+      const padMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        roughness: 0.85,
+        metalness: 0.05,
+        transparent: true,
+        opacity: 0.85
+      });
+      casingThermalPad = new THREE.Mesh(padGeo, padMat);
+      casingThermalPad.position.set(0, 0.18, 0);
+      casingGroup.add(casingThermalPad);
+
+      // 4. 4 Precision Stainless Fasteners / Torx Screws
+      casingScrews = [];
+      const screwPositions = [
+        { x: -11.2, z: -3.6 },
+        { x: -11.2, z: 3.6 },
+        { x: 11.2, z: -3.6 },
+        { x: 11.2, z: 3.6 }
+      ];
+      const screwHeadMat = new THREE.MeshStandardMaterial({
+        color: 0xe2e8f0,
+        metalness: 0.96,
+        roughness: 0.12,
+        transparent: true
+      });
+      const screwShaftMat = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        metalness: 0.9,
+        roughness: 0.2,
+        transparent: true
+      });
+
+      screwPositions.forEach(pos => {
+        const sGrp = new THREE.Group();
+        const head = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.18, 16), screwHeadMat);
+        head.position.y = 0.72;
+        head.castShadow = true;
+        sGrp.add(head);
+
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.8, 16), screwShaftMat);
+        shaft.position.y = 0.35;
+        sGrp.add(shaft);
+
+        const slot1 = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.05, 0.12), new THREE.MeshBasicMaterial({ color: 0x09090b }));
+        slot1.position.y = 0.82;
+        sGrp.add(slot1);
+        const slot2 = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.05, 0.65), new THREE.MeshBasicMaterial({ color: 0x09090b }));
+        slot2.position.y = 0.82;
+        sGrp.add(slot2);
+
+        sGrp.position.set(pos.x, 0, pos.z);
+        casingGroup.add(sGrp);
+        casingScrews.push(sGrp);
+      });
+
+      if (isPitchRunning) {
+        casingGroup.visible = false;
+        setCasingOpacity(0.0);
+      } else {
+        casingGroup.position.set(0, 0.25, 0);
+        casingGroup.visible = true;
+        setCasingOpacity(1.0);
+      }
+      scene.add(casingGroup);
+    }
+
+    function setCasingOpacity(op) {
+      if (!casingGroup) return;
+      casingGroup.traverse(child => {
+        if (child.isMesh) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(m => {
+              m.transparent = true;
+              m.opacity = op;
+            });
+          } else if (child.material) {
+            child.material.transparent = true;
+            child.material.opacity = op;
+          }
+        }
+      });
+    }
+
+    let onCasingCompleteCallback = null;
+    function playCasingLiftOffAnimation(onComplete) {
+      if (!casingGroup) return;
+      onCasingCompleteCallback = onComplete || null;
+      isCasingLiftAnimating = true;
+      casingLiftStartTime = performance.now();
+      casingGroup.visible = true;
+      casingGroup.position.set(0, 0.25, 0);
+      casingGroup.rotation.set(0, 0, 0);
+      setCasingOpacity(1.0);
+      casingScrews.forEach(s => {
+        s.position.y = 0;
+        s.rotation.y = 0;
+      });
+      playTone('reveal');
+    }
+
+    function replayCasingAnimation() {
+      playTone('click');
+      targetCamPos.set(-0.5, 16.0, 24.0);
+      targetLookAt.set(-0.5, 0.0, 0.0);
+      isCamLerping = true;
+
+      playCasingLiftOffAnimation(() => {
+        goToStep(currentStepIdx);
+      });
+    }
+
     // Initialize 3D Scene
     function init3D() {
       const container = document.getElementById('threeContainer');
@@ -4225,6 +4531,9 @@
       particles = new THREE.Points(pGeo, pMat);
       scene.add(particles);
 
+      // Enterprise Aluminum Heatsink Casing Enclosure
+      createCasingGroup();
+
       window.addEventListener('resize', onWindowResize);
       resizeGraph();
       animate3D();
@@ -4235,9 +4544,24 @@
       if (mode === 'SOLUTION') mode = 'V2';
 
       if (mode === 'CONVENTIONAL') {
-        if (doubleReadBeam) doubleReadBeam.visible = true;
-        if (doubleReadBeam2) doubleReadBeam2.visible = true;
+        if (doubleReadBeam) {
+          doubleReadBeam.visible = true;
+          doubleReadBeam.material.color.setHex(0xff0044);
+        }
+        if (doubleReadBeam2) {
+          doubleReadBeam2.visible = true;
+          doubleReadBeam2.material.color.setHex(0xff1e56);
+        }
         if (bypassSpline) bypassSpline.visible = false;
+        if (socDieOutline) {
+          socDieOutline.material.color.setHex(0xef4444);
+          socDieOutline.material.opacity = 0.85;
+        }
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.0;
+        if (pslcAuraMesh) pslcAuraMesh.visible = false;
+        if (nandDieOutline1) nandDieOutline1.material.opacity = 0.65;
+        if (nandDieOutline2) nandDieOutline2.material.opacity = 0.65;
+
         updateSocLidTexture('CONVENTIONAL');
         updateDramLiveTexture();
 
@@ -4251,9 +4575,27 @@
         }
       } else if (mode === 'V1') {
         // v1.0: Intermittent beam (15.8% miss penalty) and amber/gold particles
-        if (doubleReadBeam) doubleReadBeam.visible = true;
+        if (doubleReadBeam) {
+          doubleReadBeam.visible = true;
+          doubleReadBeam.material.color.setHex(0xf59e0b);
+        }
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (bypassSpline) bypassSpline.visible = true;
+        if (bypassSpline) {
+          bypassSpline.visible = true;
+          bypassSpline.material.color.setHex(0xf59e0b);
+        }
+        if (socDieOutline) {
+          socDieOutline.material.color.setHex(0xf59e0b);
+          socDieOutline.material.opacity = 0.75;
+        }
+        if (pslcDieOutline) pslcDieOutline.material.opacity = 0.3;
+        if (pslcAuraMesh) {
+          pslcAuraMesh.visible = true;
+          pslcAuraMesh.material.opacity = 0.12;
+        }
+        if (nandDieOutline1) nandDieOutline1.material.opacity = 0.35;
+        if (nandDieOutline2) nandDieOutline2.material.opacity = 0.0;
+
         updateSocLidTexture('V1');
         updateDramLiveTexture();
 
@@ -4274,7 +4616,22 @@
         // v2.0 (NeuroFTL 100%)
         if (doubleReadBeam) doubleReadBeam.visible = false;
         if (doubleReadBeam2) doubleReadBeam2.visible = false;
-        if (bypassSpline) bypassSpline.visible = true;
+        if (bypassSpline) {
+          bypassSpline.visible = true;
+          bypassSpline.material.color.setHex(0x10b981);
+        }
+        if (socDieOutline) {
+          socDieOutline.material.color.setHex(0x38bdf8);
+          socDieOutline.material.opacity = 0.9;
+        }
+        if (pslcDieOutline) {
+          pslcDieOutline.material.color.setHex(0xf59e0b);
+          pslcDieOutline.material.opacity = 0.95;
+        }
+        if (pslcAuraMesh) pslcAuraMesh.visible = true;
+        if (nandDieOutline1) nandDieOutline1.material.opacity = 0.0;
+        if (nandDieOutline2) nandDieOutline2.material.opacity = 0.0;
+
         updateSocLidTexture('V2');
         updateDramLiveTexture();
 
@@ -4330,6 +4687,47 @@
     function animate3D() {
       requestAnimationFrame(animate3D);
       frameCount++;
+
+      // Fluid SSD Casing Lift-off & Exploded View Animation
+      if (isCasingLiftAnimating && casingGroup) {
+        const elapsed = performance.now() - casingLiftStartTime;
+        const t = Math.min(1.0, elapsed / casingAnimationDuration);
+
+        // Phase 1: Screws rotate counter-clockwise and elevate
+        const screwProgress = Math.min(1.0, t / 0.42);
+        casingScrews.forEach(s => {
+          s.rotation.y = screwProgress * Math.PI * 6;
+          s.position.y = screwProgress * 1.8;
+        });
+
+        // Phase 2: Heatsink floats upward and tilts with exploded CAD pitch
+        if (t > 0.12) {
+          const liftProgress = (t - 0.12) / 0.88;
+          const liftEase = Math.sin(liftProgress * Math.PI / 2);
+
+          casingGroup.position.y = 0.25 + liftEase * 8.5;
+          casingGroup.rotation.x = -liftEase * 0.24;
+          casingGroup.rotation.z = liftEase * 0.08;
+
+          // Fade out opacity as it ascends into the upper atmosphere
+          if (liftProgress > 0.35) {
+            const fadeProgress = (liftProgress - 0.35) / 0.65;
+            const op = Math.max(0.0, 1.0 - fadeProgress);
+            setCasingOpacity(op);
+          }
+        }
+
+        if (t >= 1.0) {
+          isCasingLiftAnimating = false;
+          casingGroup.visible = false;
+          setCasingOpacity(0.0);
+          if (onCasingCompleteCallback) {
+            const cb = onCasingCompleteCallback;
+            onCasingCompleteCallback = null;
+            cb();
+          }
+        }
+      }
 
       // Smooth Fluid Flow Speed and Vanishing Opacity (Inertia physics)
       flowSpeedFactor += (targetFlowSpeedFactor - flowSpeedFactor) * 0.08;
@@ -5101,9 +5499,23 @@
         const stepParam = params.get('step');
         const targetStep = stepParam !== null ? parseInt(stepParam, 10) : 0;
         const maxStep = getCurrentTrackSteps().length - 1;
-        goToStep(targetStep >= 0 && targetStep <= maxStep ? targetStep : 0);
+        goToStep(targetStep >= 0 && targetStep <= maxStep ? targetStep : 0, true);
         if (params.has('minimized')) {
           toggleDockCollapse();
+        }
+        if (params.has('casing') && params.get('casing') === 'closed') {
+          if (casingGroup) {
+            casingGroup.position.set(0, 0.25, 0);
+            casingGroup.visible = true;
+            setCasingOpacity(1.0);
+          }
+        } else if (params.has('casing') && params.get('casing') === 'reveal') {
+          setTimeout(playCasingLiftOffAnimation, 300);
+        } else {
+          if (casingGroup) {
+            casingGroup.visible = false;
+            setCasingOpacity(0.0);
+          }
         }
       }
     });
