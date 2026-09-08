@@ -437,7 +437,7 @@
             <h1 class="text-[11px] sm:text-sm font-black tracking-tight text-white hidden xs:block font-display">NeuroFTL™</h1>
             <span class="text-[8px] sm:text-[9px] px-1 sm:px-1.5 py-0.2 rounded-full bg-rose-500/25 border border-rose-500/40 text-rose-300 font-mono font-bold hidden md:inline">FW Twin</span>
           </div>
-          <p class="text-[9px] sm:text-[10px] text-zinc-300 font-medium hidden md:block">Adaptive AI Storage FTL</p>
+          <p class="text-[9px] sm:text-[10px] text-zinc-300 font-medium hidden md:block">Workload-Aware Storage FTL</p>
         </div>
       </div>
 
@@ -811,13 +811,13 @@
             <div id="dockTakeawayBox" class="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:py-1 rounded-lg bg-rose-500/15 border-l-2 border-rose-500 text-rose-200 text-[10.5px] sm:text-[11.5px] md:text-xs font-medium shadow-sm my-0.5 shrink-0">
               <span id="dockTakeawayIcon" class="text-xs sm:text-sm shrink-0">❌</span>
               <span class="text-[8.5px] sm:text-[9.5px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">TAKEAWAY:</span>
-              <span id="dockTakeawayText" class="font-semibold text-white leading-tight truncate">Conventional FTL routes all AI traffic through a single FIFO queue without workload awareness.</span>
+              <span id="dockTakeawayText" class="font-semibold text-white leading-tight truncate">Conventional cache management routes concurrent AI traffic through shared FIFO/LRU structures without workload awareness.</span>
             </div>
           </div>
           
           <!-- Full explanation text with smooth overflow if screen is extremely short -->
           <p class="text-[11px] sm:text-xs md:text-[13px] text-zinc-200 leading-snug sm:leading-relaxed font-normal select-text max-h-[62px] sm:max-h-[72px] overflow-y-auto no-scrollbar" id="dockStepPara">
-            Modern enterprise NVMe SSDs use legacy FTL firmware that processes all host traffic through a single generic FIFO queue. PyTorch checkpoint writes and vLLM KV-cache lookups fight for the same internal resources with <strong>zero workload awareness</strong>.
+            Conventional enterprise SSD firmware often employs generic cache policies where concurrent host I/O shares internal buffers. Under mixed AI workloads, PyTorch checkpoint writes and vLLM KV-cache lookups contend for the same DRAM cache lines without workload segregation.
           </p>
         </div>
 
@@ -923,7 +923,7 @@
             <span>❌ Problem Statement: AI Storage Bottleneck &amp; Double-Read Trap</span>
           </div>
           <p class="text-zinc-200 text-xs leading-relaxed">
-            Modern NVMe SSDs deliver fast sequential bandwidth, but their firmware manages all I/O with a generic LRU strategy that treats every request equally. In AI workloads:
+            Modern enterprise NVMe SSDs deliver fast sequential bandwidth, but conventional firmware typically relies on generic cache policies and unsegregated buffering that treat concurrent host requests identically. Under mixed AI workloads:
           </p>
           <ul class="text-zinc-200 space-y-1 list-disc pl-4 text-xs">
             <li><strong>Cache Pollution:</strong> Large 64KB sequential PyTorch training streams sweep through DRAM, evicting the Logical-to-Physical (L2P) translation table.</li>
@@ -943,7 +943,7 @@
           </p>
           <ul class="text-zinc-200 space-y-1.5 list-disc pl-4 text-xs">
             <li><strong>Dynamic 3-Region DRAM Partitioning:</strong> Region 1 (65% DRAM) <strong>permanently locks L2P metadata in RAM with a 93.6% hit rate (0.1µs RAM access)</strong>, completely eliminating the Double-Read Trap.</li>
-            <li><strong>Online Spatial Classifier &amp; Direct DMA Bypass:</strong> 10ns classifier detects sequential training streams (<code class="text-amber-300 font-mono font-bold">Seq_Score &gt; 0.85</code>) and <strong>routes them directly to NAND channel buffers with 0% DRAM eviction</strong>.</li>
+            <li><strong>Lightweight Workload Classifier &amp; Direct DMA Rail:</strong> 10ns multi-feature classifier detects sequential training streams (<code class="text-amber-300 font-mono font-bold">Seq_Score &gt; 0.85</code>) and <strong>routes them via DMA ring descriptors directly to flash, minimizing buffer allocation while L2P metadata remains safely pinned in DRAM</strong>.</li>
             <li><strong>pSLC Mode Shield:</strong> Tracks block read counts; hot KV blocks exceeding 50,000 reads <strong>auto-migrate to high-endurance pSLC mode, bounding tail latency to &le;15µs</strong>.</li>
             <li><strong>RUH Checkpoint Segregation:</strong> Segregates checkpoint writes into dedicated Reclaim Unit Handles, <strong>dropping WAF from 2.84 to 1.08 and extending flash lifespan by 2.6×</strong>.</li>
           </ul>
@@ -953,7 +953,7 @@
 
       <!-- Jury Verdict Matrix -->
       <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-        <div class="text-white font-bold text-xs uppercase tracking-wider font-mono">🏆 Silicon Benchmark Verdict</div>
+        <div class="text-white font-bold text-xs uppercase tracking-wider font-mono">🏆 Simulated Silicon Benchmark Verdict (Validation Results)</div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono pt-1">
           <div class="p-2 rounded-xl bg-black/40 border border-white/5">
             <div class="text-[9px] text-zinc-400">P99 Latency</div>
@@ -1072,7 +1072,7 @@
           </p>
           <ul class="text-zinc-200 space-y-1 list-disc pl-4 text-xs font-sans">
             <li><strong>PyTorch Training DataLoader:</strong> Bulk 64KB sequential batch reads saturating PCIe Gen5 ingress at 14.2 GB/s.</li>
-            <li><strong>LLM KV-Cache &amp; Vector Search:</strong> Small 4KB random lookups requiring sub-30µs tail response time.</li>
+            <li><strong>LLM KV-Cache &amp; Sparse Attention (e.g. vLLM):</strong> Small 4KB random lookups requiring sub-30µs target tail latency.</li>
             <li><strong>Model Checkpointing:</strong> Periodic heavy burst writes causing background Garbage Collection wear.</li>
           </ul>
         </div>
@@ -1124,7 +1124,7 @@
           <span class="px-2.5 sm:px-3 py-1 rounded-full bg-gradient-to-r from-rose-500/20 via-amber-500/20 to-emerald-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold">3-GENERATION COMPARISON</span>
           <div>
             <h2 class="text-sm sm:text-lg md:text-xl font-bold text-white tracking-tight font-display">Silicon &amp; Firmware Evolutionary Benchmark Matrix</h2>
-            <p class="text-[10px] sm:text-xs text-zinc-400">Comparing Conventional FTL vs. Early Heuristic Prototype (v1.0) vs. SanDisk NeuroFTL™ (v2.0)</p>
+            <p class="text-[10px] sm:text-xs text-zinc-400">Comparing Conventional Baseline vs. Early Heuristic Prototype (v1.0) vs. SanDisk NeuroFTL™ (v2.0 Validated)</p>
           </div>
         </div>
         <button onclick="closeCompareModal()" class="text-zinc-400 hover:text-white p-1 rounded-full text-lg cursor-pointer font-bold leading-none">✕</button>
@@ -1149,7 +1149,7 @@
                   <span class="w-2 h-2 rounded-full bg-rose-500"></span>
                   <span>Conventional FTL</span>
                 </div>
-                <span class="text-[9px] text-zinc-400 font-normal">Legacy Page-Level Baseline</span>
+                <span class="text-[9px] text-zinc-400 font-normal">Legacy Baseline</span>
               </th>
               <th class="p-3 text-amber-400 font-bold w-1/4 bg-amber-500/10 border-r border-white/5">
                 <div class="flex items-center gap-1.5">
@@ -1163,7 +1163,7 @@
                   <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                   <span>NeuroFTL v2.0</span>
                 </div>
-                <span class="text-[9px] text-zinc-400 font-normal">Adaptive FDP Production</span>
+                <span class="text-[9px] text-emerald-300 font-bold">Validated Simulation</span>
               </th>
             </tr>
           </thead>
@@ -1171,44 +1171,44 @@
             <!-- Row 1: Algorithm & Microcode -->
             <tr class="hover:bg-white/5 transition">
               <td class="p-2.5 font-bold text-zinc-300">Algorithm / FTL Engine</td>
-              <td class="p-2.5 bg-rose-500/5 text-rose-300 border-x border-white/5">Generic unified LRU cache; single-tier flash placement</td>
+              <td class="p-2.5 bg-rose-500/5 text-rose-300 border-x border-white/5">Conventional unsegregated cache policy; single-tier flash placement</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-300 border-r border-white/5">Static stride threshold (ΔLBA &gt; 16) &amp; fixed 50/50 DRAM split</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">10ns Online Multi-Feature Classifier + Dynamic 3-Region DRAM + pSLC</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">10ns Lightweight Multi-Feature Classifier + Dynamic 3-Region DRAM + pSLC</td>
             </tr>
             <!-- Row 2: Stream Accuracy -->
             <tr class="hover:bg-white/5 transition">
               <td class="p-2.5 font-bold text-zinc-300">Stream Accuracy</td>
               <td class="p-2.5 bg-rose-500/5 text-rose-400 font-bold border-x border-white/5">0.0% (Unclassified / Blind)</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-400 font-bold border-r border-white/5">84.2% (15.8% False Positives)</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">93.6% (10ns Online TCM Classifier)</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">93.6% (10ns Lightweight TCM Classifier)</td>
             </tr>
             <!-- Row 3: P99 Tail Latency -->
             <tr class="hover:bg-white/5 transition">
               <td class="p-2.5 font-bold text-zinc-300">P99 Read Tail Latency</td>
               <td class="p-2.5 bg-rose-500/5 text-rose-400 font-bold border-x border-white/5">168.2 µs (+130µs Double-Read)</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-400 font-bold border-r border-white/5">84.6 µs (Boundary Jitter Tails)</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">21.4 µs (Flat 7.8× Lower)</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">21.4 µs (Simulated Flat Latency, Target: &lt;30µs SLA)</td>
             </tr>
             <!-- Row 4: L2P DRAM Hit Rate -->
             <tr class="hover:bg-white/5 transition">
               <td class="p-2.5 font-bold text-zinc-300">L2P RAM Hit Rate</td>
               <td class="p-2.5 bg-rose-500/5 text-rose-300 border-x border-white/5">18.4% (Evicted by 14.2GB/s Checkpoints)</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-300 border-r border-white/5">64.7% (Static Boundary Spillover)</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">93.6% (Region 1 Pinned Lock)</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">93.6% (Region 1 Pinned Lock • Protected)</td>
             </tr>
             <!-- Row 5: GPU Compute Stalls -->
             <tr class="hover:bg-white/5 transition">
               <td class="p-2.5 font-bold text-zinc-300">GPU Compute Stalls</td>
               <td class="p-2.5 bg-rose-500/5 text-rose-400 font-bold border-x border-white/5">38.2% Idle Bubbles (Starved)</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-400 font-bold border-r border-white/5">14.3% Periodic Stalls</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">0.0% Stalls (100% Fed Compute)</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-400 font-black">0.0% Stalls (Validated 100% Fed Compute)</td>
             </tr>
             <!-- Row 6: Flash WAF -->
             <tr class="hover:bg-white/5 transition">
               <td class="p-2.5 font-bold text-zinc-300">Write Amplification (WAF)</td>
               <td class="p-2.5 bg-rose-500/5 text-rose-300 border-x border-white/5">2.84 WAF (High GC Collisions)</td>
               <td class="p-2.5 bg-amber-500/5 text-amber-300 border-r border-white/5">1.88 WAF (Partial Segregation)</td>
-              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">1.08 WAF (2.6× Flash Longevity)</td>
+              <td class="p-2.5 bg-emerald-500/5 text-emerald-300 font-bold">1.08 WAF (Validated 2.6× Flash Longevity)</td>
             </tr>
             <!-- Row 7: Deployment Cost -->
             <tr class="hover:bg-white/5 transition">
@@ -1238,15 +1238,15 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] font-sans">
         <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/25 space-y-1">
           <div class="font-bold text-rose-400 font-mono flex items-center gap-1">❌ Why Conventional Fails</div>
-          <p class="text-zinc-300 leading-relaxed text-[10px]">Unsegregated FIFO/LRU allows 14.2 GB/s checkpoint bursts to sweep through DRAM, flushing 4KB KV translation entries and causing the Double-Read Trap (+130µs flash latency penalty).</p>
+          <p class="text-zinc-300 leading-relaxed text-[10px]">Conventional unsegregated cache policies allow 14.2 GB/s checkpoint bursts to sweep through DRAM, flushing 4KB KV translation entries and causing the Double-Read Trap (+130µs flash latency penalty).</p>
         </div>
         <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 space-y-1">
           <div class="font-bold text-amber-300 font-mono flex items-center gap-1">⚠️ Why v1.0 Was Insufficient</div>
-          <p class="text-zinc-300 leading-relaxed text-[10px]">A simple static stride threshold (ΔLBA &gt; 16) misclassifies interleaved multi-head attention KV writes and strided RAG lookups (84.2% accuracy), still incurring 84.6µs tail spikes and 14.3% GPU stalls.</p>
+          <p class="text-zinc-300 leading-relaxed text-[10px]">A simple static stride threshold (ΔLBA &gt; 16) misclassifies interleaved multi-head attention reads and random KV-cache lookups (84.2% accuracy), still incurring 84.6µs tail spikes and 14.3% GPU stalls.</p>
         </div>
         <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 space-y-1">
           <div class="font-bold text-emerald-400 font-mono flex items-center gap-1">⚡ Why v2.0 Is The Final Solution</div>
-          <p class="text-zinc-300 leading-relaxed text-[10px]">10ns multi-feature online classifier in TCM registers detects stride, arrival delta, and queue entropy for 93.6% accuracy. Dynamic 3-Region DRAM locks metadata and pSLC shield absorbs write bursts.</p>
+          <p class="text-zinc-300 leading-relaxed text-[10px]">10ns lightweight multi-feature classifier in TCM registers detects stride, arrival delta, and queue entropy for 93.6% accuracy. Dynamic 3-Region DRAM locks metadata (minimizing write buffer allocation) and pSLC shield absorbs write bursts.</p>
         </div>
       </div>
 
@@ -1417,10 +1417,10 @@
         category: "TRACK 1: CONVENTIONAL FTL • TOPOLOGY",
         activeChip: "Focus: Legacy Gen5 x4 NVMe SSD Silicon",
         title: "Conventional FTL: Architecture & Unsegregated Controller",
-        takeaway: "Conventional FTL routes all AI traffic through a single FIFO queue without workload awareness.",
-        para: "Modern enterprise NVMe SSDs use legacy FTL firmware that processes all host traffic through a single generic FIFO queue. PyTorch checkpoint writes and vLLM KV-cache lookups fight for the same internal resources with <strong>zero workload awareness</strong>.",
+        takeaway: "Conventional cache management routes concurrent AI traffic through shared FIFO/LRU structures without workload awareness.",
+        para: "Modern enterprise NVMe SSDs frequently utilize conventional cache management that processes concurrent host traffic through shared buffers. PyTorch checkpoint writes and vLLM KV-cache lookups fight for the same internal resources with <strong>zero workload segregation</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Generic FIFO Queue:</strong> Bulk 64KB writes & 4KB reads intermixed`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Unsegregated Buffers:</strong> Bulk 64KB writes & 4KB reads intermixed in shared cache`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Shared DRAM:</strong> L2P mapping table unprotected in RAM`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Unsegregated Flash:</strong> High GC write amplification (2.84 WAF)`
         ],
@@ -1448,7 +1448,7 @@
         para: "High-throughput 64KB PyTorch training checkpoints flood the PCIe Gen5 interface at <strong>14.2 GB/s</strong> alongside latency-sensitive 4KB KV-cache inference reads (120K IOPS). The host cannot signal I/O priority to commodity SSDs.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">SQ0 Ingress:</strong> 64KB PyTorch checkpoints at 14.2 GB/s`,
-          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">SQ1 Ingress:</strong> 4KB KV-cache random reads (&lt;30µs SLA)`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">SQ1 Ingress:</strong> 4KB KV-cache random reads (Target: &lt;30µs SLA)`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">Blind Admission:</strong> Controller cannot distinguish stream priorities`
         ],
         nextLabel: "Next: Step 2 ➔",
@@ -1547,7 +1547,7 @@
       }
     ];
 
-    // TRACK 2: FIRMWARE v1.0 (Early Heuristic Prototype & The RAG Blind Spot) - 5 Dedicated Steps
+    // TRACK 2: FIRMWARE v1.0 (Early Heuristic Prototype & The Interleaved Attention Blind Spot) - 5 Dedicated Steps
     const TRACK_V1 = [
       {
         num: 0,
@@ -1610,8 +1610,8 @@
         category: "STAGE 2: SEQUENTIAL STREAM DETECTION",
         activeChip: "Focus: Sequential Bypass Path Spline",
         title: "2. Partial Success: 96.4% Detection on Pure Streams",
-        takeaway: "Pure sequential streams achieve 96.4% detection, bypassing DRAM and cutting WAF to 1.62.",
-        para: "On synthetic benchmarks with continuous sequential writes (single-stream checkpoint dumps), Firmware v1.0 successfully identifies <strong>96.4% of sequential blocks</strong>, bypassing them around the DRAM data buffer and providing partial relief.",
+        takeaway: "Pure sequential streams achieve 96.4% detection, minimizing cache allocation and cutting WAF to 1.62.",
+        para: "On synthetic benchmarks with continuous sequential writes (single-stream checkpoint dumps), Firmware v1.0 successfully identifies <strong>96.4% of sequential blocks</strong>, minimizing host data buffer allocation and providing partial relief.",
         points: [
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Sequential Detection:</strong> 96.4% accuracy on isolated linear streams`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">WAF Reduction:</strong> WAF drops from 2.84 down to 1.62`,
@@ -1633,14 +1633,14 @@
       {
         num: 3,
         tabIcon: "3",
-        tabShort: "RAG Blind Spot ⚠️",
-        category: "STAGE 3: THE RAG & ATTENTION BLIND SPOT",
+        tabShort: "Attention Blind Spot ⚠️",
+        category: "STAGE 3: THE INTERLEAVED ATTENTION BLIND SPOT",
         activeChip: "Focus: Shared DRAM & Controller Interface",
-        title: "3. The RAG Blind Spot: 15.8% False Bypasses",
-        takeaway: "Interleaved RAG and attention lookups drop stride below 16, causing 15.8% false bypass errors.",
-        para: "In modern production LLM architectures (vLLM, DeepSeek, RAG), multi-head attention and vector similarity lookups interleave requests. Stride jumps frequently drop below 16 blocks, causing v1.0 to <strong>misclassify 15.8% of requests</strong>.",
+        title: "3. The Interleaved Attention Blind Spot: 15.8% False Bypasses",
+        takeaway: "Interleaved multi-head attention reads and random KV lookups drop stride below 16, causing 15.8% false bypass errors.",
+        para: "In modern production LLM architectures (e.g. vLLM interleaved attention lookups), multi-head attention and sparse key-value retrieval interleave requests. Stride jumps frequently drop below 16 blocks, causing v1.0 to <strong>misclassify 15.8% of requests</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Interleaved Vectors:</strong> RAG retrieval bursts have variable stride (ΔLBA &lt; 16)`,
+          `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0 animate-ping"></span><strong class="text-white">Interleaved Requests:</strong> Multi-head attention reads have variable stride (ΔLBA &lt; 16)`,
           `<span class="w-2 h-2 rounded-full bg-rose-500 shrink-0"></span><strong class="text-white">False Bypasses:</strong> 15.8% of KV reads misrouted or training writes dumped into RAM`,
           `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">DRAM Thrash:</strong> Fixed 50% metadata space overflows under high KV load`
         ],
@@ -1655,7 +1655,7 @@
         metricSecLabel: "False Bypasses",
         metricSecVal: "15.8% Error",
         metricSecStd: "0.0%",
-        metricBadgeSec: "❌ RAG MISCLASSIFIED"
+        metricBadgeSec: "❌ 15.8% MISCLASSIFIED"
       },
       {
         num: 4,
@@ -1698,8 +1698,8 @@
         takeaway: "NeuroFTL v2.0 solves the collision in firmware: 93.6% classification accuracy with $0 ASIC respin.",
         para: "NeuroFTL™ v2.0 is an adaptive, zero-overhead firmware architecture deployed on standard NVMe Gen5 hardware. It eliminates the Double-Read Trap, locks P99 latency flat at <strong>21.4µs (7.8× faster)</strong>, and eliminates GPU stalls with <strong>$0 ASIC respin</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Online Classifier:</strong> 93.6% accurate stream separation in ARM TCM`,
-          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Direct DMA Bypass:</strong> 14.2 GB/s checkpoints routed straight to flash`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Workload Classifier:</strong> 93.6% accurate stream separation in ARM TCM`,
+          `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Direct DMA Bypass:</strong> DRAM cache isolation minimizing write buffer allocation`,
           `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">3-Region DRAM:</strong> 93.6% L2P RAM hit rate • 0.0% GPU compute stalls`
         ],
         nextLabel: "Next: Step 1 ➔",
@@ -1721,13 +1721,13 @@
         tabShort: "Classifier ⚡",
         category: "STAGE 1: 10ns MULTI-FEATURE CLASSIFIER",
         activeChip: "Focus: SanDisk ARM Cortex-R8 SoC & TCM",
-        title: "1. Zero-Overhead 10ns Online Classifier in TCM",
-        takeaway: "10ns TCM classifier fuses LBA stride, inter-arrival time, and spatial entropy to achieve 93.6% accuracy with zero host overhead.",
-        para: "Executing inside the controller's Tightly Coupled Memory (TCM), NeuroFTL's online classifier computes three hardware features per request: <strong>LBA Stride</strong>, <strong>Inter-Arrival Delta</strong>, and <strong>Spatial Entropy</strong>. Classification takes just <strong>10 nanoseconds</strong> with <strong>93.6% accuracy</strong>.",
+        title: "1. Lightweight 10ns Workload Classifier in TCM",
+        takeaway: "Lightweight 10ns TCM classifier fuses LBA stride, inter-arrival time, and spatial entropy to achieve 93.6% accuracy with zero host overhead.",
+        para: "Executing inside the controller's Tightly Coupled Memory (TCM), NeuroFTL's deterministic workload classifier computes three hardware features per request: <strong>LBA Stride</strong>, <strong>Inter-Arrival Delta</strong>, and <strong>Spatial Entropy</strong>. Classification takes just <strong>10 nanoseconds</strong> with <strong>93.6% accuracy</strong>.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Inference:</strong> Runs in ARM TCM registers with 0 CPU cache pollution`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">10ns Classifier:</strong> Runs deterministically in ARM TCM registers with 0 CPU cache pollution`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">3-Feature Fusion:</strong> Stride + Inter-Arrival + Spatial Entropy window`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">93.6% Accuracy:</strong> Distinguishes RAG vectors from bulk training writes`
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">93.6% Accuracy:</strong> Distinguishes random KV reads from bulk training writes`
         ],
         nextLabel: "Next: Step 2 ➔",
         mode: "V2",
@@ -1748,12 +1748,12 @@
         tabShort: "Direct DMA",
         category: "STAGE 2: DIRECT DMA BYPASS RAIL",
         activeChip: "Focus: Direct DMA Bypass Rail Spline",
-        title: "2. Direct DMA Bypass: Zero-Copy DRAM Isolation",
-        takeaway: "Direct DMA bypass routes 14.2 GB/s checkpoints straight from PCIe to NAND, bypassing DRAM completely.",
-        para: "Identified 64KB sequential checkpoints are assigned directly to the <strong>Direct DMA Bypass Rail</strong>. Data streams straight from PCIe NVMe queues to NAND flash channels via a circular descriptor ring, achieving <strong>0.0% DRAM cache pollution</strong>.",
+        title: "2. Direct DMA Bypass: DRAM Cache Isolation",
+        takeaway: "Direct DMA bypass routes 14.2 GB/s checkpoints straight from PCIe to NAND, minimizing cache allocation while L2P metadata remains pinned.",
+        para: "Identified 64KB sequential checkpoints are assigned directly to the <strong>Direct DMA Bypass Rail</strong>. Data streams from PCIe NVMe queues to NAND flash channels via circular ring descriptors, <strong>minimizing write buffer allocation</strong> while address translation tables remain pinned in DRAM.",
         points: [
-          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Zero-Copy Ingress:</strong> 14.2 GB/s checkpoint streams bypass DRAM cache`,
-          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">Zero DRAM Pollution:</strong> 0.0% L2P table eviction • Cache stays 100% clean`,
+          `<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span><strong class="text-white">Direct Transfer:</strong> 14.2 GB/s checkpoint streams bypass host read cache`,
+          `<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span><strong class="text-white">DRAM Isolation:</strong> 0.0% L2P table eviction • Hot metadata stays 100% pinned`,
           `<span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span><strong class="text-white">Line-Rate Throughput:</strong> Saturates PCIe Gen5 x4 physical bus bandwidth`
         ],
         nextLabel: "Next: Step 3 ➔",
@@ -1763,7 +1763,7 @@
         target: { x: 0.8, y: 0.7, z: -2.0 },
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
-        metricBadgeLatency: "⚡ ZERO DRAM FLUSH",
+        metricBadgeLatency: "⚡ L2P PINNED & PROTECTED",
         metricSecLabel: "DRAM Pollution",
         metricSecVal: "0.0% Eviction",
         metricSecStd: "81.6%",
@@ -2287,7 +2287,7 @@
                 <div class="text-[9.5px] text-zinc-200 truncate font-mono">
                   <code>if (ΔLBA &gt; 16 &amp;&amp; size &gt;= 64KB) bypass();</code>
                 </div>
-                <div class="text-[8px] text-amber-300 truncate">⚠️ Zero temporal memory • Fails RAG</div>
+                <div class="text-[8px] text-amber-300 truncate">⚠️ Zero temporal memory • Fails interleaved attention</div>
               </div>
               <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
                 <div class="flex items-center justify-between text-[8.5px]">
@@ -2329,7 +2329,7 @@
           `;
         } else if (stepNum === 3) {
           if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping";
-          if (label) label.innerText = "FAILURE • THE RAG & ATTENTION BLIND SPOT";
+          if (label) label.innerText = "FAILURE • THE INTERLEAVED ATTENTION BLIND SPOT";
           if (badge) {
             badge.innerText = "15.8% FALSE BYPASSES";
             badge.className = "px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono text-[8.5px] border border-rose-500/40";
@@ -2415,7 +2415,7 @@
               <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
                 <span class="text-cyan-300 font-bold text-[8px] uppercase truncate">Controller</span>
                 <span class="text-white font-bold text-[10px] truncate">ARM Cortex-R8</span>
-                <span class="text-[8px] text-emerald-400 font-semibold truncate">10ns Classifier</span>
+                <span class="text-[8px] text-emerald-400 font-semibold truncate">Workload Classifier</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
               <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
@@ -2433,9 +2433,9 @@
           `;
         } else if (stepNum === 1) {
           if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
-          if (label) label.innerText = "CONTROLLER • 10ns MULTI-FEATURE CLASSIFIER IN TCM";
+          if (label) label.innerText = "CONTROLLER • 10ns WORKLOAD CLASSIFIER IN TCM";
           if (badge) {
-            badge.innerText = "ZERO-OVERHEAD CLASSIFICATION";
+            badge.innerText = "DETERMINISTIC 10ns TCM";
             badge.className = "px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[8.5px] border border-emerald-500/30";
           }
           container.innerHTML = `
@@ -2461,7 +2461,7 @@
           if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
           if (label) label.innerText = "BYPASS • DIRECT DMA BYPASS RAIL EXECUTION";
           if (badge) {
-            badge.innerText = "0% DRAM POLLUTION";
+            badge.innerText = "MINIMIZED ALLOCATION";
             badge.className = "px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[8.5px] border border-emerald-500/30";
           }
           container.innerHTML = `
@@ -2472,9 +2472,9 @@
                 <div class="text-[8px] text-zinc-300 truncate">Direct PCIe ➔ Flash bus</div>
               </div>
               <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
-                <div class="text-[8px] text-emerald-300 font-bold truncate">ZERO DRAM COPY</div>
-                <div class="text-white font-bold text-[10px] truncate">0% Cache Pollution</div>
-                <div class="text-[8px] text-zinc-300 truncate">Buffer lines untouched</div>
+                <div class="text-[8px] text-emerald-300 font-bold truncate">DRAM ISOLATION</div>
+                <div class="text-white font-bold text-[10px] truncate">Minimized Buffer</div>
+                <div class="text-[8px] text-zinc-300 truncate">Read cache untouched</div>
               </div>
               <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
                 <div class="text-[8px] text-emerald-300 font-bold truncate">METADATA PURITY</div>
@@ -3772,7 +3772,7 @@
       socCtx.font = 'bold 16px monospace';
       if (isConv) {
         socCtx.fillStyle = '#fda4af';
-        socCtx.fillText('⚠️ STATIC LRU CONTROLLER', 60, 365);
+        socCtx.fillText('⚠️ CONVENTIONAL CACHE FTL', 60, 365);
         socCtx.font = '14px monospace';
         socCtx.fillStyle = '#ffffff';
         socCtx.fillText('• Shared Cache Swept by DataLoader', 60, 395);
@@ -3784,14 +3784,14 @@
         socCtx.font = '14px monospace';
         socCtx.fillStyle = '#ffffff';
         socCtx.fillText('• ΔLBA > 16 Heuristic: 84.2% Acc', 60, 395);
-        socCtx.fillText('• Interleaved RAG Fails: 15.8% Miss', 60, 420);
+        socCtx.fillText('• Interleaved Attention: 15.8% Miss', 60, 420);
         socCtx.fillText('• Fixed 50/50 DRAM: Latency 84.6µs', 60, 445);
       } else {
         socCtx.fillStyle = '#38bdf8';
-        socCtx.fillText('⚡ ONLINE CLASSIFIER ACTIVE', 60, 365);
+        socCtx.fillText('⚡ WORKLOAD CLASSIFIER ACTIVE', 60, 365);
         socCtx.font = '14px monospace';
         socCtx.fillStyle = '#ffffff';
-        socCtx.fillText('• Multi-Feature: 93.6% Stream Acc', 60, 395);
+        socCtx.fillText('• Multi-Feature: 93.6% Accuracy', 60, 395);
         socCtx.fillText('• Pinned L2P Hits: 93.6% (Flat 21µs)', 60, 420);
         socCtx.fillText('• Host GPU Stalls: 0.0% (Zero Bubbles)', 60, 445);
       }
@@ -3900,7 +3900,7 @@
         dramCtx.font = '12px monospace';
         dramCtx.fillStyle = '#fef08a';
         dramCtx.fillText('• Rule: ΔLBA > 16 only', 272, 110);
-        dramCtx.fillText('• Interleaved RAG: Leaks', 272, 132);
+        dramCtx.fillText('• Interleaved KV Reads: Leaks', 272, 132);
         dramCtx.fillText('• Cache Bloat: High', 272, 154);
 
         for (let gx = 272; gx < 475; gx += 22) {
@@ -4043,7 +4043,7 @@
         ctx.fillStyle = '#cbd5e1';
         ctx.fillText('• Direct DMA Write Ingestion Rail', 60, 340);
         ctx.fillText('• Sequential Stream Buffering', 60, 375);
-        ctx.fillText('• Zero DRAM Cache Pollution', 60, 410);
+        ctx.fillText('• L2P Metadata Pinned & Protected', 60, 410);
       }
 
       return new THREE.CanvasTexture(canvas);
@@ -5089,7 +5089,7 @@
 
         setText('statHitAdp', stdHit.toFixed(1) + '%');
         setText('statHitStd', '93.6%');
-        setText('deltaHit', '⚠️ LRU EVICTED');
+        setText('deltaHit', '⚠️ CONV EVICTED');
 
         setText('statWafAdp', stdWaf.toFixed(2));
         setText('statWafStd', '1.08');
@@ -5106,7 +5106,7 @@
           statAccVal.className = "text-xs font-bold text-rose-400";
         }
         if (statAccBadge) {
-          statAccBadge.innerText = "Blind LRU (0%)";
+          statAccBadge.innerText = "Conventional (0%)";
           statAccBadge.className = "text-[9px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold";
         }
         if (statAccDot) statAccDot.className = "w-2 h-2 rounded-full bg-rose-500";
@@ -5131,7 +5131,7 @@
 
         setText('statHitAdp', lastV1Hit.toFixed(1) + '%');
         setText('statHitStd', stdHit.toFixed(1) + '%');
-        setText('deltaHit', '⚠️ 15.8% RAG MISS');
+        setText('deltaHit', '⚠️ 15.8% MISCLASSIFIED');
 
         setText('statWafAdp', lastV1Waf.toFixed(2));
         setText('statWafStd', stdWaf.toFixed(2));
@@ -5254,7 +5254,7 @@
           setText('metricSecondaryLabel', 'Stream Accuracy');
           setText('metricSecondaryVal', lastV1Acc.toFixed(1) + '%');
           setText('metricSecondaryStd', '93.6%');
-          setText('metricBadgeSecondary', '⚠️ 15.8% RAG MISS RATE');
+          setText('metricBadgeSecondary', '⚠️ 15.8% MISCLASSIFIED');
         } else if (currentStepIdx === 1) {
           setText('metricSecondaryLabel', 'DRAM Split');
           setText('metricSecondaryVal', 'Fixed 50/50');
