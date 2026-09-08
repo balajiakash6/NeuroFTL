@@ -128,6 +128,13 @@ class FTLSimulationServer:
                     with sim_lock:
                         sim.__init__(specs)
                     self._send_json({"success": True, "message": "Simulator reset"})
+                elif parsed.path in ("/api/run-simulation", "/api/simulate"):
+                    num_req = int(payload.get("num_requests", 10000))
+                    num_req = max(100, min(50000, num_req))
+                    workload_type = payload.get("workload_type", "TRAINING_SURGE")
+                    with sim_lock:
+                        benchmark_res = sim.run_batch_benchmark(num_requests=num_req, workload_type=workload_type)
+                    self._send_json(benchmark_res)
                 else:
                     self.send_response(404)
                     self.end_headers()

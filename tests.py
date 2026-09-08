@@ -95,6 +95,31 @@ class TestAdaptiveFTL(unittest.TestCase):
         self.assertLess(v2.p99_latency_us, std.p99_latency_us)
         print(f"[3-Gen Evolution] Std Acc: {std.classification_accuracy_pct}% | v1 Acc: {v1.classification_accuracy_pct}% | v2 Acc: {v2.classification_accuracy_pct}%")
 
+    def test_batch_benchmark_10k(self):
+        """Validates end-to-end 10,000 I/O pipeline simulation benchmark."""
+        sim = DualWorkloadSimulator(self.specs)
+        res = sim.run_batch_benchmark(num_requests=10000, workload_type="TRAINING_SURGE")
+        
+        self.assertIn("pipeline_stages", res)
+        stages = res["pipeline_stages"]
+        
+        # Verify 6 pipeline stages present
+        self.assertIn("stage1_input", stages)
+        self.assertIn("stage2_classifier", stages)
+        self.assertIn("stage3_policy_engine", stages)
+        self.assertIn("stage4_ftl_simulation", stages)
+        self.assertIn("stage5_nand_timing", stages)
+        self.assertIn("stage6_verified_metrics", stages)
+        
+        # Verify 10,000 requests processed
+        self.assertEqual(stages["stage1_input"]["num_requests"], 10000)
+        
+        # Verify latency speedup
+        m = stages["stage6_verified_metrics"]
+        self.assertLess(m["neuroftl_v2"]["p99_read_latency_us"], m["conventional"]["p99_read_latency_us"])
+        self.assertGreater(m["deltas"]["latency_speedup_x"], 1.0)
+        print(f"[10k Benchmark Test] Processed 10,000 I/Os in {res['benchmark_execution_ms']}ms | Speedup: {m['deltas']['latency_speedup_x']}x | v2 P99: {m['neuroftl_v2']['p99_read_latency_us']}us")
+
 
 if __name__ == '__main__':
     unittest.main()
