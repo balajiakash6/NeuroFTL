@@ -229,13 +229,12 @@
 
     /* Zero-scroll bento cockpit scaling across all displays */
     #presentationDock {
-      overflow-y: hidden !important;
+      overflow: visible !important;
     }
     #dockBody {
       overflow: hidden !important;
     }
     #dockStepPara {
-      overflow-y: hidden !important;
       display: block !important;
       -webkit-line-clamp: unset !important;
       line-clamp: unset !important;
@@ -244,15 +243,16 @@
     /* Scaling on compact laptop viewports (600px - 850px height) */
     @media (min-width: 768px) and (max-height: 850px) {
       #presentationDock {
-        max-height: 200px !important;
+        max-height: 245px !important;
         padding: 6px 10px !important;
       }
       #dockStepPara {
-        font-size: 10.5px !important;
-        line-height: 1.35 !important;
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+        max-height: 48px !important;
       }
       #telemetryHud {
-        max-height: min(320px, calc(100vh - 230px)) !important;
+        max-height: min(320px, calc(100vh - 250px)) !important;
       }
       #graphCanvasBox {
         height: 85px !important;
@@ -261,12 +261,13 @@
 
     @media (min-width: 768px) and (max-height: 720px) {
       #presentationDock {
-        max-height: 185px !important;
+        max-height: 230px !important;
         padding: 5px 8px !important;
       }
       #dockStepPara {
-        font-size: 10px !important;
-        line-height: 1.3 !important;
+        font-size: 9.5px !important;
+        line-height: 1.25 !important;
+        max-height: 42px !important;
       }
       #graphCanvasBox {
         height: 75px !important;
@@ -275,12 +276,13 @@
 
     @media (min-width: 768px) and (max-height: 540px) {
       #presentationDock {
-        max-height: 170px !important;
-        padding: 4px 8px !important;
+        max-height: 200px !important;
+        padding: 4px 6px !important;
       }
       #dockStepPara {
         font-size: 9px !important;
-        line-height: 1.25 !important;
+        line-height: 1.2 !important;
+        max-height: 32px !important;
       }
     }
 
@@ -459,57 +461,58 @@
       <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
         <div class="flex items-center gap-1 sm:gap-1.5 font-mono text-xs">
           <!-- 3-Way Comparative Benchmark Matrix Modal Button -->
-          <button onclick="openCompareModal()" id="btnTopCompare" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-amber-300 hover:text-white transition cursor-pointer flex items-center gap-1 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 shadow-sm" title="Compare 3 Generations: Conventional vs v1.0 vs v2.0">
+          <button onclick="openCompareModal()" id="btnTopCompare" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-amber-300 hover:text-white transition cursor-pointer flex items-center gap-1 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 shadow-sm shrink-0" title="Compare 3 Generations: Conventional vs v1.0 vs v2.0">
             <span>⚖️</span>
-            <span class="hidden md:inline text-[11px] font-bold">Compare 3 Gens</span>
+            <span class="hidden lg:inline text-[11px] font-bold">Compare</span>
+            <span class="hidden 2xl:inline text-[11px] font-bold">3 Gens</span>
           </button>
 
           <!-- Live Telemetry Toggle Tab Button -->
-          <button onclick="toggleTelemetryCollapse()" id="btnTopHudToggle" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-mono text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-md shadow-emerald-500/20 hover:bg-emerald-500/30" title="Toggle Live Telemetry Panel (Key H)">
+          <button onclick="toggleTelemetryCollapse()" id="btnTopHudToggle" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-mono text-xs font-bold transition cursor-pointer flex items-center gap-1 sm:gap-1.5 shadow-md shadow-emerald-500/20 hover:bg-emerald-500/30 shrink-0" title="Toggle Live Telemetry Panel (Key H)">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" id="topHudLiveDot"></span>
             <span>📊</span>
-            <span class="hidden sm:inline whitespace-nowrap">Live Telemetry</span>
+            <span class="hidden sm:inline whitespace-nowrap text-[11px]">Telemetry</span>
           </button>
 
           <!-- Fluid Flow Start / Stop Button -->
-          <button onclick="toggleSimulationFlow()" id="btnFlowToggle" class="p-1.5 sm:px-3 sm:py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer hidden xs:flex items-center gap-1 font-bold shadow-md" title="Toggle Traffic Flow">
+          <button onclick="toggleSimulationFlow()" id="btnFlowToggle" class="p-1.5 sm:px-2.5 sm:py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition cursor-pointer hidden xs:flex items-center gap-1 font-bold shadow-md shrink-0" title="Toggle Traffic Flow">
             <span id="flowToggleIcon">⏸</span>
-            <span id="flowToggleText" class="hidden sm:inline text-[11px]">Stop Flow</span>
+            <span id="flowToggleText" class="hidden md:inline text-[11px]">Flow</span>
           </button>
 
           <!-- 3D Casing Lift-off & Disassembly Button -->
-          <button onclick="replayCasingAnimation()" id="btnTopCasing" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-cyan-300 hover:text-white transition cursor-pointer hidden sm:flex items-center gap-1 border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 shadow-sm" title="Replay 3D Casing Lift-off Reveal (Key C)">
+          <button onclick="replayCasingAnimation()" id="btnTopCasing" class="apple-pill p-1.5 sm:px-2 sm:py-1 rounded-xl text-cyan-300 hover:text-white transition cursor-pointer hidden xl:flex items-center gap-1 border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 shadow-sm shrink-0" title="Replay 3D Casing Lift-off Reveal (Key C)">
             <span>📦</span>
-            <span class="hidden md:inline text-[11px] font-bold">Casing Reveal ⟲</span>
+            <span class="hidden 2xl:inline text-[11px] font-bold">Casing</span>
           </button>
 
           <!-- Zoom Out Overview Button -->
-          <button onclick="zoomOutOverview()" id="btnZoomOverview" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer flex items-center gap-1 border border-white/15 hidden xs:flex" title="Zoom to Panoramic Overview (Key O)">
+          <button onclick="zoomOutOverview()" id="btnZoomOverview" class="apple-pill p-1.5 sm:px-2 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer hidden 2xl:flex items-center gap-1 border border-white/15 shrink-0" title="Zoom to Panoramic Overview (Key O)">
             <span>🔍</span>
-            <span class="hidden md:inline text-[11px]">Overview</span>
+            <span class="text-[11px]">Overview</span>
           </button>
 
           <!-- Problem Statement & Architecture Spec Modal Button -->
-          <button onclick="openSpecModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer hidden sm:flex items-center gap-1 border border-white/15" title="View Specification">
+          <button onclick="openSpecModal()" class="apple-pill p-1.5 sm:px-2 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer hidden xl:flex items-center gap-1 border border-white/15 shrink-0" title="View Specification">
             <span>📖</span>
-            <span class="hidden md:inline text-[11px]">Spec</span>
+            <span class="text-[11px]">Spec</span>
           </button>
 
           <!-- Proof of Work & Simulation Methodology Button -->
-          <button onclick="openPowModal()" class="apple-pill p-1.5 sm:px-2.5 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer hidden sm:flex items-center gap-1 border border-white/15" title="View Simulation Methodology & Proof of Work">
+          <button onclick="openPowModal()" class="apple-pill p-1.5 sm:px-2 sm:py-1 rounded-xl text-zinc-200 hover:text-white transition cursor-pointer hidden 2xl:flex items-center gap-1 border border-white/15 shrink-0" title="View Simulation Methodology & Proof of Work">
             <span>🔬</span>
-            <span class="hidden md:inline text-[11px]">Proof</span>
+            <span class="text-[11px]">Proof</span>
           </button>
 
           <!-- Audio Toggle -->
-          <button onclick="toggleAudio()" id="btnAudio" class="apple-pill p-1.5 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer" title="Toggle Sound">
+          <button onclick="toggleAudio()" id="btnAudio" class="apple-pill p-1.5 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer shrink-0" title="Toggle Sound">
             <span id="audioIcon">🔊</span>
           </button>
 
           <!-- Reset -->
-          <button onclick="resetDemo()" class="apple-pill p-1.5 sm:px-2 sm:py-1 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1 hidden sm:flex" title="Restart Pitch">
+          <button onclick="resetDemo()" class="apple-pill p-1.5 sm:px-2 sm:py-1 rounded-xl text-zinc-300 hover:text-white transition cursor-pointer hidden sm:flex items-center gap-1 shrink-0" title="Restart Pitch">
             <span>↺</span>
-            <span class="hidden xl:inline text-[11px]">Reset</span>
+            <span class="hidden 2xl:inline text-[11px]">Reset</span>
           </button>
         </div>
       </div>
@@ -722,13 +725,13 @@
     <!-- ========================================================================= -->
     <!-- 3. EXECUTIVE PRESENTATION DOCK (Responsive for Desktop, Laptop, and Mobile) -->
     <!-- ========================================================================= -->
-    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-2 sm:p-2.5 w-[96vw] max-w-[1360px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 overflow-hidden panel-transition" style="min-width: 280px; max-height: 240px; overflow: hidden;">
+    <div id="presentationDock" class="fixed bottom-1 sm:bottom-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto apple-glass rounded-2xl p-1.5 sm:p-2 md:p-2.5 w-[96vw] max-w-[1360px] shadow-2xl border border-white/20 select-none flex flex-col no-scrollbar min-w-0 panel-transition" style="min-width: 280px; max-height: min(250px, 38vh);">
       
       <!-- Top Stage Progress Header + Draggable Grip -->
-      <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-1 border-b border-white/10 pb-1 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
+      <div id="presentationDockHeader" ondblclick="toggleDockCollapse()" class="flex flex-col gap-0.5 sm:gap-1 border-b border-white/10 pb-0.5 sm:pb-1 cursor-grab active:cursor-grabbing select-none shrink-0" title="Drag to move panel • Double-click to minimize/expand">
         
         <!-- Centered Visual Drag Grip Handle -->
-        <div class="w-12 sm:w-16 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-0.5 cursor-grab active:cursor-grabbing transition" title="Drag to move panel"></div>
+        <div class="w-10 sm:w-14 h-1 bg-white/30 hover:bg-white/60 rounded-full mx-auto -mt-0.5 mb-0.5 cursor-grab active:cursor-grabbing transition" title="Drag to move panel"></div>
 
         <!-- Glowing Level Progress Bar Track -->
         <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
@@ -742,58 +745,58 @@
           <div class="flex items-center gap-0.5 sm:gap-1 min-w-0 flex-1 relative py-0.5 overflow-hidden">
             <span class="text-zinc-400 font-mono text-xs opacity-80 px-0.5 pointer-events-none shrink-0 flex items-center gap-1" title="Drag to move panel">
               <span>⠿</span>
-              <span class="text-[9px] hidden xl:inline font-bold tracking-wider opacity-70">DRAG</span>
+              <span class="text-[9px] hidden 2xl:inline font-bold tracking-wider opacity-70">DRAG</span>
             </span>
 
             <!-- Left Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps left">
+            <button onclick="scrollStepTabs(-1)" id="btnScrollTabsLeft" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm hidden" title="Scroll steps left">
               ‹
             </button>
 
             <!-- Scrollable Tabs Track with Wheel & Touch Drag Support -->
-            <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar flex-1 min-w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
+            <div id="stageTabsScrollContainer" class="no-drag flex items-center gap-1 overflow-x-auto no-scrollbar flex-1 min-w-0 py-0.5 scroll-smooth" style="scroll-behavior: smooth;">
               <!-- Step Tab 0: Overview -->
-              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap glow-problem">
+              <button onclick="goToStep(0)" id="stepTab0" class="no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap glow-problem">
                 <span>🔍</span>
                 <span>Overview</span>
               </button>
 
               <!-- Step Tab 1: Ingress -->
-              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(1)" id="stepTab1" class="no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>1</span>
                 <span>Ingress ⚠️</span>
               </button>
 
               <!-- Step Tab 2: Eviction -->
-              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(2)" id="stepTab2" class="no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>2</span>
                 <span>Eviction ⚠️</span>
               </button>
 
               <!-- Step Tab 3: Double-Read -->
-              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(3)" id="stepTab3" class="no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>3</span>
                 <span>Double-Read ⚠️</span>
               </button>
 
               <!-- Step Tab 4: GPU Stalls -->
-              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+              <button onclick="goToStep(4)" id="stepTab4" class="no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
                 <span>4</span>
                 <span>GPU Stalls 💥</span>
               </button>
             </div>
 
             <!-- Right Scroll Chevron Button -->
-            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm" title="Scroll steps right">
+            <button onclick="scrollStepTabs(1)" id="btnScrollTabsRight" class="no-drag w-5 h-5 sm:w-6 sm:h-6 rounded-md apple-pill hover:bg-white/20 text-zinc-300 hover:text-white flex items-center justify-center font-bold text-xs transition cursor-pointer shrink-0 shadow-sm hidden" title="Scroll steps right">
               ›
             </button>
           </div>
 
           <!-- Right: Pinned Window Controls -->
           <div class="flex items-center gap-1 sm:gap-2 text-xs font-mono text-zinc-200 shrink-0 ml-auto pl-1">
-            <span id="dockStageCount" class="font-bold text-rose-400 text-xs whitespace-nowrap">OVERVIEW</span>
+            <span id="dockStageCount" class="font-bold text-rose-400 text-[11px] sm:text-xs whitespace-nowrap">OVERVIEW</span>
             
-            <button onclick="openSpecModal()" id="dockSpecLink" class="no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden sm:inline" title="Specification Modal">
+            <button onclick="openSpecModal()" id="dockSpecLink" class="no-drag text-rose-400 hover:text-rose-300 font-bold underline underline-offset-4 cursor-pointer px-1 hidden md:inline" title="Specification Modal">
               Spec ↗
             </button>
           </div>
@@ -803,16 +806,16 @@
       </div>
 
       <!-- Collapsible Body Area: High-Precision 3-Column Bento Deck (ZERO SCROLL, ALL TEXT VISIBLE) -->
-      <div id="dockBody" class="w-full grid grid-cols-1 md:grid-cols-12 gap-2 pt-1.5 items-stretch min-h-0 overflow-hidden select-none flex-1">
+      <div id="dockBody" class="w-full grid grid-cols-1 lg:grid-cols-12 gap-1.5 sm:gap-2 pt-1 sm:pt-1.5 items-stretch min-h-0 select-none flex-1 overflow-hidden">
         
-        <!-- Column 1: Narrative & Context (md:col-span-5) -->
-        <div class="md:col-span-5 flex flex-col justify-between min-w-0 pr-1 space-y-1">
+        <!-- Column 1: Narrative & Context (lg:col-span-7 xl:col-span-5) -->
+        <div class="lg:col-span-7 xl:col-span-5 flex flex-col justify-between min-w-0 pr-0.5 sm:pr-1 space-y-0.5 sm:space-y-1 overflow-hidden">
           <div class="space-y-0.5 min-w-0">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <span id="dockGenBadge" class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0">GEN 1: CONVENTIONAL FTL</span>
+            <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+              <span id="dockGenBadge" class="text-[8.5px] sm:text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.2 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0">GEN 1: CONVENTIONAL FTL</span>
               <span class="text-zinc-500 text-xs hidden lg:inline">•</span>
-              <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 truncate" id="dockStepCategory">TRACK 1: CONVENTIONAL FTL • TOPOLOGY</span>
-              <span class="text-[9px] font-mono text-cyan-300 font-semibold truncate hidden xl:inline" id="dockActiveChip">Focus: Legacy Gen5 x4 NVMe SSD Silicon</span>
+              <span class="text-[8.5px] sm:text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.2 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30 truncate" id="dockStepCategory">TRACK 1: CONVENTIONAL FTL • TOPOLOGY</span>
+              <span class="text-[8.5px] sm:text-[9px] font-mono text-cyan-300 font-semibold truncate hidden xl:inline" id="dockActiveChip">Focus: Legacy Gen5 x4 NVMe SSD Silicon</span>
             </div>
             
             <h2 class="text-xs sm:text-sm font-extrabold text-white tracking-tight leading-tight mt-0.5 font-display truncate" id="dockStepTitle">
@@ -820,22 +823,22 @@
             </h2>
 
             <!-- Executive 1-Line Key Takeaway Card -->
-            <div id="dockTakeawayBox" class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-rose-500/15 border-l-2 border-rose-500 text-rose-200 text-[10px] sm:text-[10.5px] font-medium shadow-sm my-0.5 shrink-0">
+            <div id="dockTakeawayBox" class="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-lg bg-rose-500/15 border-l-2 border-rose-500 text-rose-200 text-[9.5px] sm:text-[10px] font-medium shadow-sm my-0.5 shrink-0">
               <span id="dockTakeawayIcon" class="text-xs shrink-0">❌</span>
-              <span class="text-[8.5px] sm:text-[9px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">TAKEAWAY:</span>
-              <span id="dockTakeawayText" class="font-semibold text-white leading-tight">Conventional FTL routes all AI traffic through a single FIFO queue without workload awareness.</span>
+              <span class="text-[8px] sm:text-[8.5px] font-mono uppercase tracking-wider font-bold opacity-80 shrink-0">TAKEAWAY:</span>
+              <span id="dockTakeawayText" class="font-semibold text-white leading-tight truncate">Conventional FTL routes all AI traffic through a single FIFO queue without workload awareness.</span>
             </div>
           </div>
           
-          <!-- Full explanation text - NO line clamp, completely visible without vertical scrolling -->
-          <p class="text-[10px] sm:text-[10.5px] text-zinc-300 leading-relaxed font-normal select-text" id="dockStepPara">
+          <!-- Full explanation text with smooth overflow if screen is extremely short -->
+          <p class="text-[9.5px] sm:text-[10px] md:text-[10.5px] text-zinc-300 leading-snug sm:leading-relaxed font-normal select-text max-h-[58px] sm:max-h-[68px] overflow-y-auto no-scrollbar" id="dockStepPara">
             Modern enterprise NVMe SSDs use legacy FTL firmware that processes all host traffic through a single generic FIFO queue. PyTorch checkpoint writes and vLLM KV-cache lookups fight for the same internal resources with <strong>zero workload awareness</strong>.
           </p>
         </div>
 
-        <!-- Column 2: Real-Time Hardware Execution Pipeline (md:col-span-4) -->
-        <div class="hidden md:flex md:col-span-4 flex-col justify-between min-w-0 px-1 border-t md:border-t-0 md:border-l md:border-r border-white/10 pt-1 md:pt-0 overflow-hidden">
-          <div id="stepProcessContainer" class="w-full h-full max-h-[96px] bg-[#050811]/70 backdrop-blur-md rounded-xl p-1.5 border border-white/10 flex flex-col justify-between overflow-hidden shadow-inner">
+        <!-- Column 2: Real-Time Hardware Execution Pipeline (hidden xl:flex xl:col-span-4) -->
+        <div class="hidden xl:flex xl:col-span-4 flex-col justify-between min-w-0 px-1 border-l border-r border-white/10 overflow-hidden">
+          <div id="stepProcessContainer" class="w-full h-full max-h-[90px] bg-[#050811]/70 backdrop-blur-md rounded-xl p-1.5 border border-white/10 flex flex-col justify-between overflow-hidden shadow-inner">
             <div class="flex items-center justify-between pb-1 mb-0.5 border-b border-white/10 text-[9px] font-mono shrink-0">
               <span class="flex items-center gap-1 text-zinc-300 font-bold tracking-wider">
                 <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
@@ -850,12 +853,12 @@
           </div>
         </div>
 
-        <!-- Column 3: Silicon Telemetry Metrics & Tactile Actions (md:col-span-3) -->
-        <div class="md:col-span-3 flex flex-col justify-between w-full min-w-0 md:pl-1 space-y-1 overflow-hidden">
+        <!-- Column 3: Silicon Telemetry Metrics & Tactile Actions (lg:col-span-5 xl:col-span-3) -->
+        <div class="lg:col-span-5 xl:col-span-3 flex flex-col justify-between w-full min-w-0 lg:pl-1 space-y-1 h-full">
           <!-- Sleek Dual Silicon Metric Badges -->
-          <div class="grid grid-cols-2 gap-1.5 font-mono w-full min-w-0" id="dockMetricsGroup">
+          <div class="grid grid-cols-2 gap-1 sm:gap-1.5 font-mono w-full min-w-0" id="dockMetricsGroup">
             <!-- Latency Card -->
-            <div class="p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-right space-y-0.2 glow-problem shadow-sm min-w-0" id="metricCardLatency">
+            <div class="p-1 sm:p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-right space-y-0.2 glow-problem shadow-sm min-w-0" id="metricCardLatency">
               <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricLatencyLabel">P99 Latency</div>
               <div class="flex items-baseline justify-end gap-1">
                 <span class="text-xs sm:text-sm font-black text-rose-400 font-mono" id="metricP99">168.2 µs</span>
@@ -865,7 +868,7 @@
             </div>
 
             <!-- Secondary Metric Card -->
-            <div class="p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardSecondary">
+            <div class="p-1 sm:p-1.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-right space-y-0.2 shadow-sm min-w-0" id="metricCardSecondary">
               <div class="text-[8px] text-zinc-400 font-semibold uppercase tracking-wider truncate" id="metricSecondaryLabel">L2P RAM Hit Rate</div>
               <div class="flex items-baseline justify-end gap-1">
                 <span class="text-xs sm:text-sm font-black text-rose-400 font-mono" id="metricSecondaryVal">18.4%</span>
@@ -876,19 +879,19 @@
           </div>
 
           <!-- Bottom Actions: Back, Auto-Play, Next CTA Button -->
-          <div class="flex items-center justify-between gap-1 pt-1 border-t border-white/10 shrink-0 w-full min-w-0">
+          <div class="flex items-center justify-between gap-1 pt-1 border-t border-white/10 shrink-0 w-full min-w-0 mt-auto">
             <div class="flex items-center gap-1">
-              <button onclick="prevStep()" id="btnPrevStep" disabled class="no-drag px-2.5 py-1 rounded-lg apple-pill hover:bg-white/15 text-[11px] font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+              <button onclick="prevStep()" id="btnPrevStep" disabled class="no-drag px-2 sm:px-2.5 py-1 rounded-lg apple-pill hover:bg-white/15 text-[10.5px] sm:text-[11px] font-mono font-bold text-zinc-200 hover:text-white transition cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
                 ← Back
               </button>
-              <button onclick="toggleAutoPlay()" id="btnAutoPlay" class="no-drag px-2 py-1 rounded-lg apple-pill hover:bg-white/15 text-[11px] font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1">
+              <button onclick="toggleAutoPlay()" id="btnAutoPlay" class="no-drag px-1.5 sm:px-2 py-1 rounded-lg apple-pill hover:bg-white/15 text-[10.5px] sm:text-[11px] font-mono font-medium text-zinc-300 hover:text-white transition cursor-pointer flex items-center gap-1">
                 <span id="autoIcon">▶</span>
-                <span class="hidden xl:inline">Auto</span>
+                <span class="hidden 2xl:inline">Auto</span>
               </button>
             </div>
 
-            <!-- Primary Call-to-Action Next Button -->
-            <button onclick="nextStep()" id="btnNextStep" class="no-drag px-3 sm:px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs font-mono shadow-md shadow-rose-600/30 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0">
+            <!-- Primary Call-to-Action Next Button (Guaranteed Visible) -->
+            <button onclick="nextStep()" id="btnNextStep" class="no-drag px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-[11px] sm:text-xs font-mono shadow-md shadow-rose-600/30 transition transform hover:scale-[1.02] cursor-pointer flex items-center gap-1 pulse-primary shrink-0">
               <span id="btnNextLabel" class="truncate">Next: Step 1 ➔</span>
             </button>
           </div>
@@ -1351,6 +1354,71 @@
     // Wide Panoramic Overview Coordinates (Framed high to prevent any UI overlay)
     const OVERVIEW_CAM = { x: -0.5, y: 22.0, z: 27.0 };
     const OVERVIEW_TARGET = { x: -0.5, y: -4.5, z: 0.0 };
+
+    // Responsive Camera Positioning: lifts SSD on short/scaled laptop screens so 3D model never overlaps dock
+    function getAdaptiveCameraCoords(step, stepNum) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const aspect = w / h;
+
+      const baseCam = (step && step.cam) ? { ...step.cam } : { ...OVERVIEW_CAM };
+      const baseTarget = (step && step.target) ? { ...step.target } : { ...OVERVIEW_TARGET };
+
+      const isOverview = (baseCam.z > 18.0) || (stepNum === 0);
+
+      let cam = { ...baseCam };
+      let target = { ...baseTarget };
+
+      if (isOverview) {
+        if (h < 620) {
+          // Extremely short screens (netbooks, 768p with full browser UI + taskbar)
+          cam.y = 26.0;
+          cam.z = 36.0;
+          target.y = -9.2;
+        } else if (h < 720) {
+          // Standard 1366x768 / scaled laptops (inner height ~620-710px)
+          cam.y = 25.0;
+          cam.z = 34.0;
+          target.y = -8.4;
+        } else if (h < 820) {
+          // 1080p at 125% scaling (inner height ~760px)
+          cam.y = 24.0;
+          cam.z = 31.0;
+          target.y = -7.5;
+        } else if (h < 950) {
+          // Standard 1080p (inner height ~850-920px)
+          cam.y = 23.0;
+          cam.z = 28.5;
+          target.y = -6.0;
+        }
+
+        // Narrow aspect ratios (mobile portrait, 4:3 tablet)
+        if (aspect < 1.0) {
+          cam.z += 8.0;
+          target.y -= 2.0;
+        } else if (aspect < 1.35) {
+          cam.z += 3.5;
+          target.y -= 1.5;
+        }
+      } else {
+        // Macro Zoom-in step
+        if (h < 650) {
+          cam.y += 1.0;
+          cam.z += 1.6;
+          target.y -= 1.5;
+        } else if (h < 780) {
+          cam.y += 0.6;
+          cam.z += 1.0;
+          target.y -= 1.0;
+        }
+        if (aspect < 1.0) {
+          cam.z += 2.5;
+          target.y -= 0.5;
+        }
+      }
+
+      return { cam, target };
+    }
 
     // --- 3 DEDICATED WALKTHROUGH TOURS & SILICON TWIN STEP DEFINITIONS ---
     let currentTrackKey = "CONVENTIONAL"; // "CONVENTIONAL", "V1", or "V2"
@@ -1897,22 +1965,27 @@
 
     function focusChipIn3D(chipName) {
       playTone('click');
+      let baseCam = { ...OVERVIEW_CAM };
+      let baseTarget = { ...OVERVIEW_TARGET };
+      let isMacro = true;
       if (chipName === 'soc') {
-        targetCamPos.set(-5.5, 5.6, 7.2);
-        targetLookAt.set(-5.5, -0.9, 0.3);
+        baseCam = { x: -5.5, y: 5.6, z: 7.2 };
+        baseTarget = { x: -5.5, y: -0.9, z: 0.3 };
       } else if (chipName === 'dram') {
-        targetCamPos.set(-0.2, 5.4, 7.0);
-        targetLookAt.set(-0.2, -0.9, 0.3);
+        baseCam = { x: -0.2, y: 5.4, z: 7.0 };
+        baseTarget = { x: -0.2, y: -0.9, z: 0.3 };
       } else if (chipName === 'nand' || chipName === 'pslc') {
-        targetCamPos.set(5.0, 5.4, 7.0);
-        targetLookAt.set(5.0, -0.9, 2.1);
+        baseCam = { x: 5.0, y: 5.4, z: 7.0 };
+        baseTarget = { x: 5.0, y: -0.9, z: 2.1 };
       } else if (chipName === 'pcie') {
-        targetCamPos.set(-9.0, 5.6, 7.2);
-        targetLookAt.set(-9.0, -0.9, 0.3);
+        baseCam = { x: -9.0, y: 5.6, z: 7.2 };
+        baseTarget = { x: -9.0, y: -0.9, z: 0.3 };
       } else {
-        targetCamPos.set(OVERVIEW_CAM.x, OVERVIEW_CAM.y, OVERVIEW_CAM.z);
-        targetLookAt.set(OVERVIEW_TARGET.x, OVERVIEW_TARGET.y, OVERVIEW_TARGET.z);
+        isMacro = false;
       }
+      const coords = getAdaptiveCameraCoords({ cam: baseCam, target: baseTarget }, isMacro ? 1 : 0);
+      targetCamPos.set(coords.cam.x, coords.cam.y, coords.cam.z);
+      targetLookAt.set(coords.target.x, coords.target.y, coords.target.z);
       isCamLerping = true;
       setTimeout(updateZoomUI, 400);
     }
@@ -1993,7 +2066,7 @@
         let icon = s.tabIcon || (i === 0 ? '🔍' : `${i}`);
 
         html += `
-          <button onclick="goToStep(${i})" id="stepTab${i}" class="no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
+          <button onclick="goToStep(${i})" id="stepTab${i}" class="no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap">
             <span>${icon}</span>
             <span>${tabShort}</span>
           </button>
@@ -2689,22 +2762,22 @@
         if (!tab) continue;
         if (i === stepNum) {
           if (currentTrackKey === 'CONVENTIONAL') {
-            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap glow-problem";
+            tab.className = "no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-bold bg-rose-600 text-white shadow-lg shadow-rose-600/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap glow-problem";
           } else if (currentTrackKey === 'V1') {
-            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-amber-400 text-black shadow-lg shadow-amber-400/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+            tab.className = "no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-bold bg-amber-400 text-black shadow-lg shadow-amber-400/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
           } else {
-            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-bold bg-emerald-400 text-black shadow-lg shadow-emerald-400/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+            tab.className = "no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-bold bg-emerald-400 text-black shadow-lg shadow-emerald-400/30 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
           }
         } else if (i < stepNum) {
           if (currentTrackKey === 'CONVENTIONAL') {
-            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-rose-500/15 border border-rose-500/30 text-rose-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+            tab.className = "no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-semibold bg-rose-500/15 border border-rose-500/30 text-rose-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
           } else if (currentTrackKey === 'V1') {
-            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+            tab.className = "no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-semibold bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
           } else {
-            tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+            tab.className = "no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:text-white transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
           }
         } else {
-          tab.className = "no-drag px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-xl text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
+          tab.className = "no-drag px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10.5px] sm:text-xs font-mono font-medium text-zinc-300 hover:text-white border border-white/10 transition flex items-center gap-1 shrink-0 cursor-pointer whitespace-nowrap";
         }
       }
 
@@ -2729,17 +2802,18 @@
       // Update 3D Hardware Visuals for This Step & Track
       updateStep3DVisuals(stepNum);
 
-      // Camera Glide to Specific Macro Zoom-in Angle
+      // Camera Glide to Specific Macro Zoom-in Angle (Height & Aspect Adaptive)
+      const coords = getAdaptiveCameraCoords(step, stepNum);
       if (instantCam && camera && controls) {
-        camera.position.set(step.cam.x, step.cam.y, step.cam.z);
-        controls.target.set(step.target.x, step.target.y, step.target.z);
+        camera.position.set(coords.cam.x, coords.cam.y, coords.cam.z);
+        controls.target.set(coords.target.x, coords.target.y, coords.target.z);
         targetCamPos.copy(camera.position);
         targetLookAt.copy(controls.target);
         isCamLerping = false;
         updateZoomUI();
       } else {
-        targetCamPos.set(step.cam.x, step.cam.y, step.cam.z);
-        targetLookAt.set(step.target.x, step.target.y, step.target.z);
+        targetCamPos.set(coords.cam.x, coords.cam.y, coords.cam.z);
+        targetLookAt.set(coords.target.x, coords.target.y, coords.target.z);
         isCamLerping = true;
         setTimeout(updateZoomUI, 400);
       }
@@ -2971,9 +3045,11 @@
 
     function resetCameraZoom() {
       playTone('click');
-      const step = STEPS[currentStepIdx] || STEPS[0];
-      targetCamPos.set(step.cam.x, step.cam.y, step.cam.z);
-      targetLookAt.set(step.target.x, step.target.y, step.target.z);
+      const steps = getCurrentTrackSteps();
+      const step = steps[currentStepIdx] || steps[0];
+      const coords = getAdaptiveCameraCoords(step, currentStepIdx);
+      targetCamPos.set(coords.cam.x, coords.cam.y, coords.cam.z);
+      targetLookAt.set(coords.target.x, coords.target.y, coords.target.z);
       isCamLerping = true;
       setTimeout(updateZoomUI, 400);
     }
@@ -2982,17 +3058,23 @@
       playTone('click');
       if (preset === 'OVERVIEW') {
         goToStep(0);
-      } else if (preset === 'CONTROLLER') {
-        targetCamPos.set(-5.5, 5.6, 7.2);
-        targetLookAt.set(-5.5, -0.9, 0.3);
-        isCamLerping = true;
+        return;
+      }
+      let baseCam, baseTarget;
+      if (preset === 'CONTROLLER') {
+        baseCam = { x: -5.5, y: 5.6, z: 7.2 };
+        baseTarget = { x: -5.5, y: -0.9, z: 0.3 };
       } else if (preset === 'DRAM') {
-        targetCamPos.set(-0.2, 5.4, 7.0);
-        targetLookAt.set(-0.2, -0.9, 0.3);
-        isCamLerping = true;
+        baseCam = { x: -0.2, y: 5.4, z: 7.0 };
+        baseTarget = { x: -0.2, y: -0.9, z: 0.3 };
       } else if (preset === 'FLASH') {
-        targetCamPos.set(4.2, 5.8, 7.6);
-        targetLookAt.set(4.2, -0.9, 0.3);
+        baseCam = { x: 4.2, y: 5.8, z: 7.6 };
+        baseTarget = { x: 4.2, y: -0.9, z: 0.3 };
+      }
+      if (baseCam) {
+        const coords = getAdaptiveCameraCoords({ cam: baseCam, target: baseTarget }, 1);
+        targetCamPos.set(coords.cam.x, coords.cam.y, coords.cam.z);
+        targetLookAt.set(coords.target.x, coords.target.y, coords.target.z);
         isCamLerping = true;
       }
       setTimeout(updateZoomUI, 400);
@@ -4232,15 +4314,28 @@
 
       const aspect = w / h;
       let initFov = 36;
-      if (aspect < 1.0) {
-        initFov = Math.min(62, Math.max(38, 36 * (1.1 / aspect)));
-      } else if (aspect < 1.4) {
-        initFov = 40;
+      if (aspect < 0.55) {
+        initFov = 54;
+      } else if (aspect < 1.0) {
+        initFov = Math.min(52, Math.max(40, 36 * (1.1 / aspect)));
+      } else if (aspect < 1.35) {
+        initFov = h < 700 ? 42 : 39;
       } else if (aspect > 2.2) {
-        initFov = 34;
+        initFov = 32;
+      } else {
+        if (h < 620) {
+          initFov = 42;
+        } else if (h < 720) {
+          initFov = 38;
+        } else if (h < 820) {
+          initFov = 36;
+        } else {
+          initFov = 35;
+        }
       }
       camera = new THREE.PerspectiveCamera(initFov, aspect, 0.1, 1000);
-      camera.position.set(OVERVIEW_CAM.x, OVERVIEW_CAM.y, OVERVIEW_CAM.z);
+      const initCoords = getAdaptiveCameraCoords({ cam: OVERVIEW_CAM, target: OVERVIEW_TARGET }, 0);
+      camera.position.set(initCoords.cam.x, initCoords.cam.y, initCoords.cam.z);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(w, h);
@@ -4257,7 +4352,7 @@
       controls.zoomSpeed = 1.2;
       controls.minDistance = 6.0;
       controls.maxDistance = 60.0;
-      controls.target.set(OVERVIEW_TARGET.x, OVERVIEW_TARGET.y, OVERVIEW_TARGET.z);
+      controls.target.set(initCoords.target.x, initCoords.target.y, initCoords.target.z);
 
       controls.addEventListener('start', () => {
         isCamLerping = false;
@@ -4756,22 +4851,39 @@
         camera.fov = 54;
       } else if (aspect < 1.0) {
         // Standard mobile portrait / narrow tablet
-        camera.fov = Math.min(50, Math.max(38, 36 * (1.05 / aspect)));
-      } else if (aspect < 1.4) {
+        camera.fov = Math.min(52, Math.max(40, 36 * (1.1 / aspect)));
+      } else if (aspect < 1.35) {
         // Tablet / iPad 4:3
-        camera.fov = 38;
+        camera.fov = h < 700 ? 42 : 39;
       } else if (aspect > 2.2) {
         // 21:9 Ultrawide
         camera.fov = 32;
       } else {
         // Standard 16:9 / 16:10 Laptop & Desktop
-        camera.fov = 35;
+        if (h < 620) {
+          camera.fov = 42;
+        } else if (h < 720) {
+          camera.fov = 38;
+        } else if (h < 820) {
+          camera.fov = 36;
+        } else {
+          camera.fov = 35;
+        }
       }
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       resizeGraph();
       updateTabScrollButtons();
+
+      if (!controls.state || controls.state === -1) {
+        const steps = getCurrentTrackSteps();
+        const step = steps[currentStepIdx] || steps[0];
+        const coords = getAdaptiveCameraCoords(step, currentStepIdx);
+        targetCamPos.set(coords.cam.x, coords.cam.y, coords.cam.z);
+        targetLookAt.set(coords.target.x, coords.target.y, coords.target.z);
+        isCamLerping = true;
+      }
     }
 
     let frameCount = 0;
