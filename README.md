@@ -26,11 +26,11 @@
 ## Executive Summary & Problem Statement
 
 ### Context & Bottleneck
-The explosive growth of Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), and multi-GPU training clusters has shifted the AI performance bottleneck from compute to storage I/O. Although modern PCIe Gen5 NVMe SSDs boast up to 14.2 GB/s sequential throughput, their onboard firmware continues to handle I/O using a single generic Least Recently Used (LRU) caching strategy that assumes every request has equal value.
+The explosive growth of Large Language Models (LLMs), interleaved attention lookups (e.g. vLLM multi-head attention), and multi-GPU training clusters has shifted the AI performance bottleneck from compute to storage I/O. Although modern PCIe Gen5 NVMe SSDs boast up to 14.2 GB/s sequential throughput, conventional SSD firmware continues to handle I/O using generic cache management policies without workload segregation.
 
 In production AI workloads:
 - **Massive Sequential Training Streams** (PyTorch dataset loaders, checkpoints) flood SSD read queues at tens of gigabytes per second.
-- **Latency-Critical Random Inference Lookups** (KV-cache paging, vector embeddings, fine-tuning indices) require immediate sub-30µs responses to prevent GPU execution pipeline bubbles.
+- **Latency-Critical Random Inference Lookups** (KV-cache paging, sparse attention lookups, fine-tuning indices) require immediate sub-30µs target response times to prevent GPU execution pipeline bubbles.
 
 ### The Double-Read Trap
 When sequential training streams and random inference lookups collide in a standard SSD:
@@ -56,9 +56,10 @@ SanDisk NeuroFTL introduces an adaptive, workload-aware scheduling engine integr
            └─────────────────────┬─────────────────────┘
                                  ▼
          ┌───────────────────────────────────────────┐
-         │ Embedded Spatial AI Classifier (<80ns)    │
-         │ - Sliding window stride analysis          │
-         │ - Access density & entropy tracking       │
+         │ 10ns Multi-Feature Classifier (ARM TCM)   │
+         │ - Spatial stride vector tracking          │
+         │ - Inter-arrival time delta                │
+         │ - Spatial entropy window                  │
          └───────────────────────┬───────────────────┘
                                  │
                  ┌───────────────┴───────────────┐
@@ -67,7 +68,7 @@ SanDisk NeuroFTL introduces an adaptive, workload-aware scheduling engine integr
                  │                               │
                  ▼                               ▼
      Region 2: DMA Bypass Rail         Region 1: Pinned L2P (65%)
-   (Direct Flash-to-Host DMA)         (93.6% Locked RAM Hit Rate)
+   (Direct PCIe-to-NAND Transfer)     (93.6% Locked RAM Hit Rate)
                  │                               │
                  └───────────────┬───────────────┘
                                  ▼
@@ -75,14 +76,14 @@ SanDisk NeuroFTL introduces an adaptive, workload-aware scheduling engine integr
                      (Endurance Buffer & WAF 1.08)
 ```
 
-### 1. Embedded Nanosecond Spatial Classifier
-- Runs within the controller command dispatch pipeline in under 80 nanoseconds.
-- Dynamically classifies arriving block requests into **Sequential Bulk**, **Random Inference**, and **Checkpoint Burst**.
+### 1. Embedded 10ns Multi-Feature Workload Classifier
+- Runs deterministically within ARM Cortex-R8 Tightly Coupled Memory (TCM) registers in 10 nanoseconds.
+- Fuses three hardware features (Spatial Stride, Inter-Arrival Delta, and Spatial Entropy) with **93.6% classification accuracy**.
 
 ### 2. 3-Region DRAM Partitioning
 - **Region 1: Pinned Hot L2P Table (65% DRAM)**: Guarantees a **93.6% L2P RAM hit rate** (0.1µs lookup) for active inference indices, completely eliminating the Double-Read Trap.
-- **Region 2: Direct DMA Bypass Rail (5% DRAM)**: Routes sequential training streams directly to host memory over PCIe DMA, preventing DRAM cache pollution.
-- **Region 3: KV-Cache & Dynamic pSLC Shield (30% DRAM)**: Buffers burst writes and isolates high-frequency rewrites into pseudo-SLC flash blocks, lowering WAF to **1.08** and extending drive lifespan by **2.6×**.
+- **Region 2: Direct DMA Bypass Rail (5% DRAM)**: Minimizes write buffer allocation and routes sequential checkpoint streams directly to NAND flash channels, preserving L2P metadata purity.
+- **Region 3: Dynamic KV Tier & pSLC Shield (30% DRAM)**: Buffers latency-sensitive 4KB random reads and isolates high-frequency rewrites into pseudo-SLC flash blocks, lowering WAF to **1.08** and extending drive lifespan by **2.6×**.
 
 ---
 
