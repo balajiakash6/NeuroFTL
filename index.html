@@ -99,6 +99,9 @@
     #stepProcessContainer {
       min-height: 44px;
     }
+    #stepProcessContent {
+      overflow: hidden !important;
+    }
     @media (max-height: 850px) {
       #stepProcessContainer {
         padding: 4px 6px !important;
@@ -820,7 +823,7 @@
 
         <!-- Column 2: Real-Time Hardware Execution Pipeline (hidden xl:flex xl:col-span-4) -->
         <div class="hidden xl:flex xl:col-span-4 flex-col justify-between min-w-0 px-1 border-l border-r border-white/10 overflow-hidden">
-          <div id="stepProcessContainer" class="w-full h-full max-h-[90px] bg-[#050811]/70 backdrop-blur-md rounded-xl p-1.5 border border-white/10 flex flex-col justify-between overflow-hidden shadow-inner">
+          <div id="stepProcessContainer" class="w-full h-full bg-[#050811]/85 backdrop-blur-md rounded-xl p-1.5 sm:p-2 border border-white/10 flex flex-col justify-between overflow-hidden shadow-inner">
             <div class="flex items-center justify-between pb-1 mb-0.5 border-b border-white/10 text-[9px] font-mono shrink-0">
               <span class="flex items-center gap-1 text-zinc-300 font-bold tracking-wider">
                 <span id="processFlowDot" class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
@@ -830,7 +833,7 @@
                 STATUS QUO BASELINE
               </span>
             </div>
-            <div id="stepProcessContent" class="w-full flex-1 flex items-center overflow-x-auto no-scrollbar py-0.5">
+            <div id="stepProcessContent" class="w-full flex-1 flex flex-col justify-center overflow-hidden py-0.5 min-h-0">
             </div>
           </div>
         </div>
@@ -1707,10 +1710,10 @@
         metricP99: "21.4 µs",
         metricP99Std: "168.2",
         metricBadgeLatency: "⚡ 7.8× FASTER (vs Conv)",
-        metricSecLabel: "L2P RAM Hit Rate",
+        metricSecLabel: "Stream Accuracy",
         metricSecVal: "93.6%",
-        metricSecStd: "18.4%",
-        metricBadgeSec: "🔒 93.6% HIT RATE"
+        metricSecStd: "0.0%",
+        metricBadgeSec: "🔒 93.6% STREAM ACC"
       },
       {
         num: 1,
@@ -2075,29 +2078,29 @@
             badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/30";
           }
           container.innerHTML = `
-            <div class="flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5">
-              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[75px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-                <span class="text-zinc-400 font-bold text-[9px] uppercase">Host PCIe 5.0</span>
-                <span class="text-white font-bold">14.2 GB/s</span>
-                <span class="text-[9px] text-rose-400 font-semibold">Unsegregated</span>
+            <div class="flex items-center justify-between gap-1 text-[10px] sm:text-xs font-mono w-full py-0.5">
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[8px] sm:text-[9px] uppercase truncate">Host PCIe 5.0</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">14.2 GB/s</span>
+                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">Unsegregated</span>
               </button>
               <span class="text-rose-400 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-                <span class="text-rose-300 font-bold text-[9px] uppercase">Legacy Controller</span>
-                <span class="text-white font-bold">Generic FIFO</span>
-                <span class="text-[9px] text-rose-400 font-semibold">0% Awareness</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-rose-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Controller</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Generic FIFO</span>
+                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">0% Awareness</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-                <span class="text-rose-300 font-bold text-[9px] uppercase">Shared DRAM</span>
-                <span class="text-white font-bold">Unprotected Table</span>
-                <span class="text-[9px] text-rose-400 font-semibold">18.4% Hit Rate</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-rose-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Shared DRAM</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Unprotected</span>
+                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">18.4% Hit</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 shrink-0 min-w-[90px] sm:min-w-[115px] text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
-                <span class="text-rose-300 font-bold text-[9px] uppercase">BiCS Flash</span>
-                <span class="text-white font-bold">No Wear Shield</span>
-                <span class="text-[9px] text-rose-400 font-semibold">WAF 2.84</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
+                <span class="text-rose-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">BiCS Flash</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">No Shield</span>
+                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">2.84 WAF</span>
               </button>
             </div>
           `;
@@ -2267,29 +2270,29 @@
             badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
           }
           container.innerHTML = `
-            <div class="flex items-center justify-between gap-1 sm:gap-2 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5">
-              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[75px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-                <span class="text-zinc-400 font-bold text-[9px] uppercase">Host PCIe 5.0</span>
-                <span class="text-white font-bold">14.2 GB/s</span>
-                <span class="text-[9px] text-amber-400 font-semibold">Unchanged Link</span>
+            <div class="flex items-center justify-between gap-1 text-[10px] sm:text-xs font-mono w-full py-0.5">
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[8px] sm:text-[9px] uppercase truncate">PCIe 5.0</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">14.2 GB/s</span>
+                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">Unchanged</span>
               </button>
               <span class="text-amber-400 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-                <span class="text-amber-300 font-bold text-[9px] uppercase">v1.0 Controller</span>
-                <span class="text-white font-bold">ΔLBA &gt; 16 Rule</span>
-                <span class="text-[9px] text-amber-400 font-semibold">84.2% Accuracy</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Controller</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">ΔLBA &gt; 16</span>
+                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">84.2% Acc</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[95px] sm:min-w-[120px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-                <span class="text-amber-300 font-bold text-[9px] uppercase">Static DRAM</span>
-                <span class="text-white font-bold">Fixed 50/50 Split</span>
-                <span class="text-[9px] text-amber-400 font-semibold">Rigid Partition</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Static DRAM</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Fixed 50/50</span>
+                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">Rigid Split</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[90px] sm:min-w-[115px] text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
-                <span class="text-amber-300 font-bold text-[9px] uppercase">BiCS Flash</span>
-                <span class="text-white font-bold">Partial Bypass</span>
-                <span class="text-[9px] text-amber-400 font-semibold">WAF 1.62</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
+                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">BiCS Flash</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Bypass</span>
+                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">WAF 1.62</span>
               </button>
             </div>
           `;
@@ -2361,17 +2364,26 @@
             badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
           }
           container.innerHTML = `
-            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
-              <div class="p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-1">
                 <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">WHY STATIC STRIDE FAILS ON AI WORKLOADS</span>
-                  <span class="text-rose-300 font-bold">15.8% MISCLASSIFICATION</span>
+                  <span class="text-rose-400 font-bold">1. INTERLEAVED ATTENTION</span>
+                  <span class="text-rose-300 font-bold">ΔLBA &lt; 16</span>
                 </div>
-                <div class="text-[10px] text-zinc-200 leading-snug">
-                  • <strong>Interleaved Attention Bursts:</strong> vLLM multi-head attention and RAG vector lookups generate non-sequential address deltas (<code>ΔLBA &lt; 16</code>).<br/>
-                  • <strong>False Positives / Negatives:</strong> v1.0 incorrectly bypasses small KV tables or dumps massive training blocks into the 50% DRAM cache.<br/>
-                  • <strong>Tail Jitter:</strong> Each misclassification triggers a flash sensing stall, introducing <strong>84.6µs tail latency spikes</strong>.
+                <div class="text-[9.5px] text-zinc-200 leading-snug">
+                  vLLM multi-head attention &amp; RAG vector queries interleave random reads, breaking sequential stride rules.
                 </div>
+                <div class="text-[8.5px] text-rose-400 font-semibold">❌ 15.8% Misclassification Error</div>
+              </div>
+              <div class="p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-1">
+                <div class="flex items-center justify-between text-[9px]">
+                  <span class="text-rose-400 font-bold">2. DOUBLE-READ &amp; JITTER</span>
+                  <span class="text-rose-300 font-bold">84.6µs SPIKES</span>
+                </div>
+                <div class="text-[9.5px] text-zinc-200 leading-snug">
+                  Misclassified KV reads trigger flash sensing stalls; massive training blocks pollute the 50% DRAM cache.
+                </div>
+                <div class="text-[8.5px] text-rose-400 font-semibold">💥 84.6µs Tail Jitter / GPU Stalls</div>
               </div>
             </div>
           `;
@@ -2422,29 +2434,29 @@
             badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
           }
           container.innerHTML = `
-            <div class="flex items-center justify-between gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono overflow-x-auto no-scrollbar py-0.5 w-full">
-              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 shrink-0 min-w-[68px] sm:min-w-[85px] text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-                <span class="text-zinc-400 font-bold text-[8.5px] sm:text-[9px] uppercase">Host PCIe 5.0</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px]">14.2 GB/s</span>
-                <span class="text-[8.5px] sm:text-[9px] text-cyan-400 font-semibold">x4 NVMe Link</span>
+            <div class="flex items-center justify-between gap-1 text-[10px] sm:text-xs font-mono w-full py-0.5">
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[8px] sm:text-[9px] uppercase truncate">Host PCIe 5.0</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">14.2 GB/s</span>
+                <span class="text-[8px] sm:text-[8.5px] text-cyan-400 font-semibold truncate">x4 NVMe Link</span>
               </button>
               <span class="text-cyan-400 font-bold text-xs shrink-0 animate-pulse">➔</span>
-              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 shrink-0 min-w-[78px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-                <span class="text-cyan-300 font-bold text-[8.5px] sm:text-[9px] uppercase">NVMe Controller</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px]">ARM Cortex-R8</span>
-                <span class="text-[8.5px] sm:text-[9px] text-emerald-400 font-semibold">10ns Classifier</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-cyan-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Controller</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">ARM Cortex-R8</span>
+                <span class="text-[8px] sm:text-[8.5px] text-emerald-400 font-semibold truncate">10ns Classifier</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 shrink-0 min-w-[78px] sm:min-w-[95px] text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-                <span class="text-amber-300 font-bold text-[8.5px] sm:text-[9px] uppercase">3-Region DRAM</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px]">65% Pinned L2P</span>
-                <span class="text-[8.5px] sm:text-[9px] text-cyan-400 font-semibold">93.6% RAM Hit</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">3-Region DRAM</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">65% Pinned L2P</span>
+                <span class="text-[8px] sm:text-[8.5px] text-cyan-400 font-semibold truncate">93.6% RAM Hit</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 shrink-0 min-w-[72px] sm:min-w-[90px] text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
-                <span class="text-emerald-300 font-bold text-[8.5px] sm:text-[9px] uppercase">BiCS5 3D Flash</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px]">pSLC Shield</span>
-                <span class="text-[8.5px] sm:text-[9px] text-emerald-400 font-semibold">WAF 1.08</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
+                <span class="text-emerald-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">BiCS5 Flash</span>
+                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">pSLC Shield</span>
+                <span class="text-[8px] sm:text-[8.5px] text-emerald-400 font-semibold truncate">WAF 1.08</span>
               </button>
             </div>
           `;
@@ -5238,52 +5250,93 @@
       setText('miniP99', curMiniP99 + ' µs');
       setText('miniWaf', curMiniWaf);
 
-      // 3. Update Presentation Dock Metric Cards dynamically according to active step
-      if (currentStepIdx === 2 || currentArchMode === 'CONVENTIONAL' || currentArchMode === 'PROBLEM') {
-        // Stage 2: Conventional Failure
+      // 3. Update Presentation Dock Metric Cards dynamically according to active step & track
+      if (currentTrackKey === 'CONVENTIONAL' || currentArchMode === 'CONVENTIONAL' || currentArchMode === 'PROBLEM') {
         setText('metricP99', stdP99.toFixed(1) + ' µs');
         setText('metricP99Std', adpP99.toFixed(1));
         setText('metricBadgeLatency', `⚠️ +${(stdP99 - adpP99).toFixed(0)}µs FLASH PENALTY`);
-        setText('metricSecondaryLabel', 'GPU Compute Idle');
-        setText('metricSecondaryVal', stdStall.toFixed(1) + '% Stalled');
-        setText('metricSecondaryStd', '0.0%');
-        setText('metricBadgeSecondary', '❌ GPU DATA-STARVED');
-      } else if (currentStepIdx === 3 || currentArchMode === 'V1') {
-        // Stage 3: Firmware v1.0 vs v2.0 Online Classifier
+        if (currentStepIdx === 0 || currentStepIdx === 2) {
+          setText('metricSecondaryLabel', 'L2P RAM Hit Rate');
+          setText('metricSecondaryVal', stdHit.toFixed(1) + '%');
+          setText('metricSecondaryStd', '93.6%');
+          setText('metricBadgeSecondary', '❌ 81.6% MISSES');
+        } else if (currentStepIdx === 1) {
+          setText('metricSecondaryLabel', 'Ingress Traffic');
+          setText('metricSecondaryVal', '14.2 GB/s');
+          setText('metricSecondaryStd', '0.0');
+          setText('metricBadgeSecondary', '⚠️ UNSEGREGATED');
+        } else if (currentStepIdx === 3) {
+          setText('metricSecondaryLabel', 'Flash Penalty');
+          setText('metricSecondaryVal', '2× Flash Fetch');
+          setText('metricSecondaryStd', '1×');
+          setText('metricBadgeSecondary', '❌ CONTROLLER STALLED');
+        } else {
+          setText('metricSecondaryLabel', 'GPU Compute Idle');
+          setText('metricSecondaryVal', stdStall.toFixed(1) + '% Stalled');
+          setText('metricSecondaryStd', '0.0%');
+          setText('metricBadgeSecondary', '❌ GPU DATA-STARVED');
+        }
+      } else if (currentTrackKey === 'V1' || currentArchMode === 'V1') {
         setText('metricP99', lastV1P99.toFixed(1) + ' µs');
-        setText('metricP99Std', stdP99.toFixed(1));
-        setText('metricBadgeLatency', '⚠️ v1.0 HEURISTIC (84.2%)');
-        setText('metricSecondaryLabel', 'Stream Accuracy');
-        setText('metricSecondaryVal', lastV1Acc.toFixed(1) + '% (v2: 93.6%)');
-        setText('metricSecondaryStd', '0.0%');
-        setText('metricBadgeSecondary', '⚡ 15.8% RAG MISS RATE');
-      } else if (currentStepIdx === 4) {
-        // Stage 4: 3-Region DRAM & pSLC
-        setText('metricP99', adpP99.toFixed(1) + ' µs');
-        setText('metricP99Std', stdP99.toFixed(1));
-        setText('metricBadgeLatency', '⚡ FLAT 21µs LATENCY');
-        setText('metricSecondaryLabel', 'BiCS Flash WAF');
-        setText('metricSecondaryVal', adpWaf.toFixed(2) + ' WAF');
-        setText('metricSecondaryStd', stdWaf.toFixed(2));
-        setText('metricBadgeSecondary', '🛡️ 2.6× FLASH LIFESPAN');
-      } else if (currentStepIdx === 5) {
-        // Stage 5: Verdict
-        setText('metricP99', adpP99.toFixed(1) + ' µs');
-        setText('metricP99Std', stdP99.toFixed(1));
-        setText('metricBadgeLatency', '⚡ 7.8× LOWER TAIL LATENCY');
-        setText('metricSecondaryLabel', 'GPU Utilization');
-        setText('metricSecondaryVal', '100% Active');
-        setText('metricSecondaryStd', (100 - stdStall).toFixed(1) + '%');
-        setText('metricBadgeSecondary', '🚀 ZERO IDLE BUBBLES');
+        setText('metricP99Std', adpP99.toFixed(1));
+        setText('metricBadgeLatency', '⚠️ v1.0 HEURISTIC');
+        if (currentStepIdx === 0 || currentStepIdx === 3) {
+          setText('metricSecondaryLabel', 'Stream Accuracy');
+          setText('metricSecondaryVal', lastV1Acc.toFixed(1) + '%');
+          setText('metricSecondaryStd', '93.6%');
+          setText('metricBadgeSecondary', '⚠️ 15.8% RAG MISS RATE');
+        } else if (currentStepIdx === 1) {
+          setText('metricSecondaryLabel', 'DRAM Split');
+          setText('metricSecondaryVal', 'Fixed 50/50');
+          setText('metricSecondaryStd', 'Dynamic');
+          setText('metricBadgeSecondary', '⚠️ INFLEXIBLE SPLIT');
+        } else if (currentStepIdx === 2) {
+          setText('metricSecondaryLabel', 'Pure Stride Acc');
+          setText('metricSecondaryVal', '96.4%');
+          setText('metricSecondaryStd', '100.0%');
+          setText('metricBadgeSecondary', '✓ DETECTS LINEAR');
+        } else {
+          setText('metricSecondaryLabel', 'GPU Starvation');
+          setText('metricSecondaryVal', lastV1Stall.toFixed(1) + '%');
+          setText('metricSecondaryStd', '0.0%');
+          setText('metricBadgeSecondary', '⚠️ PERSISTENT JITTER');
+        }
       } else {
-        // Stage 0 & 1: Overview & Arrival
+        // Track 3: NeuroFTL v2.0 (Adaptive FTL - 93.6% Stream Accuracy)
         setText('metricP99', adpP99.toFixed(1) + ' µs');
         setText('metricP99Std', stdP99.toFixed(1));
-        setText('metricBadgeLatency', '⚡ 7.8× FASTER');
-        setText('metricSecondaryLabel', 'L2P RAM Hit Rate');
-        setText('metricSecondaryVal', adpHit.toFixed(1) + '%');
-        setText('metricSecondaryStd', stdHit.toFixed(1) + '%');
-        setText('metricBadgeSecondary', '🔒 METADATA LOCKED');
+        setText('metricBadgeLatency', '⚡ FLAT 21.4µs');
+        if (currentStepIdx === 0) {
+          setText('metricSecondaryLabel', 'Stream Accuracy');
+          setText('metricSecondaryVal', '93.6%');
+          setText('metricSecondaryStd', '0.0%');
+          setText('metricBadgeSecondary', '🔒 93.6% STREAM ACC');
+        } else if (currentStepIdx === 1) {
+          setText('metricSecondaryLabel', 'Stream Accuracy');
+          setText('metricSecondaryVal', '93.6%');
+          setText('metricSecondaryStd', '0.0%');
+          setText('metricBadgeSecondary', '⚡ 93.6% SEPARATION');
+        } else if (currentStepIdx === 2) {
+          setText('metricSecondaryLabel', 'DRAM Pollution');
+          setText('metricSecondaryVal', '0.0% Eviction');
+          setText('metricSecondaryStd', '81.6%');
+          setText('metricBadgeSecondary', '🔒 ISOLATED RAIL');
+        } else if (currentStepIdx === 3) {
+          setText('metricSecondaryLabel', 'L2P Hit Rate');
+          setText('metricSecondaryVal', '93.6%');
+          setText('metricSecondaryStd', '18.4%');
+          setText('metricBadgeSecondary', '🔒 93.6% PINNED');
+        } else if (currentStepIdx === 4) {
+          setText('metricSecondaryLabel', 'BiCS Flash WAF');
+          setText('metricSecondaryVal', adpWaf.toFixed(2) + ' WAF');
+          setText('metricSecondaryStd', stdWaf.toFixed(2));
+          setText('metricBadgeSecondary', '🛡️ 2.6× FLASH LIFESPAN');
+        } else {
+          setText('metricSecondaryLabel', 'Stream Accuracy');
+          setText('metricSecondaryVal', '93.6%');
+          setText('metricSecondaryStd', (100 - stdStall).toFixed(1) + '%');
+          setText('metricBadgeSecondary', '⚡ 93.6% ACCURACY');
+        }
       }
     }
 
