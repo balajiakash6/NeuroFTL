@@ -246,13 +246,13 @@
     /* Scaling on compact laptop viewports (600px - 850px height) */
     @media (min-width: 768px) and (max-height: 850px) {
       #presentationDock {
-        max-height: 250px !important;
-        padding: 6px 10px !important;
+        max-height: 255px !important;
+        padding: 5px 8px !important;
       }
       #dockStepPara {
-        font-size: 12px !important;
-        line-height: 1.4 !important;
-        max-height: 56px !important;
+        font-size: 11.5px !important;
+        line-height: 1.35 !important;
+        max-height: 52px !important;
       }
       #telemetryHud {
         max-height: min(320px, calc(100vh - 250px)) !important;
@@ -264,13 +264,13 @@
 
     @media (min-width: 768px) and (max-height: 720px) {
       #presentationDock {
-        max-height: 238px !important;
-        padding: 5px 8px !important;
+        max-height: 245px !important;
+        padding: 4px 7px !important;
       }
       #dockStepPara {
-        font-size: 11.5px !important;
-        line-height: 1.35 !important;
-        max-height: 50px !important;
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+        max-height: 46px !important;
       }
       #graphCanvasBox {
         height: 75px !important;
@@ -793,8 +793,8 @@
       <!-- Collapsible Body Area: High-Precision 3-Column Bento Deck (ZERO SCROLL, ALL TEXT VISIBLE) -->
       <div id="dockBody" class="w-full grid grid-cols-1 lg:grid-cols-12 gap-1.5 sm:gap-2 pt-1 sm:pt-1.5 items-stretch min-h-0 select-none flex-1 overflow-hidden">
         
-        <!-- Column 1: Narrative & Context (lg:col-span-7 xl:col-span-5) -->
-        <div class="lg:col-span-7 xl:col-span-5 flex flex-col justify-between min-w-0 pr-0.5 sm:pr-1 space-y-0.5 sm:space-y-1 overflow-hidden">
+        <!-- Column 1: Narrative & Context (lg:col-span-4 xl:col-span-5) -->
+        <div class="lg:col-span-4 xl:col-span-5 flex flex-col justify-between min-w-0 pr-0.5 sm:pr-1 space-y-0.5 sm:space-y-1 overflow-hidden">
           <div class="space-y-0.5 min-w-0">
             <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
               <span id="dockGenBadge" class="text-[8.5px] sm:text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.2 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0">GEN 1: CONVENTIONAL FTL</span>
@@ -821,8 +821,8 @@
           </p>
         </div>
 
-        <!-- Column 2: Real-Time Hardware Execution Pipeline (hidden xl:flex xl:col-span-4) -->
-        <div class="hidden xl:flex xl:col-span-4 flex-col justify-between min-w-0 px-1 border-l border-r border-white/10 overflow-hidden">
+        <!-- Column 2: Real-Time Hardware Execution Pipeline (hidden lg:flex lg:col-span-5 xl:col-span-4) -->
+        <div class="hidden lg:flex lg:col-span-5 xl:col-span-4 flex-col justify-between min-w-0 px-1 border-l border-r border-white/10 overflow-hidden">
           <div id="stepProcessContainer" class="w-full h-full bg-[#050811]/85 backdrop-blur-md rounded-xl p-1.5 sm:p-2 border border-white/10 flex flex-col justify-between overflow-hidden shadow-inner">
             <div class="flex items-center justify-between pb-1 mb-0.5 border-b border-white/10 text-[9px] font-mono shrink-0">
               <span class="flex items-center gap-1 text-zinc-300 font-bold tracking-wider">
@@ -838,8 +838,8 @@
           </div>
         </div>
 
-        <!-- Column 3: Silicon Telemetry Metrics & Tactile Actions (lg:col-span-5 xl:col-span-3) -->
-        <div class="lg:col-span-5 xl:col-span-3 flex flex-col justify-between w-full min-w-0 lg:pl-1 space-y-1 h-full">
+        <!-- Column 3: Silicon Telemetry Metrics & Tactile Actions (lg:col-span-3 xl:col-span-3) -->
+        <div class="lg:col-span-3 xl:col-span-3 flex flex-col justify-between w-full min-w-0 lg:pl-1 space-y-1 h-full">
           <!-- Sleek Dual Silicon Metric Badges -->
           <div class="grid grid-cols-2 gap-1 sm:gap-1.5 font-mono w-full min-w-0" id="dockMetricsGroup">
             <!-- Latency Card -->
@@ -2075,32 +2075,32 @@
           if (label) label.innerText = "TOPOLOGY • CONVENTIONAL UNSEGREGATED PIPELINE";
           if (badge) {
             badge.innerText = "STATUS QUO BASELINE";
-            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono text-[8.5px] border border-rose-500/30";
           }
           container.innerHTML = `
             <div class="flex items-center justify-between gap-1 text-[10px] sm:text-xs font-mono w-full py-0.5">
-              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-                <span class="text-zinc-400 font-bold text-[8px] sm:text-[9px] uppercase truncate">Host PCIe 5.0</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">14.2 GB/s</span>
-                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">Unsegregated</span>
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[8px] uppercase truncate">Host PCIe 5.0</span>
+                <span class="text-white font-bold text-[10px] truncate">14.2 GB/s</span>
+                <span class="text-[8px] text-rose-400 font-semibold truncate">Unsegregated</span>
               </button>
               <span class="text-rose-400 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-                <span class="text-rose-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Controller</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Generic FIFO</span>
-                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">0% Awareness</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-rose-300 font-bold text-[8px] uppercase truncate">Controller</span>
+                <span class="text-white font-bold text-[10px] truncate">Generic FIFO</span>
+                <span class="text-[8px] text-rose-400 font-semibold truncate">0% Awareness</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-                <span class="text-rose-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Shared DRAM</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Unprotected</span>
-                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">18.4% Hit</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-rose-300 font-bold text-[8px] uppercase truncate">Shared DRAM</span>
+                <span class="text-white font-bold text-[10px] truncate">Unprotected</span>
+                <span class="text-[8px] text-rose-400 font-semibold truncate">18.4% Hit</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
-                <span class="text-rose-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">BiCS Flash</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">No Shield</span>
-                <span class="text-[8px] sm:text-[8.5px] text-rose-400 font-semibold truncate">2.84 WAF</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
+                <span class="text-rose-300 font-bold text-[8px] uppercase truncate">BiCS Flash</span>
+                <span class="text-white font-bold text-[10px] truncate">No Shield</span>
+                <span class="text-[8px] text-rose-400 font-semibold truncate">2.84 WAF</span>
               </button>
             </div>
           `;
@@ -2109,34 +2109,25 @@
           if (label) label.innerText = "INGRESS • CONCURRENT NVMe QUEUE TRACE";
           if (badge) {
             badge.innerText = "TRAFFIC CONTENTION";
-            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono text-[8.5px] border border-amber-500/30";
           }
           container.innerHTML = `
-            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
-              <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/25">
-                <div class="flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                  <span class="text-amber-300 font-bold">QUEUE SQ0 (PyTorch Checkpoint):</span>
-                  <span class="text-zinc-200">64KB Sequential Writes</span>
+            <div class="grid grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/25 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8.5px]">
+                  <span class="text-amber-300 font-bold truncate">SQ0 • TRAIN CHECKPOINT</span>
+                  <span class="text-amber-400 font-bold shrink-0">14.2 GB/s</span>
                 </div>
-                <div class="flex items-center gap-2 text-right">
-                  <span class="text-zinc-400 hidden sm:inline">LBA 0x1000..0x103F</span>
-                  <span class="text-amber-400 font-bold">14.2 GB/s Bandwidth</span>
-                </div>
+                <div class="text-white font-bold text-[10px] truncate">64KB Sequential Writes</div>
+                <div class="text-[8px] text-amber-300/90 truncate">💥 Floods Shared DRAM FIFO</div>
               </div>
-              <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/25">
-                <div class="flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-                  <span class="text-cyan-300 font-bold">QUEUE SQ1 (vLLM KV Inference):</span>
-                  <span class="text-zinc-200">4KB Random Reads</span>
+              <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/25 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8.5px]">
+                  <span class="text-cyan-300 font-bold truncate">SQ1 • KV INFERENCE</span>
+                  <span class="text-cyan-400 font-bold shrink-0">120K IOPS</span>
                 </div>
-                <div class="flex items-center gap-2 text-right">
-                  <span class="text-zinc-400 hidden sm:inline">LBA 0x8A420</span>
-                  <span class="text-cyan-400 font-bold">120K IOPS (&lt;30µs SLA)</span>
-                </div>
-              </div>
-              <div class="text-[9px] sm:text-[10px] text-rose-300/90 flex items-center justify-between pt-0.5 font-sans">
-                <span>⚠️ <strong>Conventional FTL Flaw:</strong> Unsegregated LRU cache allows massive 64KB writes to flush 4KB KV page tables out of DRAM.</span>
+                <div class="text-white font-bold text-[10px] truncate">4KB Random Reads (&lt;30µs SLA)</div>
+                <div class="text-[8px] text-rose-300/90 truncate">❌ Evicted &amp; Stalled by SQ0</div>
               </div>
             </div>
           `;
@@ -2145,33 +2136,33 @@
           if (label) label.innerText = "POLLUTION • DRAM CACHE EVICTION TRACE";
           if (badge) {
             badge.innerText = "81.6% EVICTION RATE";
-            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+            badge.className = "px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono text-[8.5px] border border-rose-500/40";
           }
           container.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-0.5">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">STEP 1: INGRESS</span>
-                  <span class="text-amber-400">14.2 GB/s</span>
+            <div class="grid grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8px]">
+                  <span class="text-rose-400 font-bold">1. INGRESS</span>
+                  <span class="text-amber-400 font-semibold">14.2 GB/s</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">Training Stream Flood</div>
-                <div class="text-[9px] text-zinc-300">PyTorch weights sweep through DRAM buffer uncontrollably</div>
+                <div class="text-white font-bold text-[10px] truncate">Write Sweep</div>
+                <div class="text-[8px] text-zinc-300 truncate">64KB blocks flood DRAM</div>
               </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 space-y-0.5">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">STEP 2: FLUSH</span>
-                  <span class="text-rose-300 font-bold">L2P PURGED</span>
+              <div class="p-1 rounded-lg bg-rose-500/20 border border-rose-500/40 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8px]">
+                  <span class="text-rose-400 font-bold">2. FLUSH</span>
+                  <span class="text-rose-300 font-bold">PURGED</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">Metadata Table Evicted</div>
-                <div class="text-[9px] text-zinc-300">KV address translation entries cast out to make room for writes</div>
+                <div class="text-white font-bold text-[10px] truncate">L2P Purged</div>
+                <div class="text-[8px] text-zinc-300 truncate">KV page tables cast out</div>
               </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/25 border border-rose-500/50 space-y-0.5">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-300 font-bold">STEP 3: PENALTY</span>
-                  <span class="text-rose-400 font-black">+130µs tR</span>
+              <div class="p-1 rounded-lg bg-rose-500/25 border border-rose-500/50 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8px]">
+                  <span class="text-rose-300 font-bold">3. PENALTY</span>
+                  <span class="text-rose-400 font-bold">+130µs tR</span>
                 </div>
-                <div class="text-rose-300 font-bold text-[11px]">Subsequent KV Miss</div>
-                <div class="text-[9px] text-rose-200">Hit rate drops from 93.6% down to 18.4% • Double-Read triggered</div>
+                <div class="text-rose-300 font-bold text-[10px] truncate">Double-Read</div>
+                <div class="text-[8px] text-rose-200 truncate">Hit drops to 18.4%</div>
               </div>
             </div>
           `;
@@ -2180,46 +2171,29 @@
           if (label) label.innerText = "FAILURE • DOUBLE-READ CASCADE TRACE";
           if (badge) {
             badge.innerText = "⚠️ +130µs FLASH PENALTY";
-            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+            badge.className = "px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono text-[8.5px] border border-rose-500/40";
           }
           container.innerHTML = `
-            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-1 sm:gap-1.5">
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-0.5">
-                  <div class="flex items-center justify-between text-[9px]">
-                    <span class="text-rose-400 font-bold">T = 0.2 µs</span>
-                    <span class="text-rose-300">DRAM MISS</span>
-                  </div>
-                  <div class="text-white font-bold text-[11px]">1. L2P Evicted</div>
-                  <div class="text-[9px] text-zinc-300">64KB training write purged KV page table from RAM</div>
-                </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 space-y-0.5">
-                  <div class="flex items-center justify-between text-[9px]">
-                    <span class="text-rose-400 font-bold">T = 25.0 µs</span>
-                    <span class="text-amber-400 font-bold">+25µs tR</span>
-                  </div>
-                  <div class="text-white font-bold text-[11px]">2. FLASH READ 1</div>
-                  <div class="text-[9px] text-zinc-300">Controller stalls to read L2P page from Die 0</div>
-                </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 space-y-0.5">
-                  <div class="flex items-center justify-between text-[9px]">
-                    <span class="text-rose-400 font-bold">T = 26.8 µs</span>
-                    <span class="text-zinc-300">PBA DECODE</span>
-                  </div>
-                  <div class="text-white font-bold text-[11px]">3. Address Resolved</div>
-                  <div class="text-[9px] text-zinc-300">Target resolved: Die 1, Plane 0, Blk 412, Pg 68</div>
-                </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/25 border border-rose-500/50 space-y-0.5 animate-pulse">
-                  <div class="flex items-center justify-between text-[9px]">
-                    <span class="text-rose-300 font-bold">T = 52µs..168µs</span>
-                    <span class="text-rose-400 font-black">TAIL SPIKE!</span>
-                  </div>
-                  <div class="text-rose-300 font-bold text-[11px]">4. FLASH READ 2</div>
-                  <div class="text-[9px] text-rose-200">Second sensing + GC lock ➔ 168.2µs tail latency</div>
-                </div>
+            <div class="grid grid-cols-4 gap-1 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-0.5 min-w-0 text-center">
+                <div class="text-[8px] text-rose-400 font-bold">T = 0.2 µs</div>
+                <div class="text-white font-bold text-[10px] truncate">1. L2P Miss</div>
+                <div class="text-[8px] text-zinc-300 truncate">Table evicted</div>
               </div>
-              <div class="text-[9px] sm:text-[10px] text-rose-300 flex items-center justify-between pt-0.5 font-sans">
-                <span>💥 <strong>Host Impact:</strong> GPU DataLoader starved • <strong>38.2% compute idle bubbles</strong> while CUDA cores wait</span>
+              <div class="p-1 rounded-lg bg-rose-500/20 border border-rose-500/40 flex flex-col justify-between space-y-0.5 min-w-0 text-center">
+                <div class="text-[8px] text-amber-400 font-bold">+25µs tR</div>
+                <div class="text-white font-bold text-[10px] truncate">2. L2P Read</div>
+                <div class="text-[8px] text-zinc-300 truncate">Flash sensing</div>
+              </div>
+              <div class="p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-0.5 min-w-0 text-center">
+                <div class="text-[8px] text-zinc-300 font-bold">T = 26.8 µs</div>
+                <div class="text-white font-bold text-[10px] truncate">3. PBA Calc</div>
+                <div class="text-[8px] text-zinc-300 truncate">Target mapped</div>
+              </div>
+              <div class="p-1 rounded-lg bg-rose-500/25 border border-rose-500/50 flex flex-col justify-between space-y-0.5 min-w-0 text-center animate-pulse">
+                <div class="text-[8px] text-rose-400 font-black">168.2µs TAIL</div>
+                <div class="text-rose-300 font-bold text-[10px] truncate">4. Data Read</div>
+                <div class="text-[8px] text-rose-200 truncate">GC contention</div>
               </div>
             </div>
           `;
@@ -2228,33 +2202,33 @@
           if (label) label.innerText = "IMPACT • HOST GPU STARVATION & FLASH WEAR";
           if (badge) {
             badge.innerText = "38.2% COMPUTE LOSS";
-            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+            badge.className = "px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono text-[8.5px] border border-rose-500/40";
           }
           container.innerHTML = `
-            <div class="space-y-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">P99 READ TAIL</div>
-                  <div class="text-sm sm:text-base font-black text-rose-400">168.2 µs</div>
-                  <div class="text-[8.5px] text-rose-300 font-semibold">❌ 7.8× Higher vs Target</div>
+            <div class="space-y-1 text-[10px] sm:text-xs font-mono w-full">
+              <div class="grid grid-cols-4 gap-1">
+                <div class="p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">P99 Tail</div>
+                  <div class="text-xs sm:text-sm font-black text-rose-400 leading-tight">168.2 µs</div>
+                  <div class="text-[7.5px] text-rose-300 font-semibold truncate">❌ 7.8× Target</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">GPU IDLE BUBBLES</div>
-                  <div class="text-sm sm:text-base font-black text-rose-400">38.2%</div>
-                  <div class="text-[8.5px] text-rose-300 font-semibold">💥 CUDA Cores Starved</div>
+                <div class="p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">Idle Bubbles</div>
+                  <div class="text-xs sm:text-sm font-black text-rose-400 leading-tight">38.2%</div>
+                  <div class="text-[7.5px] text-rose-300 font-semibold truncate">💥 CUDA Starved</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">WRITE AMPLIFICATION</div>
-                  <div class="text-sm sm:text-base font-black text-rose-400">2.84 WAF</div>
-                  <div class="text-[8.5px] text-rose-300 font-semibold">⚠️ 62% Shorter Flash Life</div>
+                <div class="p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">Flash WAF</div>
+                  <div class="text-xs sm:text-sm font-black text-rose-400 leading-tight">2.84 WAF</div>
+                  <div class="text-[7.5px] text-rose-300 font-semibold truncate">⚠️ 62% Shorter</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">L2P RAM HIT RATE</div>
-                  <div class="text-sm sm:text-base font-black text-rose-400">18.4%</div>
-                  <div class="text-[8.5px] text-rose-300 font-semibold">❌ Severe Cache Thrash</div>
+                <div class="p-1 rounded-lg bg-rose-500/15 border border-rose-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">RAM Hit Rate</div>
+                  <div class="text-xs sm:text-sm font-black text-rose-400 leading-tight">18.4%</div>
+                  <div class="text-[7.5px] text-rose-300 font-semibold truncate">❌ Cache Thrash</div>
                 </div>
               </div>
-              <button onclick="switchMode('V1')" class="w-full py-1.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
+              <button onclick="switchMode('V1')" class="w-full py-0.5 px-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-bold text-[9.5px] shadow-sm transition cursor-pointer flex items-center justify-center gap-1 font-mono">
                 <span>See What We Tried First: Firmware v1.0 (Heuristic Prototype) ➔</span>
               </button>
             </div>
@@ -2267,32 +2241,32 @@
           if (label) label.innerText = "TOPOLOGY • FIRMWARE v1.0 STATIC HEURISTIC";
           if (badge) {
             badge.innerText = "EARLY PROTOTYPE (84.2%)";
-            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono text-[8.5px] border border-amber-500/30";
           }
           container.innerHTML = `
             <div class="flex items-center justify-between gap-1 text-[10px] sm:text-xs font-mono w-full py-0.5">
-              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-                <span class="text-zinc-400 font-bold text-[8px] sm:text-[9px] uppercase truncate">PCIe 5.0</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">14.2 GB/s</span>
-                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">Unchanged</span>
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[8px] uppercase truncate">PCIe 5.0</span>
+                <span class="text-white font-bold text-[10px] truncate">14.2 GB/s</span>
+                <span class="text-[8px] text-amber-400 font-semibold truncate">Unchanged</span>
               </button>
               <span class="text-amber-400 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Controller</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">ΔLBA &gt; 16</span>
-                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">84.2% Acc</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-amber-300 font-bold text-[8px] uppercase truncate">Controller</span>
+                <span class="text-white font-bold text-[10px] truncate">ΔLBA &gt; 16</span>
+                <span class="text-[8px] text-amber-400 font-semibold truncate">84.2% Acc</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Static DRAM</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Fixed 50/50</span>
-                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">Rigid Split</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-amber-300 font-bold text-[8px] uppercase truncate">Static DRAM</span>
+                <span class="text-white font-bold text-[10px] truncate">Fixed 50/50</span>
+                <span class="text-[8px] text-amber-400 font-semibold truncate">Rigid Split</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
-                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">BiCS Flash</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">Bypass</span>
-                <span class="text-[8px] sm:text-[8.5px] text-amber-400 font-semibold truncate">WAF 1.62</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom Flash in 3D">
+                <span class="text-amber-300 font-bold text-[8px] uppercase truncate">BiCS Flash</span>
+                <span class="text-white font-bold text-[10px] truncate">Bypass</span>
+                <span class="text-[8px] text-amber-400 font-semibold truncate">WAF 1.62</span>
               </button>
             </div>
           `;
@@ -2301,32 +2275,29 @@
           if (label) label.innerText = "ALGORITHM • STATIC STRIDE THRESHOLD & 50/50 SPLIT";
           if (badge) {
             badge.innerText = "ΔLBA > 16 RULE";
-            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono text-[8.5px] border border-amber-500/30";
           }
           container.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-amber-300 font-bold">HEURISTIC LOGIC</span>
-                  <span class="text-white font-mono">SOFTWARE CHECK</span>
+            <div class="grid grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8.5px]">
+                  <span class="text-amber-300 font-bold truncate">STATIC STRIDE RULE</span>
+                  <span class="text-white font-mono text-[8px] shrink-0">SW CHECK</span>
                 </div>
-                <div class="text-[10px] text-zinc-200 leading-snug">
-                  <code>if (req.lba - last_lba &gt; 16 &amp;&amp; req.size &gt;= 64KB) {</code><br/>
-                  &nbsp;&nbsp;<code>route_to_stream_bypass();</code><br/>
-                  <code>} else { route_to_dram_cache(); }</code>
+                <div class="text-[9.5px] text-zinc-200 truncate font-mono">
+                  <code>if (ΔLBA &gt; 16 &amp;&amp; size &gt;= 64KB) bypass();</code>
                 </div>
-                <div class="text-[9px] text-amber-300 font-sans">⚠️ Only checks current address distance — has zero temporal memory or request entropy awareness.</div>
+                <div class="text-[8px] text-amber-300 truncate">⚠️ Zero temporal memory • Fails RAG</div>
               </div>
-              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-1">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-amber-300 font-bold">STATIC 50/50 DRAM SPLIT</span>
-                  <span class="text-amber-400">HARD-CODED</span>
+              <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8.5px]">
+                  <span class="text-amber-300 font-bold truncate">50/50 RIGID SPLIT</span>
+                  <span class="text-amber-400 text-[8px] shrink-0">HARD-CODED</span>
                 </div>
-                <div class="space-y-0.5 text-[10px]">
-                  <div class="flex justify-between text-zinc-300"><span>• Metadata Region:</span> <strong class="text-white">50% (2.0 GB)</strong></div>
-                  <div class="flex justify-between text-zinc-300"><span>• Host Data Buffer:</span> <strong class="text-white">50% (2.0 GB)</strong></div>
+                <div class="text-[9.5px] text-zinc-200 truncate">
+                  Metadata: <strong>2GB</strong> | Host Buffer: <strong>2GB</strong>
                 </div>
-                <div class="text-[9px] text-zinc-400 font-sans">Inflexible: Under heavy KV-cache reads, the 50% metadata partition overflows, causing cache thrash.</div>
+                <div class="text-[8px] text-zinc-400 truncate">Inflexible: KV-cache reads overflow &amp; thrash</div>
               </div>
             </div>
           `;
@@ -2335,24 +2306,24 @@
           if (label) label.innerText = "BENCHMARK • SYNTHETIC SEQUENTIAL TEST (PARTIAL SUCCESS)";
           if (badge) {
             badge.innerText = "96.4% DETECTION";
-            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[8.5px] border border-emerald-500/30";
           }
           container.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
-                <div class="text-[9px] text-zinc-400">SEQUENTIAL STREAMS</div>
-                <div class="text-base font-bold text-emerald-400">96.4% Correct</div>
-                <div class="text-[9px] text-zinc-300">Clean linear PyTorch checkpoints successfully identified</div>
+            <div class="grid grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-zinc-400 truncate">SEQUENTIAL STREAMS</div>
+                <div class="text-xs sm:text-sm font-bold text-emerald-400 truncate">96.4% Correct</div>
+                <div class="text-[8px] text-zinc-300 truncate">Linear checkpoints detected</div>
               </div>
-              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
-                <div class="text-[9px] text-zinc-400">WAF REDUCTION</div>
-                <div class="text-base font-bold text-emerald-400">1.62 WAF</div>
-                <div class="text-[9px] text-zinc-300">Reduced from 2.84 Conv (43% flash wear relief)</div>
+              <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-zinc-400 truncate">WAF REDUCTION</div>
+                <div class="text-xs sm:text-sm font-bold text-emerald-400 truncate">1.62 WAF</div>
+                <div class="text-[8px] text-zinc-300 truncate">Reduced from 2.84 Conv</div>
               </div>
-              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
-                <div class="text-[9px] text-zinc-400">P99 LATENCY IMPROVEMENT</div>
-                <div class="text-base font-bold text-amber-400">84.6 µs</div>
-                <div class="text-[9px] text-zinc-300">Better than 168µs Conv, but 4× worse than 21µs target</div>
+              <div class="p-1 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-zinc-400 truncate">P99 READ TAIL</div>
+                <div class="text-xs sm:text-sm font-bold text-amber-400 truncate">84.6 µs</div>
+                <div class="text-[8px] text-zinc-300 truncate">4× worse than 21µs target</div>
               </div>
             </div>
           `;
@@ -2361,29 +2332,29 @@
           if (label) label.innerText = "FAILURE • THE RAG & ATTENTION BLIND SPOT";
           if (badge) {
             badge.innerText = "15.8% FALSE BYPASSES";
-            badge.className = "px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[9px] border border-rose-500/40";
+            badge.className = "px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-mono text-[8.5px] border border-rose-500/40";
           }
           container.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono w-full">
-              <div class="p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-1">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">1. INTERLEAVED ATTENTION</span>
-                  <span class="text-rose-300 font-bold">ΔLBA &lt; 16</span>
+            <div class="grid grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8.5px]">
+                  <span class="text-rose-400 font-bold truncate">1. INTERLEAVED ATTENTION</span>
+                  <span class="text-rose-300 font-bold shrink-0">ΔLBA &lt; 16</span>
                 </div>
-                <div class="text-[9.5px] text-zinc-200 leading-snug">
-                  vLLM multi-head attention &amp; RAG vector queries interleave random reads, breaking sequential stride rules.
+                <div class="text-[9px] text-zinc-200 truncate">
+                  vLLM multi-head attention interleaves random reads.
                 </div>
-                <div class="text-[8.5px] text-rose-400 font-semibold">❌ 15.8% Misclassification Error</div>
+                <div class="text-[8px] text-rose-400 font-semibold truncate">❌ 15.8% Misclassification Error</div>
               </div>
-              <div class="p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-1">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-rose-400 font-bold">2. DOUBLE-READ &amp; JITTER</span>
-                  <span class="text-rose-300 font-bold">84.6µs SPIKES</span>
+              <div class="p-1 sm:p-1.5 rounded-lg bg-rose-500/15 border border-rose-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8.5px]">
+                  <span class="text-rose-400 font-bold truncate">2. DOUBLE-READ &amp; JITTER</span>
+                  <span class="text-rose-300 font-bold shrink-0">84.6µs SPIKES</span>
                 </div>
-                <div class="text-[9.5px] text-zinc-200 leading-snug">
-                  Misclassified KV reads trigger flash sensing stalls; massive training blocks pollute the 50% DRAM cache.
+                <div class="text-[9px] text-zinc-200 truncate">
+                  Misclassified KV reads stall; writes thrash DRAM.
                 </div>
-                <div class="text-[8.5px] text-rose-400 font-semibold">💥 84.6µs Tail Jitter / GPU Stalls</div>
+                <div class="text-[8px] text-rose-400 font-semibold truncate">💥 84.6µs Tail Jitter / GPU Stalls</div>
               </div>
             </div>
           `;
@@ -2392,33 +2363,33 @@
           if (label) label.innerText = "VERDICT • v1.0 INSUFFICIENT FOR ENTERPRISE AI";
           if (badge) {
             badge.innerText = "84.6µs JITTER TAIL";
-            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono text-[8.5px] border border-amber-500/30";
           }
           container.innerHTML = `
-            <div class="space-y-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
-                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">P99 READ TAIL</div>
-                  <div class="text-sm sm:text-base font-black text-amber-400">84.6 µs</div>
-                  <div class="text-[8.5px] text-amber-300 font-semibold">⚠️ Unstable Jitter</div>
+            <div class="space-y-1 text-[10px] sm:text-xs font-mono w-full">
+              <div class="grid grid-cols-4 gap-1">
+                <div class="p-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">P99 Tail</div>
+                  <div class="text-xs sm:text-sm font-black text-amber-400 leading-tight">84.6 µs</div>
+                  <div class="text-[7.5px] text-amber-300 font-semibold truncate">⚠️ Unstable Jitter</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">GPU IDLE BUBBLES</div>
-                  <div class="text-sm sm:text-base font-black text-amber-400">14.3%</div>
-                  <div class="text-[8.5px] text-amber-300 font-semibold">⚠️ Persistent Stalls</div>
+                <div class="p-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">GPU Idle</div>
+                  <div class="text-xs sm:text-sm font-black text-amber-400 leading-tight">14.3%</div>
+                  <div class="text-[7.5px] text-amber-300 font-semibold truncate">⚠️ Persistent Stalls</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">STREAM ACCURACY</div>
-                  <div class="text-sm sm:text-base font-black text-amber-400">84.2%</div>
-                  <div class="text-[8.5px] text-rose-400 font-semibold">❌ 15.8% Error Rate</div>
+                <div class="p-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">Accuracy</div>
+                  <div class="text-xs sm:text-sm font-black text-amber-400 leading-tight">84.2%</div>
+                  <div class="text-[7.5px] text-rose-400 font-semibold truncate">❌ 15.8% Error</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">WRITE AMPLIFICATION</div>
-                  <div class="text-sm sm:text-base font-black text-amber-400">1.62 WAF</div>
-                  <div class="text-[8.5px] text-amber-300 font-semibold">⚠️ Partial Relief</div>
+                <div class="p-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">Flash WAF</div>
+                  <div class="text-xs sm:text-sm font-black text-amber-400 leading-tight">1.62 WAF</div>
+                  <div class="text-[7.5px] text-amber-300 font-semibold truncate">⚠️ Partial Relief</div>
                 </div>
               </div>
-              <button onclick="switchMode('V2')" class="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
+              <button onclick="switchMode('V2')" class="w-full py-0.5 px-2 rounded-lg bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[9.5px] shadow-sm transition cursor-pointer flex items-center justify-center gap-1 font-mono">
                 <span>See the Final Solution: NeuroFTL™ v2.0 (93.6% Accuracy) ➔</span>
               </button>
             </div>
@@ -2431,32 +2402,32 @@
           if (label) label.innerText = "TOPOLOGY • COMPLETE SILICON DATA PATH";
           if (badge) {
             badge.innerText = "GEN5 X4 ARCHITECTURE";
-            badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[8.5px] border border-cyan-500/30";
           }
           container.innerHTML = `
             <div class="flex items-center justify-between gap-1 text-[10px] sm:text-xs font-mono w-full py-0.5">
-              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
-                <span class="text-zinc-400 font-bold text-[8px] sm:text-[9px] uppercase truncate">Host PCIe 5.0</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">14.2 GB/s</span>
-                <span class="text-[8px] sm:text-[8.5px] text-cyan-400 font-semibold truncate">x4 NVMe Link</span>
+              <button onclick="focusChipIn3D('pcie')" class="flex flex-col items-center p-1 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom PCIe in 3D">
+                <span class="text-zinc-400 font-bold text-[8px] uppercase truncate">Host PCIe 5.0</span>
+                <span class="text-white font-bold text-[10px] truncate">14.2 GB/s</span>
+                <span class="text-[8px] text-cyan-400 font-semibold truncate">x4 NVMe Link</span>
               </button>
               <span class="text-cyan-400 font-bold text-xs shrink-0 animate-pulse">➔</span>
-              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
-                <span class="text-cyan-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">Controller</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">ARM Cortex-R8</span>
-                <span class="text-[8px] sm:text-[8.5px] text-emerald-400 font-semibold truncate">10ns Classifier</span>
+              <button onclick="focusChipIn3D('soc')" class="flex flex-col items-center p-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom SoC Controller in 3D">
+                <span class="text-cyan-300 font-bold text-[8px] uppercase truncate">Controller</span>
+                <span class="text-white font-bold text-[10px] truncate">ARM Cortex-R8</span>
+                <span class="text-[8px] text-emerald-400 font-semibold truncate">10ns Classifier</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
-                <span class="text-amber-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">3-Region DRAM</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">65% Pinned L2P</span>
-                <span class="text-[8px] sm:text-[8.5px] text-cyan-400 font-semibold truncate">93.6% RAM Hit</span>
+              <button onclick="focusChipIn3D('dram')" class="flex flex-col items-center p-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom DRAM in 3D">
+                <span class="text-amber-300 font-bold text-[8px] uppercase truncate">3-Region DRAM</span>
+                <span class="text-white font-bold text-[10px] truncate">65% Pinned L2P</span>
+                <span class="text-[8px] text-cyan-400 font-semibold truncate">93.6% RAM Hit</span>
               </button>
               <span class="text-zinc-500 font-bold text-xs shrink-0">➔</span>
-              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
-                <span class="text-emerald-300 font-bold text-[8px] sm:text-[9px] uppercase truncate">BiCS5 Flash</span>
-                <span class="text-white font-bold text-[10px] sm:text-[11px] truncate">pSLC Shield</span>
-                <span class="text-[8px] sm:text-[8.5px] text-emerald-400 font-semibold truncate">WAF 1.08</span>
+              <button onclick="focusChipIn3D('nand')" class="flex flex-col items-center p-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 flex-1 min-w-0 text-center transition cursor-pointer" title="Click to zoom BiCS5 Flash in 3D">
+                <span class="text-emerald-300 font-bold text-[8px] uppercase truncate">BiCS5 Flash</span>
+                <span class="text-white font-bold text-[10px] truncate">pSLC Shield</span>
+                <span class="text-[8px] text-emerald-400 font-semibold truncate">WAF 1.08</span>
               </button>
             </div>
           `;
@@ -2465,24 +2436,24 @@
           if (label) label.innerText = "CONTROLLER • 10ns MULTI-FEATURE CLASSIFIER IN TCM";
           if (badge) {
             badge.innerText = "ZERO-OVERHEAD CLASSIFICATION";
-            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[8.5px] border border-emerald-500/30";
           }
           container.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 space-y-0.5">
-                <div class="text-[9px] text-cyan-300 font-bold">FEATURE 1: STRIDE</div>
-                <div class="text-white font-bold text-[11px]">LBA Stride Vector</div>
-                <div class="text-[9px] text-zinc-300">Continuous spatial tracking across active queue descriptors</div>
+            <div class="grid grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-cyan-300 font-bold truncate">1. STRIDE VECTOR</div>
+                <div class="text-white font-bold text-[10px] truncate">Spatial Stride</div>
+                <div class="text-[8px] text-zinc-300 truncate">Queue descriptor tracking</div>
               </div>
-              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
-                <div class="text-[9px] text-emerald-300 font-bold">FEATURE 2: TEMPORAL</div>
-                <div class="text-white font-bold text-[11px]">Inter-Arrival Delta</div>
-                <div class="text-[9px] text-zinc-300">Measures burst frequency to isolate bulk checkpoints from sporadic reads</div>
+              <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-emerald-300 font-bold truncate">2. TEMPORAL DELTA</div>
+                <div class="text-white font-bold text-[10px] truncate">Inter-Arrival Time</div>
+                <div class="text-[8px] text-zinc-300 truncate">Isolates bulk checkpoints</div>
               </div>
-              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
-                <div class="text-[9px] text-amber-300 font-bold">FEATURE 3: ENTROPY</div>
-                <div class="text-white font-bold text-[11px]">Spatial Entropy Window</div>
-                <div class="text-[9px] text-zinc-300">Detects RAG & attention scatter • 93.6% accuracy in 10ns</div>
+              <div class="p-1 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-amber-300 font-bold truncate">3. SPATIAL ENTROPY</div>
+                <div class="text-white font-bold text-[10px] truncate">Entropy Window</div>
+                <div class="text-[8px] text-zinc-300 truncate">93.6% accuracy in 10ns</div>
               </div>
             </div>
           `;
@@ -2491,22 +2462,24 @@
           if (label) label.innerText = "BYPASS • DIRECT DMA BYPASS RAIL EXECUTION";
           if (badge) {
             badge.innerText = "0% DRAM POLLUTION";
-            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[8.5px] border border-emerald-500/30";
           }
           container.innerHTML = `
-            <div class="space-y-1 text-[10px] sm:text-xs font-mono">
-              <div class="flex items-center justify-between p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/35">
-                <div class="flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span class="text-emerald-300 font-bold">DIRECT DMA BYPASS RAIL:</span>
-                  <span class="text-zinc-200">14.2 GB/s Stream Routed Directly to NAND</span>
-                </div>
-                <div class="flex items-center gap-2 text-right">
-                  <span class="text-emerald-400 font-bold">Zero DRAM Touch</span>
-                </div>
+            <div class="grid grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-cyan-300 font-bold truncate">DIRECT DMA RAIL</div>
+                <div class="text-white font-bold text-[10px] truncate">14.2 GB/s Stream</div>
+                <div class="text-[8px] text-zinc-300 truncate">Direct PCIe ➔ Flash bus</div>
               </div>
-              <div class="text-[9px] sm:text-[10px] text-emerald-300 flex items-center justify-between pt-0.5 font-sans">
-                <span>🔒 <strong>Benefit:</strong> Sequential 64KB writes never touch DRAM cache lines, keeping the L2P metadata table 100% pristine.</span>
+              <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-emerald-300 font-bold truncate">ZERO DRAM COPY</div>
+                <div class="text-white font-bold text-[10px] truncate">0% Cache Pollution</div>
+                <div class="text-[8px] text-zinc-300 truncate">Buffer lines untouched</div>
+              </div>
+              <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-emerald-300 font-bold truncate">METADATA PURITY</div>
+                <div class="text-emerald-300 font-bold text-[10px] truncate">93.6% RAM Hit</div>
+                <div class="text-[8px] text-zinc-300 truncate">KV page tables stay cached</div>
               </div>
             </div>
           `;
@@ -2515,33 +2488,33 @@
           if (label) label.innerText = "MEMORY • DYNAMIC 3-REGION PARTITION & LOCK";
           if (badge) {
             badge.innerText = "93.6% L2P RAM HIT RATE";
-            badge.className = "px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] border border-cyan-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[8.5px] border border-cyan-500/30";
           }
           container.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 space-y-0.5">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-cyan-300 font-bold">REGION 1 (65% DRAM)</span>
-                  <span class="text-emerald-400 font-bold">0.1µs RAM</span>
+            <div class="grid grid-cols-3 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8px]">
+                  <span class="text-cyan-300 font-bold truncate">REGION 1 (65%)</span>
+                  <span class="text-emerald-400 font-bold shrink-0">0.1µs</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">Pinned L2P Table</div>
-                <div class="text-[9px] text-zinc-300">93.6% hit rate • Metadata write-protected against bulk training flushes</div>
+                <div class="text-white font-bold text-[10px] truncate">Pinned L2P Table</div>
+                <div class="text-[8px] text-zinc-300 truncate">93.6% hit • Protected</div>
               </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-amber-300 font-bold">REGION 2 (5% DRAM)</span>
-                  <span class="text-amber-400 font-bold">ZERO-COPY</span>
+              <div class="p-1 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8px]">
+                  <span class="text-amber-300 font-bold truncate">REGION 2 (5%)</span>
+                  <span class="text-amber-400 font-bold shrink-0">ZERO-COPY</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">Direct DMA Ring</div>
-                <div class="text-[9px] text-zinc-300">Circular descriptor ring pipes sequential streams directly to flash</div>
+                <div class="text-white font-bold text-[10px] truncate">Direct DMA Ring</div>
+                <div class="text-[8px] text-zinc-300 truncate">Circular descriptor ring</div>
               </div>
-              <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
-                <div class="flex items-center justify-between text-[9px]">
-                  <span class="text-emerald-300 font-bold">REGION 3 (30% DRAM)</span>
-                  <span class="text-emerald-400 font-bold">&lt;30µs SLA</span>
+              <div class="p-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="flex items-center justify-between text-[8px]">
+                  <span class="text-emerald-300 font-bold truncate">REGION 3 (30%)</span>
+                  <span class="text-emerald-400 font-bold shrink-0">&lt;30µs</span>
                 </div>
-                <div class="text-white font-bold text-[11px]">Hot KV Read Cache</div>
-                <div class="text-[9px] text-zinc-300">Immediate servicing for active transformer attention vectors</div>
+                <div class="text-white font-bold text-[10px] truncate">Hot KV Read Cache</div>
+                <div class="text-[8px] text-zinc-300 truncate">Active transformer vectors</div>
               </div>
             </div>
           `;
@@ -2550,19 +2523,19 @@
           if (label) label.innerText = "FLASH • DYNAMIC pSLC WEAR SHIELD (DIE 2)";
           if (badge) {
             badge.innerText = "WAF 1.08 • 2.6× LIFESPAN";
-            badge.className = "px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[9px] border border-amber-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono text-[8.5px] border border-amber-500/30";
           }
           container.innerHTML = `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono">
-              <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 space-y-0.5">
-                <div class="text-[9px] text-amber-300 font-bold">DIE 2: 1-BIT pSLC MODE</div>
-                <div class="text-white font-bold text-[11px]">Dynamic Wear Shield</div>
-                <div class="text-[9px] text-zinc-300">Random 4KB KV updates absorbed into high-endurance SLC mode with zero GC overhead</div>
+            <div class="grid grid-cols-2 gap-1.5 text-[10px] sm:text-xs font-mono w-full">
+              <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-amber-300 font-bold truncate">DIE 2: 1-BIT pSLC MODE</div>
+                <div class="text-white font-bold text-[10px] truncate">Dynamic Wear Shield</div>
+                <div class="text-[8px] text-zinc-300 truncate">Random 4KB KV updates absorbed into SLC with 0 GC</div>
               </div>
-              <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-0.5">
-                <div class="text-[9px] text-emerald-300 font-bold">WEAR AMPLIFICATION FACTOR</div>
-                <div class="text-white font-bold text-[11px]">WAF 1.08 (vs 2.84 Conv)</div>
-                <div class="text-[9px] text-zinc-300">Flash cell lifespan extended by 2.6× under continuous enterprise training workloads</div>
+              <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between space-y-0.5 min-w-0">
+                <div class="text-[8px] text-emerald-300 font-bold truncate">WEAR AMPLIFICATION FACTOR</div>
+                <div class="text-white font-bold text-[10px] truncate">WAF 1.08 (vs 2.84 Conv)</div>
+                <div class="text-[8px] text-zinc-300 truncate">Flash cell lifespan extended 2.6× under AI load</div>
               </div>
             </div>
           `;
@@ -2571,37 +2544,34 @@
           if (label) label.innerText = "VALIDATION • 3-GENERATION SILICON BENCHMARK VERDICT";
           if (badge) {
             badge.innerText = "100% FIRMWARE SOLUTION";
-            badge.className = "px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] border border-emerald-500/30";
+            badge.className = "px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[8.5px] border border-emerald-500/30";
           }
           container.innerHTML = `
-            <div class="space-y-1.5">
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-mono">
-                <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">P99 READ TAIL</div>
-                  <div class="text-sm sm:text-base font-black text-emerald-400">21.4 µs</div>
-                  <div class="text-[8.5px] text-emerald-300 font-semibold">⚡ vs 168µs (Conv) / 85µs (v1)</div>
+            <div class="space-y-1 text-[10px] sm:text-xs font-mono w-full">
+              <div class="grid grid-cols-4 gap-1">
+                <div class="p-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">P99 Tail</div>
+                  <div class="text-xs sm:text-sm font-black text-emerald-400 leading-tight">21.4 µs</div>
+                  <div class="text-[7.5px] text-emerald-300 font-semibold truncate">⚡ 7.8× vs Conv</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">STREAM ACCURACY</div>
-                  <div class="text-sm sm:text-base font-black text-cyan-400">93.6%</div>
-                  <div class="text-[8.5px] text-cyan-300 font-semibold">🔒 vs 0% (Conv) / 84.2% (v1)</div>
+                <div class="p-1 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">Stream Acc</div>
+                  <div class="text-xs sm:text-sm font-black text-cyan-400 leading-tight">93.6%</div>
+                  <div class="text-[7.5px] text-cyan-300 font-semibold truncate">🔒 vs 0% / 84%</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">WRITE AMPLIFICATION</div>
-                  <div class="text-sm sm:text-base font-black text-amber-400">1.08 WAF</div>
-                  <div class="text-[8.5px] text-amber-300 font-semibold">🛡️ 2.6× Life (vs 2.84 Conv)</div>
+                <div class="p-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">Flash WAF</div>
+                  <div class="text-xs sm:text-sm font-black text-amber-400 leading-tight">1.08 WAF</div>
+                  <div class="text-[7.5px] text-amber-300 font-semibold truncate">🛡️ 2.6× Life</div>
                 </div>
-                <div class="p-1 sm:p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0.5">
-                  <div class="text-[9px] text-zinc-400">GPU COMPUTE IDLE</div>
-                  <div class="text-sm sm:text-base font-black text-emerald-400">0.0% Stalls</div>
-                  <div class="text-[8.5px] text-emerald-300 font-semibold">🚀 100% Fed (vs 38.2% Conv)</div>
+                <div class="p-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-center space-y-0 min-w-0">
+                  <div class="text-[8px] text-zinc-400 uppercase truncate">Compute Idle</div>
+                  <div class="text-xs sm:text-sm font-black text-emerald-400 leading-tight">0.0%</div>
+                  <div class="text-[7.5px] text-emerald-300 font-semibold truncate">🚀 100% Fed</div>
                 </div>
               </div>
-
-              <button onclick="openCompareModal()" class="w-full py-1.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[10px] sm:text-[11px] shadow-lg hover:opacity-95 transition cursor-pointer flex items-center justify-center gap-1.5 font-mono">
-                <span>⚖️</span>
-                <span>Open Side-by-Side 3-Generation Comparative Evolution Matrix</span>
-                <span>➔</span>
+              <button onclick="openCompareModal()" class="w-full py-0.5 px-2 rounded-lg bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-400 text-black font-bold text-[9.5px] shadow-sm hover:opacity-95 transition cursor-pointer flex items-center justify-center gap-1 font-mono">
+                <span>⚖️ Open 3-Generation Comparative Evolution Matrix ➔</span>
               </button>
             </div>
           `;
